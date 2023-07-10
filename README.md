@@ -1,28 +1,5 @@
 # 3DMR 
 
-<!-- TOC -->
-
-- [DMR](#dmr)
-    - [1. Main features](#1-main-features)
-    - [2. Prerequisites](#2-prerequisites)
-    - [3. Quick install and build](#3-quick-install-and-build)
-    - [4. Repo organization](#4-repo-organization)
-        - [4.1. Workspaces](#41-workspaces)
-        - [4.2. Main scripts](#42-main-scripts)
-    - [5. D Multi-robot exploration](#5-d-multi-robot-exploration)
-    - [6. D Multi-robot patrolling](#6-d-multi-robot-patrolling)
-    - [7. D Multi-robot path planner](#7-d-multi-robot-path-planner)
-    - [8. GUIs](#8-guis)
-    - [9. SLAM integration](#9-slam-integration)
-    - [10. Project webpages](#10-project-webpages)
-        - [10.1. TRADR EU project](#101-tradr-eu-project)
-        - [10.2. D Patrolling project](#102-d-patrolling-project)
-    - [11. License](#11-license)
-    - [12. Contributing to 3DMR](#12-contributing-to-3dmr)
-    - [13. Credits](#13-credits)
-
-<!-- /TOC -->
-
 
 **3D Multi-Robot** Exploration, Patrolling and Navigation.
 
