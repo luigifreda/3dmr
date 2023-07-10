@@ -28,14 +28,11 @@ Please read the main **[README.md](./README.md)** file and install the required 
 <p align="center">
 <img src="images/3D-exploration-ugvs2.gif"
 alt="V-REP simulation 3d exploration" height="250" border="1"/> 
-</p>
-
-<center>
 <img src="images/3d_exploration2.png"
 alt="V-REP simulation 3d exploration" height="250" border="1" /> 
 <img src="images/3d_exploration_ring.png"
 alt="V-REP simulation 3d exploration" height="250" border="1" />
-</center>
+</p>
 
 ## Overview
 

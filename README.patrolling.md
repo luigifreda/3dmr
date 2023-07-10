@@ -20,10 +20,10 @@
 
 Please read the main **[README.md](./README.md)** file and install the required tools using the [install.sh](./install.sh) script before reading this file. Note that, at the present time, patrolling is supported only the tracked UGVs.
 
-<center>
+<p align="center">
 <img src="images/patrolling-two-floor-ring.gif"
 alt="V-REP simulation 3dpatrolling" height="300" border="1" /> 
-</center>
+</p>
 
 <p align="center">
 <img src="images/patrolling-elike-animated.gif"
