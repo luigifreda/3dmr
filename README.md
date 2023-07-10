@@ -171,19 +171,17 @@ We have different **PyQt GUIs** for launching exploration, patrolling and path p
 * `$ ./main_uav.py` for a team of UAVs equipped with stereo/depth cameras and IMUs ([nbvplanner](https://github.com/ethz-asl/nbvplanner))
 
 
-<center>
+
+<p align="center">
 <img src="images/gui-tradr.png"
 alt="RVIZ and V-REP" width="200" border="1" />
 <img src="images/gui-jackal.png"
 alt="RVIZ and V-REP" width="200" border="1" />
-</center>
-
-<center>
 <img src="images/gui-pioneer.png"
 alt="RVIZ and V-REP" width="200" border="1" />
 <img src="images/gui-uav.png"
 alt="RVIZ and V-REP" width="200" border="1" />
-</center>
+<p align="center">
 
 The buttons and tooltips should be self-explanatory. Start playing with them and refer to the following README files for further details:
 - [README.exploration.md](./README.exploration.md)
