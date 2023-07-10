@@ -1,0 +1,6 @@
+#
+# simxInt simxGetObjectSelection(simxInt** objectHandles,simxInt* objectCount,simxInt operationMode)
+#
+
+---
+int32[] handles

@@ -1,0 +1,15 @@
+<launch>
+	
+    <arg name="control_rate"        default="10"/>
+    <arg name="transform_tolerance" default="0.1"/>
+
+    <rosparam file="$(find teb_optim_local_planner)/config/local_planner_params.yaml" command="load" />
+
+  	<!--- Run optimization test node -->
+   	<node pkg="teb_optim_local_planner" type="teb_optim_local_planner_node" name="optim_node" output="screen">
+	    <param name="control_rate" value="$(arg control_rate)"/>
+	    <param name="transform_tolerance" value="$(arg transform_tolerance)"/>
+	</node>
+
+</launch>
+

@@ -1,0 +1,27 @@
+# only values different from default-robot.yaml need to be defined here; the default config is always loaded
+
+laser_angle_offset: deg(2.6)
+
+actor_name: 'Echo'
+
+viz:
+  camera1394_driver:
+    guid: '00b09d01009f01b2'
+  lady_saw:
+    camera_name_format: '00b09d01009f01b2_1232x1616_c%i'
+
+omnicam_sensors_calib:
+  transforms:
+  - [0.041931, -0.001990, -0.000473, -0.501408, 0.499614, -0.500383, 0.498591, 'omnicam', 'camera_0']
+  - [0.011341, -0.040213, -0.000245, -0.109995, 0.698425, -0.698085, 0.113049, 'omnicam', 'camera_1']
+  - [-0.034849, -0.022944, 0.000360, -0.324840, -0.629576, 0.630165, 0.317815, 'omnicam', 'camera_2']
+  - [-0.032898, 0.026055, 0.000286, -0.631742, -0.319539, 0.322083, 0.628538, 'omnicam', 'camera_3']
+  - [0.014474, 0.039090, 0.000067, -0.701831, 0.110812, -0.109812, 0.695051, 'omnicam', 'camera_4']
+  - [0.000736, -0.000983, 0.062182, -0.000000, 0.000000, -0.704633, 0.709572, 'omnicam', 'camera_5']
+
+# ubnt bullet hostname for RSSI monitoring
+bullet_hostname: eth-rover-bullet-5g
+
+# inso calibration parameter - rotation matrix aligning tracks and body frame
+inso_TracksIMUAlignment: '[0.9999756,  0.0000000, -0.0069813; 0.0000000,  1.0000000,  0.0000000; 0.0069813,  0.0000000,  0.9999756 ]'
+

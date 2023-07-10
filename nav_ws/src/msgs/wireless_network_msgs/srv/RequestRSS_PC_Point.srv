@@ -1,0 +1,7 @@
+#request position
+sensor_msgs/PointCloud2 surveypoints
+bool simulated
+---
+#response rssi values
+geometry_msgs/Point bestpointrssi
+

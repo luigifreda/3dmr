@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<launch>
+
+    <include file="$(find p3dx_description)/launch/rviz_p3dx.launch"/>
+
+    <!--node name="base_link_pioneer_tf"	pkg="tf"	type="static_transform_publisher"	args="0 0 -0.15 0 0 0 pioneer base_link 100"/-->
+
+    <!--node name="lidar_pioneer_tf"	pkg="tf"	type="static_transform_publisher"	args="0 0 0.15 0 0 0 pioneer lidar_link 100"/-->
+
+    <!--node name="mynteye_pioneer_tf" 	pkg="tf" 	type="static_transform_publisher" 	args="0.2 0 0.10682 0 0 0 pioneer mynteye_link 100"/-->
+
+    <!--node name="mynteye_depth_tf" 	pkg="tf" 	type="static_transform_publisher"	args="0 0 0 1.5707963267948966 0 1.5707963267948966 mynteye_link mynteye_depth 100"/-->
+
+	<!--gmapping-->
+    <!--node name="lidar_mapping" 	pkg="gmapping" 		type="slam_gmapping"		args="scan:=/vrep/front_scan"/-->
+
+	<!--OCTOMAP construction-->
+    <!--node name="octomap_vision" 	pkg="octomap_server"	type="octomap_server_node"	args="cloud_in:=/depth/points _sensor_model/max_range:=5"/-->
+
+</launch>

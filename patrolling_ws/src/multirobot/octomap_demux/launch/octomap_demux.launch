@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+  <arg name="robot_name1" value="ugv1" />
+  <arg name="robot_name2" value="ugv2" />
+    
+  <arg name="simulator" default="/vrep" />
+	 <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+      
+	  <node name="octomap_demux" pkg="octomap_demux" type="octomap_demux_node" respawn="$(arg respawn_value)" output="screen">
+            <param name="global_ref"    value="map"/>
+            <param name="ref_frame_1"   value="map"/>            
+            <param name="ref_frame_2"   value="map"/>
+            
+            <param name="pcl_sub_name"  value="/volumetric_mapping/octomap_pcl"/>
+            
+            <param name="pcl1_pub_name" value="$(arg simulator)/$(arg robot_name1)/local_map"/>
+			<param name="pcl2_pub_name" value="$(arg simulator)/$(arg robot_name2)/local_map"/>
+
+	  </node> 
+
+</launch>

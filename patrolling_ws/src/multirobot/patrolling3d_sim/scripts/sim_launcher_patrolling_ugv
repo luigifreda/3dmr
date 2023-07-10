@@ -1,0 +1,175 @@
+#!/bin/bash
+# Author: Luigi Freda 
+
+# N.B.: 
+# 1) this script is designed just for testing the patrolling and path planning nodes; no SLAM nodes are called; 
+#    SLAM is assumed to be faked by a proper V-REP simulation environment
+# 2) you can kill all the spawned terminals together by right clicking on the X icon on the left bar and selecting "Quit"
+
+echo "usage: ./${0##*/} <robot-id> <world-name> <enable-multi-robot-traversability> <use-multi-volumetric>"
+
+
+export ROBOT_ID=$1
+export ROBOT_NAME="ugv$ROBOT_ID"
+export ROBOT_ID_1=$(($ROBOT_ID-1)) # robot id zero based
+#echo "ROBOT_ID_1: $ROBOT_ID_1"
+#exit 1
+
+if [[ -n "$ROBOT_ID" ]]; then
+    echo "STARTING PATROLLING ROBOT $ROBOT_NAME"
+else
+    echo "give me a name please!"
+    exit 1
+fi
+
+WORLD_NAME=$2
+if [[ -n "$WORLD_NAME" ]]; then
+    echo "WORLD_NAME $WORLD_NAME"
+else
+    echo "give me a world please!"
+    exit 1
+fi
+
+
+if [[ -n "$ENABLE_PATROLLING" ]]; then
+    # this means we are using the main patrolling launcher
+    echo "patrolling enable: $ENABLE_PATROLLING"
+else
+    # default vars
+    export ENABLE_PATROLLING=1  
+    export BUILD_PATROLLING_GRAPH_ON_START="false"
+    export TIME_NOW=$(date +"%Y-%m-%d-%H-%M-%S")
+fi
+
+
+export PATROLLING3D_FOLDER=$(rospack find patrolling3d_sim)
+export LOGS_FOLDER=$PATROLLING3D_FOLDER/logs
+
+SUFFIX=$ROBOT_ID"_"$TIME_NOW
+export FILE_LOG_PATH_PLANNING=$LOGS_FOLDER"/log_path_planning$SUFFIX.log"
+export FILE_LOG_PATROL_AGENT=$LOGS_FOLDER"/log_patrolling_agent$SUFFIX.log"
+echo "patrolling log:" $FILE_LOG_PATROL_AGENT
+
+export XTERM_OPTIONS="-hold -iconic" # the "iconic" option allows to automatically minimize all the launched xterms
+
+########################################################################################################
+
+ENABLE_LASER_ASSEMBLER=1 #1 laser assembler enabled, 0 disabled
+
+ENABLE_MULTI_ROBOT_COORDINATION="true" # true or false
+
+USE_LASER_PROXIMITY_CHECKER=1 # 1 use laser proximity checker 
+
+USE_MULITPLE_VOLUMETRIC_MAPPING=1 # 1 use an independent mapping node for each robot
+                                  # 0 use a single shared mapping system with just one volumetric mapping node: light but can generate ghosts due to mutual robot-perceptions!
+
+USE_LASER_PROXIMITY_CALLBACK_IN_PP=0 # use laser proximity callback in path planner for safer navigation (TODO: to be removed?) 
+
+USE_PP_MARKER_CONTROLLER=false
+
+########################################################################################################
+
+# check environment variables 
+
+if [[ -z "${MR3D_HOME}" ]]; then
+    echo "ERROR: missing env var MR3D_HOME"
+    echo "please, source source_all.bash in the main 3DMR folder"
+    exit 
+else
+    source $MR3D_HOME/source_all.bash
+fi
+
+########################################################################################################
+
+# check if we want to enable/disable multi-robot coordination from input 
+export ENABLE_MULTI_ROBOT_COORDINATION_INPUT=$3
+if [[ -n "$ENABLE_MULTI_ROBOT_COORDINATION_INPUT" ]] 
+then
+    echo "setting ENABLE_MULTI_ROBOT_COORDINATION_INPUT: $ENABLE_MULTI_ROBOT_COORDINATION_INPUT"
+    ENABLE_MULTI_ROBOT_COORDINATION=$ENABLE_MULTI_ROBOT_COORDINATION_INPUT   
+fi
+echo "ENABLE_MULTI_ROBOT_COORDINATION: $ENABLE_MULTI_ROBOT_COORDINATION"
+
+
+# check if we want to use multiple volumetric mapping 
+export USE_MULITPLE_VOLUMETRIC_MAPPING_INPUT=$4
+if [[ -n "$USE_MULITPLE_VOLUMETRIC_MAPPING_INPUT" ]] 
+then
+    echo "setting USE_MULITPLE_VOLUMETRIC_MAPPING: $USE_MULITPLE_VOLUMETRIC_MAPPING_INPUT"
+    USE_MULITPLE_VOLUMETRIC_MAPPING=$USE_MULITPLE_VOLUMETRIC_MAPPING_INPUT   
+fi
+echo "USE_MULITPLE_VOLUMETRIC_MAPPING: $USE_MULITPLE_VOLUMETRIC_MAPPING"
+
+
+########################################################################################################
+
+#- Mapping
+
+# Laser assembler
+open_term "$ROBOT_NAME"laser_assembler  "echo $ROBOT_NAME laser assembler; roslaunch path_planner sim_nifti_laser_assembler_ugv2.launch robot_name:=$ROBOT_NAME world_frame:=/map; bash" &
+
+if [ $USE_MULITPLE_VOLUMETRIC_MAPPING -eq 0 ]
+then
+
+	#- Normal Estimation 
+	open_term "$ROBOT_NAME"normals  "echo $ROBOT_NAME normals; roslaunch path_planner sim_compute_normals_volumetric_ugv2.launch robot_name:=$ROBOT_NAME; bash" &
+
+else 
+
+	#- Mapping (Octomap) + Normal Estimation
+	#xterm $XTERM_OPTIONS -e "echo $ROBOT_NAME mapping; roslaunch path_planner sim_mapping_ugv2.launch robot_name:=$ROBOT_NAME use_laser_assembler:=true; bash" &
+	open_term "$ROBOT_NAME"mapping  "echo $ROBOT_NAME mapping; roslaunch path_planner sim_volumetric_mapping_ugv2.launch robot_name:=$ROBOT_NAME use_laser_assembler:=true; bash" &
+	sleep 2
+	
+fi 
+
+########################################################################################################
+
+#- Traversability  
+open_term "$ROBOT_NAME"traversability  "echo $ROBOT_NAME traversability; roslaunch path_planner sim_traversability_ugv2.launch robot_name:=$ROBOT_NAME enable_multi_robot_avoidance:=$ENABLE_MULTI_ROBOT_COORDINATION; bash" &
+
+sleep 1
+
+########################################################################################################
+
+#- Path Planner 
+
+open_term "$ROBOT_NAME"path_planner_manager  "echo $ROBOT_NAME path planner manager; roslaunch path_planner sim_path_planner_manager_ugv2.launch robot_name:=$ROBOT_NAME enable_laser_proximity_callback:=$USE_LASER_PROXIMITY_CALLBACK_IN_PP use_marker_controller:=$USE_PP_MARKER_CONTROLLER  &> $FILE_LOG_PATH_PLANNING; bash" &
+
+sleep 1
+
+########################################################################################################
+
+#- Trajectory Control 
+open_term "$ROBOT_NAME"trajectory_control  "echo $ROBOT_NAME trajectory control; roslaunch trajectory_control sim_trajectory_control_ugv2.launch robot_name:=$ROBOT_NAME odom_frame_id:=/$ROBOT_NAME/odom; bash" &
+
+
+########################################################################################################
+
+if [ $USE_LASER_PROXIMITY_CHECKER -eq 1 ]
+then
+
+    #- Laser proximity checker UGV1
+    open_term "$ROBOT_NAME"laser_proximity_checker  "echo $ROBOT_NAME laser proximity checker; roslaunch laser_proximity_checker sim_laser_proximity_checker_ugv2.launch robot_name:=$ROBOT_NAME world_frame:=/$ROBOT_NAME/odom; bash" &
+
+fi 
+
+########################################################################################################
+
+if [ $ENABLE_PATROLLING -eq 1 ]
+then
+
+    open_term "$ROBOT_NAME"patrolling_agent  "echo patrolling $ROBOT_NAME; roslaunch patrolling3d_sim  sim_multi_robot_agent.launch robot_number:=$ROBOT_ID_1 robot_name:=$ROBOT_NAME map:=$WORLD_NAME interactive:=$BUILD_PATROLLING_GRAPH_ON_START &> $FILE_LOG_PATROL_AGENT; bash" &
+	#xterm $XTERM_OPTIONS -e "echo patrolling $ROBOT_NAME; roslaunch patrolling3d_sim  sim_multi_robot_agent.launch robot_number:=$ROBOT_ID_1 robot_name:=$ROBOT_NAME map:=$WORLD_NAME interactive:=$BUILD_PATROLLING_GRAPH_ON_START; bash" &
+    sleep 1
+fi
+    
+########################################################################################################
+
+echo "DONE WITH ROBOT $ROBOT_NAME"
+
+
+                                                   
+
+
+

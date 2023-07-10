@@ -1,0 +1,38 @@
+name: cmake CI of jrl-cmakemodules
+
+on: [push,pull_request]
+
+jobs:
+  build-ubuntu:
+
+    runs-on: [ubuntu-18.04] 
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Run project tests
+      run: |
+        set -e
+        set -x
+        cd _unittests
+        CMAKE_BIN="cmake"
+        $CMAKE_BIN --version
+        ./run_unit_tests.sh
+
+    - name: Run script tests
+      run: |
+        set -e
+        set -x
+        cd _unittests
+        ln -s .. cmake
+        CMAKE_BIN="cmake"
+        $CMAKE_BIN --version
+        $CMAKE_BIN -P test_pkg-config.cmake
+
+        name="cmake-3.2.2-Linux-x86_64"
+        wget --quiet "https://cmake.org/files/v3.2/${name}.tar.gz"
+        tar xf "${name}.tar.gz"
+
+        CMAKE_BIN="${name}/bin/cmake"
+        $CMAKE_BIN --version
+        $CMAKE_BIN -P test_pkg-config.cmake

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="robot_name" default="ugv1" />
+    <arg name="robot_topic_prefix" default="$(arg robot_name)/" />  <!-- prefix for topics, must be with final slash -->
+    <arg name="robot_frame_prefix" default="$(arg robot_name)/" />  <!-- prefix for frames, must be with final slash -->
+
+    <node pkg="odom2tf" type="odom2tf" name="odom2tf_$(arg robot_name)" output="screen">
+      <param name="odom_topic" value="$(arg robot_topic_prefix)ground_truth/base_link_odom"/>
+      <param name="parent_frame" value="/odom"/>
+      <param name="child_frame" value="$(arg robot_frame_prefix)base_link"/>
+      <param name="robot_topic_prefix" value="$(arg robot_topic_prefix)"/>      
+    </node>
+</launch>

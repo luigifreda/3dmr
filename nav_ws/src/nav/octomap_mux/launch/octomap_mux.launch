@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+	  <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+	  <node name="octomap_mux" pkg="octomap_mux" type="octomap_mux_node" respawn="$(arg respawn_value)" output="screen">
+		
+	  </node> 
+
+</launch>

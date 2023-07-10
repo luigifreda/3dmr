@@ -1,0 +1,8 @@
+#
+# simxInt simxTransferFile(const simxChar* filePathAndName,const simxChar* fileName_serverSide,simxInt timeOut,simxInt operationMode)
+#
+
+uint8[] data
+string fileName
+---
+int32 result

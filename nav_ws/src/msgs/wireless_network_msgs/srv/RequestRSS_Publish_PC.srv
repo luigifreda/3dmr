@@ -1,0 +1,6 @@
+#request query PC
+sensor_msgs/PointCloud2 surveypoints
+---
+#response to publish rssi values in the Query PC
+bool status
+

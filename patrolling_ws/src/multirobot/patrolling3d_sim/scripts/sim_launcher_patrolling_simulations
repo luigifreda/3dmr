@@ -1,0 +1,32 @@
+#!/bin/bash
+# this is for launching a sequence of simulations  
+
+TIME=3610
+
+WORLD_NAME="vrep_3ways"
+NUM_ROBOTS=3 
+./sim_launcher_patrolling $WORLD_NAME $NUM_ROBOTS true $TIME
+sleep 5 
+./sim_launcher_patrolling $WORLD_NAME $NUM_ROBOTS false $TIME
+
+
+WORLD_NAME="vrep_crossroad4" 
+NUM_ROBOTS=4
+./sim_launcher_patrolling $WORLD_NAME $NUM_ROBOTS true $TIME
+sleep 5 
+./sim_launcher_patrolling $WORLD_NAME $NUM_ROBOTS false $TIME
+                                                   
+
+WORLD_NAME="vrep_fork4"
+NUM_ROBOTS=4 
+./sim_launcher_patrolling $WORLD_NAME $NUM_ROBOTS true $TIME
+sleep 5 
+./sim_launcher_patrolling $WORLD_NAME $NUM_ROBOTS false $TIME
+
+
+WORLD_NAME="vrep_ring_tails" 
+NUM_ROBOTS=4
+./sim_launcher_patrolling $WORLD_NAME $NUM_ROBOTS true $TIME
+sleep 5 
+./sim_launcher_patrolling $WORLD_NAME $NUM_ROBOTS false $TIME
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<launch>
+    <!--param name="nifti_robot_description" textfile="$(find nifti_robot_description)/old_model/nifti_robot.urdf"/-->
+    
+    <!--param if="$(arg simulate_robot)" name="/use_sim_time" value="false"/-->
+    
+    <arg name="use_old_robot" default="false" /> <!-- boolean: true, false -->
+
+    <include file="$(find nifti_robot_description)/launch/load_robot_model.launch">   
+        <arg name="use_old_robot" value="$(arg use_old_robot)" />
+	</include>	
+	
+	<node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find path_planner)/rviz/path_planner.rviz" >
+	</node> 
+    
+</launch>

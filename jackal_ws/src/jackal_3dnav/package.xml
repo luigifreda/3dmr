@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <name>jackal_3dnav</name>
+  <version>0.1.0</version>
+  <description>Launch files and code for autonomous 3D navigation of the Jackal</description>
+  <author email="luigifreda@gmail.com">Luigi Freda</author>
+  <maintainer email="luigifreda@gmail.com">Luigi Freda</maintainer>  
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roslaunch</build_depend>
+  <run_depend>urdf</run_depend>
+  <run_depend>xacro</run_depend>
+
+
+  <export>
+
+  </export>
+</package>

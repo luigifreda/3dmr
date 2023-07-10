@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+  
+  <arg name="prefix" default="ugv1"/>
+  <arg name="scene" default="$(find vrep_ugv_simulation)/data/robot_multi_$(arg prefix).ttt" />    
+  <arg name="headless" default="0" />
+  
+  <include file="$(find vrep_ugv_simulation)/launch/vrep_ugv_simulation_robot_tf_remap.launch">
+    <arg name="prefix" value="$(arg prefix)" />
+    <arg name="scene" value="$(arg scene)" />
+    <arg name="headless" value="$(arg headless)" />    
+  </include>	
+  
+
+</launch>

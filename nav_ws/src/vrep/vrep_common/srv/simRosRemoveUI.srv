@@ -1,0 +1,7 @@
+#
+# simInt simRemoveUI(simInt uiHandle)
+#
+
+int32 handle
+---
+int32 result

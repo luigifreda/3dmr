@@ -1,0 +1,11 @@
+macro(check_exist_variable name message)
+  if(NOT DEFINED ${name})
+    message(FATAL_ERROR "Variable ${name} not defined. ${message}")
+  endif()
+endmacro()
+
+macro(check_exist_target name message)
+  if(NOT TARGET ${name})
+    message(FATAL_ERROR "Expected target ${name}. ${message}")
+  endif()
+endmacro()

@@ -1,0 +1,9 @@
+#
+# simInt simGetObjectFloatParameter(simInt objectHandle,simInt parameterID,simFloat* parameter)
+#
+
+int32 handle
+int32 parameterID
+---
+int32 result
+float32 parameterValue

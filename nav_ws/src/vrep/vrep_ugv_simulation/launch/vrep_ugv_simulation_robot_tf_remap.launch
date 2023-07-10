@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+  
+  <arg name="prefix" default="ugv1"/>
+  
+  <arg name="scene" default="$(find vrep_ugv_simulation)/data/robot_multi_$(arg prefix).ttt" />    
+  
+  <arg name="headless" default="0" />
+  <arg name="hid" default="0" />
+
+  <include file="$(find nifti_robot_description)/launch/load_robot_model.launch">   
+	<arg name="use_old_robot" value="true" />
+  </include>	
+  
+  <node name="vrep_ugv_simulation" pkg="vrep_ugv_simulation" type="vrep_ugv_simulation" args="$(arg scene) $(arg headless)" />
+
+  <include file="$(find vrep_ugv_simulation)/launch/vrep_ugv_teleop_keyboard_robot.launch"/>
+  <!--include file="$(find vrep_ugv_simulation)/launch/vrep_ugv_teleop_joy.launch" if="$(arg hid)" /-->
+  <!--include file="$(find vrep_ugv_simulation)/launch/vrep_ugv_teleop_flipperduino.launch" if="$(arg hid)" /-->
+  
+  <!-- launch the tf_remapper for connecting tf_old to tf -->
+  <include file="$(find tf_remapper)/launch/sim_tf_remap_simple.launch">
+      	<arg name="prefix" value="$(arg prefix)" />
+  </include>	
+  
+  <!-- relay odom to imu_odom otherwise the trajectory controller won't be able to run -->
+  <node name="imu_odom_relay" pkg="topic_tools" type="relay" args="/odom /imu_odom" />
+
+</launch>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>vrep_pioneer_simulation</name>
+  <version>1.0.0</version>
+  <description>The VREP UGV simulation package</description>
+
+  <maintainer email="freda@diag.uniroma1.it">Luigi Freda</maintainer>
+  <author email="freda@diag.uniroma1.it">Luigi Freda</author>
+  
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package> 

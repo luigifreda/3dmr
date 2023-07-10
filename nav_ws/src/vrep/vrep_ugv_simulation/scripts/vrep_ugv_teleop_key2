@@ -1,0 +1,155 @@
+#!/usr/bin/env python
+
+import sys
+
+from PyQt4 import QtCore, QtGui
+
+import rospy
+import std_msgs.msg
+import geometry_msgs.msg
+import nifti_robot_driver_msgs.msg
+
+keys = {
+    QtCore.Qt.Key_Insert: 0,
+    QtCore.Qt.Key_Delete: 0,
+    QtCore.Qt.Key_PageUp: 0,
+    QtCore.Qt.Key_PageDown: 0,
+    QtCore.Qt.Key_Home: 0,
+    QtCore.Qt.Key_End: 0,
+    QtCore.Qt.Key_Left: 0,
+    QtCore.Qt.Key_Right: 0,
+    QtCore.Qt.Key_Up: 0,
+    QtCore.Qt.Key_Down: 0,
+    QtCore.Qt.Key_0: 0,
+    QtCore.Qt.Key_S: 0,
+    QtCore.Qt.Key_W: 0,
+    QtCore.Qt.Key_D: 0,
+    QtCore.Qt.Key_A: 0,
+    QtCore.Qt.Key_Plus: 0,
+    QtCore.Qt.Key_Minus: 0
+}
+
+control_movement = True
+control_flippers = True
+use_twist = True
+
+robot_name='ugv2'
+
+travel_speed = 0.8 #0.5 #8
+steering_speed = travel_speed #0.66 * travel_speed
+travel_speed_increment = 0.05
+
+flipper_angle_increment = 0.1
+
+home_front_flipper_position = -2.87
+home_rear_flipper_position = 2
+up_front_flipper_position = -0.5
+up_read_flipper_position = 0.5
+
+tlv = 0
+trv = 0
+fflp = home_front_flipper_position # 0
+ffrp = home_front_flipper_position # 0
+frlp = home_rear_flipper_position # 0
+frrp = home_rear_flipper_position # 0
+
+
+class MainWindow(QtGui.QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__(None, QtCore.Qt.WindowStaysOnTopHint)
+        self.initUI()
+        
+    def initUI(self):
+        self.setGeometry(300, 470, 200, 1)
+        self.setWindowTitle('UGV TeleOp 2')
+        self.show()
+
+    def keyPressEvent(self, e):
+        if e.key() in keys.keys():
+            keys[e.key()] = 1
+            print('%s -> 1' % e.key())
+            self.update()
+
+    def keyReleaseEvent(self, e):
+        if e.key() in keys.keys():
+            keys[e.key()] = 0
+            print('%s -> 0' % e.key())
+            self.update()
+
+    def update(self):
+        global tw, tl, tr, ffl, ffr, frl, frl, tlv, trv, fflp, ffrp, frlp, frrp, tradr_pub, travel_speed, steering_speed
+        trv = 0
+        tlv = 0
+        if keys[QtCore.Qt.Key_Left]: trv += steering_speed; tlv += -steering_speed
+        if keys[QtCore.Qt.Key_Right]: trv += -steering_speed; tlv += steering_speed
+        if keys[QtCore.Qt.Key_Up]: trv += travel_speed; tlv += travel_speed
+        if keys[QtCore.Qt.Key_Down]: trv += -travel_speed; tlv += -travel_speed
+        if keys[QtCore.Qt.Key_W]: fflp = home_front_flipper_position; ffrp = home_front_flipper_position; frlp = home_rear_flipper_position; frrp = home_rear_flipper_position  # home 
+        if keys[QtCore.Qt.Key_S]: fflp = 0; ffrp = 0; frlp = 0; frrp = 0     
+        if keys[QtCore.Qt.Key_D]: fflp = up_front_flipper_position; ffrp = up_front_flipper_position; frlp = 0; frrp = 0    
+        if keys[QtCore.Qt.Key_A]: fflp = 0; ffrp = 0; frlp = up_read_flipper_position; frrp = up_read_flipper_position
+        if keys[QtCore.Qt.Key_Home]:
+            if keys[QtCore.Qt.Key_Insert]: fflp += flipper_angle_increment
+            if keys[QtCore.Qt.Key_Delete]: fflp -= flipper_angle_increment
+            if keys[QtCore.Qt.Key_PageUp]: ffrp += flipper_angle_increment
+            if keys[QtCore.Qt.Key_PageDown]: ffrp -= flipper_angle_increment
+            if keys[QtCore.Qt.Key_0]: ffrp = 0; fflp = 0
+        if keys[QtCore.Qt.Key_End]:
+            if keys[QtCore.Qt.Key_Insert]: frlp += flipper_angle_increment
+            if keys[QtCore.Qt.Key_Delete]: frlp -= flipper_angle_increment
+            if keys[QtCore.Qt.Key_PageUp]: frrp += flipper_angle_increment
+            if keys[QtCore.Qt.Key_PageDown]: frrp -= flipper_angle_increment
+            if keys[QtCore.Qt.Key_0]: frrp = 0; frlp = 0
+        if keys[QtCore.Qt.Key_Plus]: 
+			travel_speed += travel_speed_increment; steering_speed = travel_speed
+			print('travel speed: %f' % travel_speed)
+        if keys[QtCore.Qt.Key_Minus]: 
+			travel_speed = max(travel_speed-travel_speed_increment,0); steering_speed = travel_speed
+			print('travel speed: %f' % travel_speed)
+        if control_movement:
+            if use_twist:
+                twm = geometry_msgs.msg.Twist()
+                twm.linear.x = (tlv+trv)/2*0.09/0.397/2
+                twm.angular.z = (trv-tlv)/2*0.09/0.397
+                tw.publish(twm)
+                tracks_msg = nifti_robot_driver_msgs.msg.Tracks()
+                tracks_msg.left = tlv
+                tracks_msg.right = trv
+                tradr_pub.publish(tracks_msg)
+            else:
+                tl.publish(std_msgs.msg.Float32(tlv))
+                tr.publish(std_msgs.msg.Float32(trv))
+        if control_flippers:
+            ffl.publish(std_msgs.msg.Float32(fflp))
+            ffr.publish(std_msgs.msg.Float32(ffrp))
+            frl.publish(std_msgs.msg.Float32(frlp))
+            frr.publish(std_msgs.msg.Float32(frrp))
+        
+def main():
+    
+    print('using robot: %s' % robot_name)
+                
+    global tw, tl, tr, ffl, ffr, frl, frr, tradr_pub, travel_speed, steering_speed
+    
+    rospy.init_node('vrep_absolem_teleop_key')
+    if use_twist:
+        tw = rospy.Publisher('/local_joy/cmd_vel', geometry_msgs.msg.Twist,queue_size=10)
+        tl = None; tl = None
+        tradr_pub = rospy.Publisher('/vrep/'+robot_name+'/tracks_vel_cmd', nifti_robot_driver_msgs.msg.Tracks,queue_size=10)
+    else:
+        tl = rospy.Publisher('/vrep/'+robot_name+'/left_track/velocity', std_msgs.msg.Float32,queue_size=10)
+        tr = rospy.Publisher('/vrep/'+robot_name+'/right_track/velocity', std_msgs.msg.Float32,queue_size=10)
+        tw = None
+        tradr_pub = None;
+    ffl = rospy.Publisher('/vrep/'+robot_name+'/front_left_flipper/position', std_msgs.msg.Float32,queue_size=10)
+    ffr = rospy.Publisher('/vrep/'+robot_name+'/front_right_flipper/position', std_msgs.msg.Float32,queue_size=10)
+    frl = rospy.Publisher('/vrep/'+robot_name+'/rear_left_flipper/position', std_msgs.msg.Float32,queue_size=10)
+    frr = rospy.Publisher('/vrep/'+robot_name+'/rear_right_flipper/position', std_msgs.msg.Float32,queue_size=10)
+
+    app = QtGui.QApplication(sys.argv)
+    w = MainWindow()
+    sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
+

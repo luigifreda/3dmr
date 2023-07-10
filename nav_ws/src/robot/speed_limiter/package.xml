@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>speed_limiter</name>
+  <version>2.0.0</version>
+  <description>Package for intelligent speed limiting of the robot</description>
+  <license>BSD</license>
+
+  <maintainer email="martin.pecka@cvut.cz">Martin Pecka</maintainer>
+  <author>Martin Pecka</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>geometry_msgs</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+
+</package>

@@ -1,0 +1,7 @@
+# only values different from default-environment.yaml need to be defined here; the default config is always loaded
+
+# In front the C building (under the stairs), heading south
+initial_lat: deg(50.0761903)
+initial_lon: deg(14.4180211)
+initial_altitude: 210.0
+initial_heading: deg(175.0)

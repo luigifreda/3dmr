@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- to spawn the jackal robot model in the world you launched via gazebo.launch -->
+  
+  <arg name="robot_name" default="ugv1" />
+  <arg name="robot_topic_prefix" default="$(arg robot_name)/" />  <!-- prefix for topics, must be with final slash -->
+  <arg name="robot_frame_prefix" default="$(arg robot_name)/" />  <!-- prefix for frames, must be with final slash -->
+
+  <arg name="robot_model" default="$(find jackal_3dmain)/urdf/jackal.urdf.xacro"/>
+  <arg name="use_rviz" default="true"/>  
+  <arg name="node_start_delay" default="0.0" /> 
+
+  <arg name="use_fake_localization" default="true"/>
+
+  <arg name="x" default="0" />
+  <arg name="y" default="0" />
+  <arg name="z" default="2" />
+  <arg name="yaw" default="0" />
+
+  <!-- Select only one among OS0, OS1, VPL16-->  
+  <arg name="OS0" default="false" />
+  <arg name="OS1" default="false" />
+  <arg name="VLP16" default="false" />
+
+  <arg name="imuRate" default="200" />
+  <arg name="cameraRate" default="30" />
+
+  <arg name="organize_cloud" default="false" />
+
+  <!-- Load Jackal's description -->
+  <param name="$(arg robot_name)/robot_description" command="$(find xacro)/xacro '$(arg robot_model)'
+    robot_name:=$(arg robot_name)  
+    robot_topic_prefix:=$(arg robot_topic_prefix)
+    robot_frame_prefix:=$(arg robot_frame_prefix)    
+    OS0:=$(arg OS0) OS1:=$(arg OS1) VLP16:=$(arg VLP16) 
+    imuRate:=$(arg imuRate) 
+    cameraRate:=$(arg cameraRate)
+    organize_cloud:=$(arg organize_cloud)"/>
+  
+  <!-- Run state publisher -->
+  <node pkg="robot_state_publisher"
+    ns="/$(arg robot_name)"  
+    type="robot_state_publisher" name="robot_state_publisher_$(arg robot_name)">
+        <!--remap from="robot_description" to="robot_description"/-->
+        <!--remap from="/joint_states" to="/joint_states" /-->    
+        <param name="publish_frequency" type="double" value="30.0" />
+  </node>
+
+  <!-- Control -->
+  <include file="$(find jackal_control)/launch/control_multi.launch">
+    <arg name="robot_name" value="$(arg robot_name)"/>          
+    <arg name="robot_topic_prefix" value="$(arg robot_topic_prefix)"/>    
+    <arg name="robot_frame_prefix" value="$(arg robot_frame_prefix)"/>              
+  </include>
+
+  <!-- Run GT publisher as odom localization -->
+  <include file="$(find odom2tf)/launch/odom2tf.launch" if="$(arg use_fake_localization)">
+    <arg name="robot_name" value="$(arg robot_name)"/>
+  </include>  
+
+  <!-- Spawner for the gazebo sensor/robot -->
+  <node pkg="gazebo_ros"
+    ns="/$(arg robot_name)" 
+    type="spawn_model" name="spawn_robot_$(arg robot_name)" 
+    args="-urdf -param robot_description -x $(arg x) -y $(arg y) -z $(arg z) -R 0 -P 0 -Y $(arg yaw) -model $(arg robot_name)"
+    launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/>
+
+  <!-- Keyboard controller -->
+  <include file="$(find gazebo_utils)/launch/gazebo_ugv_teleop_keyboard.launch">
+    <arg name="robot_name" value="$(arg robot_name)"/>          
+    <arg name="robot_topic_prefix" value="$(arg robot_name)"/>    
+    <arg name="robot_frame_prefix" value="$(arg robot_name)"/>          
+  </include>
+
+  <!-- Rviz -->
+  <node if="$(arg use_rviz)" pkg="rviz" type="rviz" name="rviz" args="-d $(find jackal_3dmain)/rviz/jackal_ugvs.rviz" />
+
+</launch>

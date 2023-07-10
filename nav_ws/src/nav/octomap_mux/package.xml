@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <name>octomap_mux</name>
+  <version>0.0.1</version>
+  <description>octomap_mux</description>
+  
+  <maintainer email="freda@diag.uniroma1.it">Luigi</maintainer>
+  
+  <license>BSD</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>catkin</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>roscpp</run_depend>  
+  <run_depend>tf</run_depend>
+  
+</package>
+

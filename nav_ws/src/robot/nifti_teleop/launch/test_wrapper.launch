@@ -1,0 +1,15 @@
+<launch>
+	<node pkg="joy" type="joy_node" name="test_joy" >
+		<param name="dev" value="/dev/input/by-id/usb-Logitech_Logitech_Cordless_RumblePad_2-joystick" />
+		<param name="autorepeat_rate" value="2.0" />
+	</node>
+
+	<node pkg="nifti_teleop" type="joy_to_twist.py" name="joy_to_twist">
+		<remap from="/cmd_vel" to="/private/nav/cmd_vel" />
+	</node>
+
+	<node pkg="nifti_teleop" type="priority_wrapper.py" name="priority_wrapper">
+
+	</node>
+
+</launch>

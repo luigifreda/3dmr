@@ -1,0 +1,29 @@
+#!/bin/bash
+# this is for launching a sequence of simulations  
+
+TIME=3610
+
+# copy this from file `sim_launcher_exploration`
+declare -A worlds
+worlds=( 
+	["corridor_test1"]="1" # ["world_name"]="num_robots"
+        ["rooms2"]="2"     
+        ["corridor2"]="2" # for better testing conflicts 
+        ["crossroad2"]="2"
+        ["crossroad3"]="3"
+        ["crossroad_rooms3"]="3"
+        ["3Dring2"]="2"
+       )
+
+for i in "${!worlds[@]}"
+do
+    echo "key  : $i"
+    echo "value: ${worlds[$i]}"
+    WORLD_NAME=$i
+    NUM_ROBOTS=${worlds[$i]}
+
+    #./sim_launcher_exploration $WORLD_NAME $NUM_ROBOTS true $TIME
+    #sleep 5 
+    #./sim_launcher_exploration $WORLD_NAME $NUM_ROBOTS false $TIME
+done
+

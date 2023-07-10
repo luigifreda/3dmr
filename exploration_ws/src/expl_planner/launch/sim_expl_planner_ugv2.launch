@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+
+  <arg name="robot_name" default="ugv2" />
+  <arg name="simulator" default="/vrep" />
+
+  <arg name="number_of_robots" default="2" /> <!-- multi -->
+  <arg name="robot_point_cloud_base_topic" default="filtered_pointcloud" />   
+  <arg name="param_file" default="$(find expl_planner)/launch/exploration.yaml" />
+
+  <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+  <arg name="use_marker_controller" default="true" /> <!-- boolean: true, false -->
+  <arg name="battery" default="false"/>
+
+  <arg name="sim_file" default="$(find expl_planner)/launch/sim_settings.yaml" if="$(arg battery)"/>
+  <arg name="sim_file" default="$(find expl_planner)/launch/exploration.yaml" unless="$(arg battery)"/>
+
+  <include file="$(find expl_planner)/launch/sim_expl_planner_ugv1.launch">
+
+    <arg name="respawn_value" value="$(arg respawn_value)" />
+    <arg name="robot_name" value="$(arg robot_name)" />
+    <arg name="simulator" value="$(arg simulator)" />
+
+    <arg name="number_of_robots" value="$(arg number_of_robots)" />
+    <arg name="robot_point_cloud_base_topic" value="$(arg robot_point_cloud_base_topic)" />
+
+    <arg name="use_marker_controller" value="$(arg use_marker_controller)" />
+    <arg name="battery" value="$(arg battery)"/>
+
+    <arg name="param_file" value="$(arg param_file)"/>
+    <arg name="sim_file" value="$(arg sim_file)" />
+
+  </include>
+
+</launch>

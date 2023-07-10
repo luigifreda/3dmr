@@ -1,0 +1,10 @@
+<!--library path="lib/librviz_plugin_tutorials"-->
+<library path="lib/libpath_planner_rviz_wp_plugin_SIM_JACKAL1">
+  <class name="path_planner_rviz_wp_plugin/WaypointsToolSimJackal1"
+         type="path_planner_rviz_wp_plugin::WaypointsToolSimJackal1"
+         base_class_type="rviz::Tool">
+    <description>
+      Tool for deploy/plant a set of 3D waypoints on the point cloud visualized inside rviz. SIM JACKAL UGV 1
+    </description>
+  </class>
+</library>

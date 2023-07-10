@@ -1,0 +1,207 @@
+#!/usr/bin/env python3
+
+# /**
+# * This file is part of the ROS package trajectory_control which belongs to the framework 3DPATROLLING. 
+# *
+# * Copyright (C) 2016-present Luigi Freda <freda at diag dot uniroma1 dot it> and Alcor Lab (La Sapienza University)
+# * For more information see <https://gitlab.com/luigifreda/3dpatrolling>
+# *
+# * 3DPATROLLING is free software: you can redistribute it and/or modify
+# * it under the terms of the GNU General Public License as published by
+# * the Free Software Foundation, either version 3 of the License, or
+# * (at your option) any later version.
+# *
+# * 3DPATROLLING is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# * GNU General Public License for more details.
+# *
+# * You should have received a copy of the GNU General Public License
+# * along with 3DPATROLLING. If not, see <http://www.gnu.org/licenses/>.
+# */
+
+import sys
+import signal
+
+from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
+
+import rospy
+import std_msgs.msg
+import geometry_msgs.msg
+import subprocess
+import time
+
+keys = {
+    QtCore.Qt.Key_Insert: 0,
+    QtCore.Qt.Key_Delete: 0,
+    QtCore.Qt.Key_PageUp: 0,
+    QtCore.Qt.Key_PageDown: 0,
+    QtCore.Qt.Key_Home: 0,
+    QtCore.Qt.Key_End: 0,
+    QtCore.Qt.Key_Left: 0,
+    QtCore.Qt.Key_Right: 0,
+    QtCore.Qt.Key_Up: 0,
+    QtCore.Qt.Key_Down: 0,
+    QtCore.Qt.Key_0: 0,
+    QtCore.Qt.Key_S: 0,
+    QtCore.Qt.Key_W: 0,
+    QtCore.Qt.Key_D: 0,
+    QtCore.Qt.Key_A: 0,
+    QtCore.Qt.Key_Plus: 0,
+    QtCore.Qt.Key_Minus: 0
+}
+
+control_movement = True
+control_flippers = True
+use_twist = True
+
+robot_name='ugv1'
+wheel_radius = 0.09
+wheel_distance = 0.397
+
+travel_speed = 4
+rate_steering_travel_speed = 0.3
+steering_speed = rate_steering_travel_speed*travel_speed #0.66 * travel_speed
+travel_speed_increment = 0.05
+
+tlv = 0
+trv = 0
+
+window = None 
+
+
+class Worker(QObject):
+    finished = pyqtSignal()
+    progress = pyqtSignal(int) 
+        
+    def run(self):
+        self.stop = False
+        while not self.stop:
+            if self.is_key_pressed():
+                self.update()
+            else: 
+                time.sleep(0.1)
+        self.finished.emit()
+
+    def is_key_pressed(self): 
+        return any(v>0 for k,v in keys.items()) 
+
+    def update(self):
+        global travel_speed
+        global tw, tl, tr, tlv, trv, travel_speed, steering_speed
+        trv = 0
+        tlv = 0   
+        if keys[QtCore.Qt.Key_Left]: trv += steering_speed; tlv += -steering_speed
+        if keys[QtCore.Qt.Key_Right]: trv += -steering_speed; tlv += steering_speed
+        if keys[QtCore.Qt.Key_Up]: trv += travel_speed; tlv += travel_speed
+        if keys[QtCore.Qt.Key_Down]: trv += -travel_speed; tlv += -travel_speed
+        if keys[QtCore.Qt.Key_Plus]:
+            travel_speed += travel_speed_increment; steering_speed = rate_steering_travel_speed*travel_speed
+            keys[QtCore.Qt.Key_Plus] = 0
+            print('travel speed: %f' % travel_speed)
+        if keys[QtCore.Qt.Key_Minus]:
+            travel_speed = max(travel_speed-travel_speed_increment,0); steering_speed = rate_steering_travel_speed*travel_speed
+            print('travel speed: %f' % travel_speed)
+            keys[QtCore.Qt.Key_Minus] = 0
+        if control_movement:
+            if use_twist:
+                twm = geometry_msgs.msg.Twist()
+                twm.linear.x = 0.5*(tlv+trv)*wheel_radius 
+                twm.angular.z = (trv-tlv)*wheel_radius/wheel_distance 
+                tw.publish(twm)
+            else:
+                tl.publish(std_msgs.msg.Float32(tlv))
+                tr.publish(std_msgs.msg.Float32(trv))
+    
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__(None, QtCore.Qt.WindowStaysOnTopHint)
+        self.initUI()
+        self.startThread()
+    
+    def closeEvent(self,event):
+        print('closeEvent()')
+        self.worker.stop = True 
+        self.thread.quit()
+        self.thread.wait()
+            
+    def getScreenResolution(self):
+        output = subprocess.Popen('xrandr | grep "\*" | cut -d" " -f4',shell=True, stdout=subprocess.PIPE).communicate()[0]
+        resolution = output.split()[0].split(b'x')
+        print('resolution: '+str(resolution))
+        return resolution
+        
+    def initUI(self):
+        robot_id = 0
+        try: 
+            digit = [int(s) for s in list(robot_name) if s.isdigit()] # we expect only one digit
+            robot_id = digit[0]
+        except:
+            robot_id = 0 
+        resolution = self.getScreenResolution()
+        self.setGeometry(int(resolution[0])-200, int(resolution[1])-350+ robot_id*100, 500, 1)
+        self.setWindowTitle('TeleOp '+robot_name)
+        self.show()
+
+    def keyPressEvent(self, e):
+        if e.key() in keys.keys():
+            keys[e.key()] = 1
+            print(f'{e.key()} -> 1')
+
+    def keyReleaseEvent(self, e):
+        if e.key() in keys.keys():
+            if not e.isAutoRepeat(): # e.isAutoRepeat() returns true when the event is automatically generated 
+                keys[e.key()] = 0
+                print(f'{e.key()} -> 0')            
+
+    def startThread(self):
+        self.thread = QThread(parent=self)
+        self.worker = Worker()
+        # Move worker to the thread
+        self.worker.moveToThread(self.thread)
+        # Connect signals and slots
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        # Start the thread
+        self.thread.start()
+     
+def sigterm_handler(_signo, _stack_frame):
+    # Raises SystemExit(0):
+    window.closeEvent(None) 
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, sigterm_handler)
+            
+            
+def main():
+
+    global robot_name, tw, tl, tr, travel_speed, steering_speed, wheel_radius, wheel_distance
+    global window 
+
+    rospy.init_node('gazebo_jackal_teleop_key')
+    robot_name = rospy.get_param('~robot_name', [])
+    robot_prefix = rospy.get_param('~robot_prefix', [])    
+    wheel_radius = rospy.get_param('~wheel_radius', 0.09)
+    wheel_distance = rospy.get_param('~wheel_distance', 0.397)    
+    print(f'using robot name: {robot_name}')
+    print(f'using robot prefix: {robot_prefix}')    
+    print(f'using wheel radius: {wheel_radius}')
+    print(f'using wheel distance: {wheel_distance}')
+               
+    if use_twist:
+        tw = rospy.Publisher(robot_prefix+'/cmd_vel', geometry_msgs.msg.Twist,queue_size=10)
+        tl = None; tl = None
+    else:
+        tl = rospy.Publisher(robot_prefix+'/left_track/velocity', std_msgs.msg.Float32,queue_size=10)
+        tr = rospy.Publisher(robot_prefix+'/right_track/velocity', std_msgs.msg.Float32,queue_size=10)
+        tw = None
+    app = QtWidgets.QApplication(sys.argv)
+    window = MainWindow()
+    sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
+

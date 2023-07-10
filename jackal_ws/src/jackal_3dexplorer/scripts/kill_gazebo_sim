@@ -1,0 +1,21 @@
+#!/bin/bash
+
+kill -9 $(ps aux | grep gazebo_ugv_teleop_key | grep -v grep | awk '{print $2}')
+
+rosnode kill -a
+sleep 1
+
+killall -9 screen; screen -wipe 
+
+killall -9 xterm
+killall -9 python
+
+killall -9 roslaunch
+killall -9 rosmaster
+killall -9 rosout
+killall -9 joynode
+killall -9 rviz 
+killall -9 rostopic
+
+kill $(ps aux | grep ros | grep -v grep | awk '{print $2}')
+

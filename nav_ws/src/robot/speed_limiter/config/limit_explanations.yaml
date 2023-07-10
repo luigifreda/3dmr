@@ -1,0 +1,13 @@
+at:
+  linear: "Auto flippers"
+  angular: "Auto flippers"
+joy:
+  linear: "Joystick"
+  angular: "Joystick"
+local_joy:
+  linear: "Safety joystick"
+  angular: "Safety joystick"
+
+console:
+  linear: "Console"
+  angular: "Console"

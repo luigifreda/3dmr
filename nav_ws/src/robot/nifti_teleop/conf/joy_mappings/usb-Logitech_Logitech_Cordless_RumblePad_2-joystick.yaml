@@ -1,0 +1,31 @@
+num_buttons: 12
+num_axes: 6
+buttons:
+  0: 'b[0]'  # X, blue, 1
+  1: 'b[1]'  # A, green, 2
+  2: 'b[2]'  # B, red, 3
+  3: 'b[3]'  # Y, yellow, 4
+  4: 'b[4]'  # LB (top left on back side)
+  5: 'b[5]'  # RB (top right on back side)
+  6: 'b[6]'  # LT (bottom left on back side)
+  7: 'b[7]'  # RT (bottom right on back side)
+  8: 'b[8]'  # Back, 9 (top left in the center)
+  9: 'b[9]'  # Start, 10 (top left in the center)
+  10: 'b[10]'  # Left joy press
+  11: 'b[11]'  # Right joy press
+axes:
+  0: 'a[0] if not vars["mode"] else a[4]'  # Left joy left-right (left = 1, right = -1)
+  1: 'a[1] if not vars["mode"] else a[5]'  # Left joy top-down (top = 1, down = -1)
+  2: 'a[2]'  # Right joy left-right (left = 1, right = -1)
+  3: 'a[3]'  # Right joy top-down (top = 1, down = -1)
+  4: 'a[4] if not vars["mode"] else a[0]'  # D-Pad/hat/arrows left-right (left = 1, right = -1)
+  5: 'a[5] if not vars["mode"] else a[1]'  # D-Pad/hat/arrows top-down (top = 1, down = -1)
+  6: '1-2*b[6]'  # Virtual axis for LT (fully released = 1, fully pressed = -1) (on some controllers, it is analog, but on this one, only 0/1 can appear)
+  7: '1-2*b[7]'  # Virtual axis for RT (fully released = 1, fully pressed = -1) (on some controllers, it is analog, but on this one, only 0/1 can appear)
+init:
+  mode_detector: "vars['mode'] = False"
+callbacks: {}
+# The MODE button switches left joystick and D-PAD, but cannot be easily detected;
+# The following mode detection actually doesn't work very well, so we turn it off.
+#  mode_detector_1: "if len(pa) > 0: \n\tif pa[0] % 1 == 0 and a[0] % 1 == 0 and pa[0] != a[0]:\n\t\tvars['mode'] = True\n\telif a[0] % 1 != 0:\n\t\tvars['mode'] = False"
+#  mode_detector_2: "if len(pa) > 0: \n\tif pa[1] % 1 == 0 and a[1] % 1 == 0 and pa[1] != a[1]:\n\t\tvars['mode'] = True\n\telif a[1] % 1 != 0:\n\t\tvars['mode'] = False"

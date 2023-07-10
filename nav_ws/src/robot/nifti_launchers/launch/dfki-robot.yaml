@@ -1,0 +1,37 @@
+# only values different from default-robot.yaml need to be defined here; the default config is always loaded
+laser_angle_offset: deg(4.5)
+
+# Name of the robot for High-Level Database purposes
+actor_name: 'Delta'
+
+# positions of the "fixed" parts of the robot that can be configured (top box, arm attach point, ...)
+parts_config:
+  top_box_j_x: 0.46
+
+  # PTU Xtion Thermo Sensor
+  has_ptuxthermo: False
+  ptuxthermo_x_offset: 0.22
+  ptuxthermo_y_offset: 0.17
+
+viz:
+  camera1394_driver:
+    guid: '00b09d01009f01a3'
+  lady_saw:
+    camera_name_format: '00b09d01009f01a3_1232x1616_c%i'
+
+omnicam_sensors_calib:
+  transforms:
+  - [0.042036, -0.001667, -0.000213, -0.500451, 0.498324, -0.501678, 0.499541, 'omnicam', 'camera_0']
+  - [0.011173, -0.040057, -0.000520, -0.110301, 0.700739, -0.696253, 0.109687, 'omnicam', 'camera_1']
+  - [-0.035017, -0.023026, 0.000695, -0.322570, -0.629375, 0.630502, 0.319847, 'omnicam', 'camera_2']
+  - [-0.032616, 0.025714, 0.000049, -0.632325, -0.319353, 0.320526, 0.628841, 'omnicam', 'camera_3']
+  - [0.014426, 0.039040, -0.000011, -0.702520, 0.108814, -0.112672, 0.694212, 'omnicam', 'camera_4']
+  - [0.000605, -0.000856, 0.062463, 0.000011, 0.000000, -0.705451, 0.708758, 'omnicam', 'camera_5']
+
+# ubnt bullet hostname for RSSI monitoring
+bullet_hostname: dfki-rover-bullet-5g
+rssi_var_identifier: 1.3.6.1.4.1.41112.1.4.5.1.5
+ssid_var_identifier: 1.3.6.1.4.1.41112.1.4.5.1.2.1
+
+# inso calibration parameter - rotation matrix aligning tracks and body frame
+inso_TracksIMUAlignment: '[0.9997015, 0.0000000, -0.0244322; 0.0000000, 1.0000000, 0.0000000; 0.0244322, 0.0000000, 0.9997015]'

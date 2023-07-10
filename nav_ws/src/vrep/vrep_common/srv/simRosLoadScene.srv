@@ -1,0 +1,7 @@
+#
+# simxInt simxLoadScene(const simxChar* scenePathAndName,simxChar options,simxInt operationMode)
+#
+
+string fileName
+---
+int32 result

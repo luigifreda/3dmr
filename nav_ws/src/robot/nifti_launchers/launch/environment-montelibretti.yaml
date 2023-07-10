@@ -1,0 +1,7 @@
+# only values different from default-environment.yaml need to be defined here; the default config is always loaded
+
+# Montelibretti inside tunnel
+initial_lat: deg(42.146546)
+initial_lon: deg(12.645485)
+initial_altitude: 125.0
+initial_heading: deg(231.0)

@@ -1,0 +1,7 @@
+#
+# simInt simGetObjectHandle(const simChar* objectName)
+#
+
+string objectName
+---
+int32 handle

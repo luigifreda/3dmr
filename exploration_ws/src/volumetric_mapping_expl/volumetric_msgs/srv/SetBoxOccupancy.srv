@@ -1,0 +1,5 @@
+# Message to make it easy to clear or set the occupancy of a bounding box.
+geometry_msgs/Vector3 box_center
+geometry_msgs/Vector3 box_size
+bool set_occupied  # Whether to set box free (false) or set occupied (true).
+---

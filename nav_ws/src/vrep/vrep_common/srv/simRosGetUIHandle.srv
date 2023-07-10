@@ -1,0 +1,7 @@
+#
+# simInt simGetUIHandle(const simChar* uiName)
+#
+
+string uiName
+---
+int32 handle

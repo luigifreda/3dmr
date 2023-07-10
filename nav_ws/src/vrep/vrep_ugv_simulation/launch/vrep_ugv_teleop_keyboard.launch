@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+  <arg name="robot_name" default="ugv1"/>
+
+  <node name="vrep_ugv_teleop_key" pkg="vrep_ugv_simulation" type="vrep_ugv_teleop_key" output="screen">
+        <param name = "robot_name" value = "$(arg robot_name)"/>
+  </node>
+
+</launch>

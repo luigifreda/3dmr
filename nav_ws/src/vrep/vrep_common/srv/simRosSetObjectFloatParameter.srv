@@ -1,0 +1,9 @@
+#
+# simInt simSetObjectFloatParameter(simInt objectHandle,simInt parameterID,simFloat parameter)
+#
+
+int32 handle
+int32 parameter
+float32 parameterValue
+---
+int32 result

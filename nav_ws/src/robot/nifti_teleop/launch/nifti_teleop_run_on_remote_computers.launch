@@ -1,0 +1,10 @@
+<launch>
+
+	<arg name="dev" default="/dev/input/js0" />
+	<arg name="priority_name" default="teleop_joy" />
+	<arg name="transparent_translation" default="false" />
+
+	<include file="$(find nifti_teleop)/launch/nifti_joy.launch" pass_all_args="true">
+	    <remap from="joy" to="teleop_joy/tank_joy" />
+	</include>
+</launch>

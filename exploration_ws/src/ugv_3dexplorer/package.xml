@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ugv_3dexplorer</name>
+  <version>0.0.0</version>
+  <description>The ugv_3dexplorer package - launch files for launching an exploration with tracked UGVs </description>
+
+  <author email="luigifreda@gmail.com">Luigi Freda</author>
+  <maintainer email="luigifreda@gmail.com">Luigi Freda</maintainer>  
+
+  <license>GPLv3</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roslaunch</build_depend>              
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+  </export>
+</package>

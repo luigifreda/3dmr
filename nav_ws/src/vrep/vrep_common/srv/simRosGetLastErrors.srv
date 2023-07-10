@@ -1,0 +1,8 @@
+#
+# simxInt simxGetLastErrors(simxInt* errorCnt,simxChar** errorStrings,simxInt operationMode)
+#
+
+
+---
+int32 errorCnt
+string errorStrings

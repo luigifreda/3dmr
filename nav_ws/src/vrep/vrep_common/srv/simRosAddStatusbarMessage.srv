@@ -1,0 +1,8 @@
+#
+# simInt simAddStatusbarMessage(const simChar* message)
+#
+
+string message
+---
+int32 result
+

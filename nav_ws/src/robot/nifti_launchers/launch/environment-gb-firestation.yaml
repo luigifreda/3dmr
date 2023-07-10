@@ -1,0 +1,7 @@
+# only values different from default-environment.yaml need to be defined here; the default config is always loaded
+
+# UGV Starting Point
+initial_lat: deg(51.902282)
+initial_lon: deg(4.243508)
+initial_altitude: 0.0
+initial_heading: deg(168.0)

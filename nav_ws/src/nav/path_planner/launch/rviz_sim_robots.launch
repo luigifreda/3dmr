@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    
+    <arg name="robot1"  default="sim1"/>
+    <arg name="robot2"  default="sim2"/>
+    <arg name="use_old_robot" default="false" /> <!-- boolean: true, false -->
+        
+        
+    <param name="robot1_name" type="string" value="$(arg robot1)" />
+    <param name="robot2_name" type="string" value="$(arg robot2)" />
+        
+
+    <include file="$(find nifti_robot_description)/launch/load_robot_model.launch">   
+        <arg name="use_old_robot" value="$(arg use_old_robot)" />
+    </include>	
+
+	
+	<node name="rviz_sim_robots" pkg="rviz" type="rviz" respawn="false" args="-d $(find path_planner)/rviz/sim_robots.rviz" >
+        <!--remap to="/$(arg robot)/tf" from="/tf" /-->
+        
+        <!-- the following remappings are needed for the rviz path-planner plugin -->
+        <!-- robot 1  --> 
+        
+        <!--remap to="/$(arg robot1)/marker_controller/feedback"    from="/sim1/marker_controller/feedback" />
+        <remap to="/$(arg robot1)/marker_controller/update"      from="/sim1/marker_controller/update" />
+        <remap to="/$(arg robot1)/marker_controller/update_full" from="/sim1/marker_controller/update_full" /-->
+
+        <remap to="/$(arg robot1)/volumetric_mapping/octomap_pcl"       from="/vrep/ugv1/local_map" />
+        <remap to="/$(arg robot1)/planner/tasks/feedback"               from="/vrep/ugv1/planner/tasks/feedback" />
+        <remap to="/$(arg robot1)/planner/tasks/append"                 from="/vrep/ugv1/planner/tasks/append" />
+        <remap to="/$(arg robot1)/planner/tasks/remove"                 from="/vrep/ugv1/planner/tasks/remove" />
+        <remap to="/$(arg robot1)/planner/waypoints/server"             from="/vrep/ugv1/planner/waypoints/server" />
+        <remap to="/$(arg robot1)/planner/waypoints/server/feedback"    from="/vrep/ugv1/planner/waypoints/server/feedback" />   
+        <remap to="/$(arg robot1)/planner/waypoints/server/update"      from="/vrep/ugv1/planner/waypoints/server/update" /> 
+        <remap to="/$(arg robot1)/planner/waypoints/server/update_full" from="/vrep/ugv1/planner/waypoints/server/update_full" />     
+
+        <!-- robot 2  --> 
+        
+        <!--remap to="/$(arg robot2)/marker_controller/feedback"    from="/sim2/marker_controller/feedback" />
+        <remap to="/$(arg robot2)/marker_controller/update"      from="/sim2/marker_controller/update" />
+        <remap to="/$(arg robot2)/marker_controller/update_full" from="/sim2/marker_controller/update_full" /-->
+        
+        <remap to="/$(arg robot2)/volumetric_mapping/octomap_pcl"       from="/vrep/ugv2/local_map" />
+        <remap to="/$(arg robot2)/planner/tasks/feedback"               from="/vrep/ugv2/planner/tasks/feedback" />
+        <remap to="/$(arg robot2)/planner/tasks/append"                 from="/vrep/ugv2/planner/tasks/append" />
+        <remap to="/$(arg robot2)/planner/tasks/remove"                 from="/vrep/ugv2/planner/tasks/remove" />
+        <remap to="/$(arg robot2)/planner/waypoints/server"             from="/vrep/ugv2/planner/waypoints/server" />   
+        <remap to="/$(arg robot2)/planner/waypoints/server/feedback"    from="/vrep/ugv2/planner/waypoints/server/feedback" />   
+        <remap to="/$(arg robot2)/planner/waypoints/server/update"      from="/vrep/ugv2/planner/waypoints/server/update" /> 
+        <remap to="/$(arg robot2)/planner/waypoints/server/update_full" from="/vrep/ugv2/planner/waypoints/server/update_full" />    
+        <!-- - -->    
+        
+        <!-- other topics remappings  -->
+        
+        <!--remap to="/$(arg robot1)/trav/traversability"   from="/sim1/trav/traversability" />  
+        <remap to="/$(arg robot1)/robot_path"               from="/sim1/robot_path" />  
+        <remap to="/$(arg robot1)/obst_point_cloud"         from="/sim1/obst_point_cloud" />  
+        <remap to="/$(arg robot1)/robot_local_path"         from="/sim1/robot_local_path" />  
+        <remap to="/$(arg robot1)/clustered_pcl/wall"       from="/sim1/clustered_pcl/wall" />  
+         
+        <remap to="/$(arg robot2)/trav/traversability"      from="/sim2/trav/traversability" />  
+        <remap to="/$(arg robot2)/robot_path"               from="/sim2/robot_path" />  
+        <remap to="/$(arg robot2)/obst_point_cloud"         from="/sim2/obst_point_cloud" />  
+        <remap to="/$(arg robot2)/robot_local_path"         from="/sim2/robot_local_path" />  
+        <remap to="/$(arg robot2)/clustered_pcl/wall"       from="/sim2/clustered_pcl/wall" /-->     
+            
+            
+                
+	</node> 
+    
+</launch>
+

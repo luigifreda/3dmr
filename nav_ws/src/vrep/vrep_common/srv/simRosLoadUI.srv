@@ -1,0 +1,8 @@
+#
+# simxInt simxLoadUI(const simxChar* uiPathAndName,simxChar options,simxInt* count,simxInt** uiHandles,simxInt operationMode)
+#
+
+string fileName
+---
+int32 result
+int32[] uiHandles

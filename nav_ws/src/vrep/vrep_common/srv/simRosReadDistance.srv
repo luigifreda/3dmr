@@ -1,0 +1,8 @@
+#
+# simInt simReadDistance(simInt distanceObjectHandle,simFloat* smallestDistance)
+#
+
+int32 handle
+---
+int32 result
+float32 distance

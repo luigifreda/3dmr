@@ -1,0 +1,7 @@
+#
+# simxInt simxEraseFile(const simxChar* fileName_serverSide,simxInt operationMode)
+#
+
+string fileName
+---
+int32 result

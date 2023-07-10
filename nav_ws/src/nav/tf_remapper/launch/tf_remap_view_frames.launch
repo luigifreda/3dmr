@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+
+
+<launch>
+      
+
+    <!-- here we have to list all the frames we want to rename -->
+    <arg name="mappings" default="
+            [
+             {old: map, new: map1}, {old: /map, new: map1}
+            ]
+    "/> 
+   
+   <!-- ===================================================================================================== -->
+      
+    <node pkg="tf" type="tf_remap" name="tf_remapper" output="screen">
+        <rosparam param="mappings" subst_value="true">$(arg mappings)</rosparam>
+    </node>
+    
+            
+    <!-- this will create a file frames.pdf in your home folder ".ros" -->
+    <node pkg="tf" type="view_frames" name="frames_viewer" output="screen" respawn="true">
+       <!--remap from="tf" to="tf_old"/--> <!-- this is not needed here since we want the new remapped tf -->
+    </node>
+    
+
+</launch>

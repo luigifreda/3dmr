@@ -1,0 +1,31 @@
+# only values different from default-robot.yaml need to be defined here; the default config is always loaded
+
+parts_config:
+  has_jaco_arm: False
+  jaco_uses_wpi: False
+  jaco_x_offset: 0.47
+  jaco_y_offset: 0.18
+
+viz:
+  camera1394_driver:
+    guid: '00b09d01009f01ae'
+  lady_saw:
+    camera_name_format: '00b09d01009f01ae_1232x1616_c%i'
+
+omnicam_sensors_calib:
+  transforms:
+  - [0.041816, -0.001886, -0.000286, -0.502583, 0.500777, -0.499213, 0.497413, 'omnicam', 'camera_0']
+  - [0.010741, -0.040009, -0.000637, -0.112438, 0.699965, -0.696983, 0.107805, 'omnicam', 'camera_1']
+  - [-0.034610, -0.022933, -0.000127, -0.317435, -0.632127, 0.628601, 0.323281, 'omnicam', 'camera_2']
+  - [-0.032944, 0.025897, 0.000492, -0.630159, -0.319783, 0.324052, 0.628990, 'omnicam', 'camera_3']
+  - [0.014997, 0.038933, 0.000557, -0.700080, 0.113322, -0.109574, 0.696448, 'omnicam', 'camera_4']
+  - [0.000226, -0.000900, 0.062251, 0.000000, -0.000000, -0.704670, 0.709535, 'omnicam', 'camera_5']
+
+# Name of the robot for High-Level Database purposes
+actor_name: 'Tango'
+
+# ubnt bullet hostname for RSSI monitoring
+bullet_hostname: tno-robot-bullet
+
+# inso calibration parameter - rotation matrix aligning tracks and body frame
+inso_TracksIMUAlignment: '[ 0.9999452, 0.0000000, -0.0104718; 0.0000000, 1.0000000, 0.0000000; 0.0104718, 0.0000000, 0.9999452 ]'

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+	
+	  <arg name="robot_name" default="ugv2" />
+	  <arg name="simulator" default="/vrep" />
+	  
+	  <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+	  
+	  <arg name="use_queue_path_planner" default="true" /> <!-- select which planner do you want; 
+														     the domain is boolean: true  -> queue_path_planner
+																					false -> path_planner
+														      
+														     -->
+                                                             
+      <arg name="enable_multi"     default="true"/>  <!-- enable/disable multi-robot coordination -->	
+      <arg name="number_of_robots" default="2"/> 
+      <arg name="lambda_trav"      default="1.0"/>        
+	  	
+	 <include file="$(find path_planner)/launch/sim_main_path_planner_$(arg robot_name).launch">
+		  <arg name="simulator" value="$(arg simulator)" />
+		  <arg name="respawn_value" value="$(arg respawn_value)" />
+		  <arg name="use_queue_path_planner" value="$(arg use_queue_path_planner)" />
+          
+          <arg name="robot_name"       value="$(arg robot_name)" />													     	
+          <arg name="enable_multi"     value="$(arg enable_multi)"/>  
+          <arg name="number_of_robots" value="$(arg number_of_robots)" /> 	
+	      <arg name="lambda_trav"      value="$(arg lambda_trav)"/>             
+          
+	 </include>
+
+</launch>

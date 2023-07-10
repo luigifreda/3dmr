@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    
+  <arg name="map" default="pioneer" />                         <!-- filename relative to the folder $(find vrep_pioneer_simulation)/data/ -->
+  <arg name="scene" default="$(find vrep_pioneer_simulation)/data/$(arg map).ttt" />   <!-- absolute filename  --> 
+  
+  <arg name="headless" default="0" />  <!-- 	0 launch VREP in normal mode (you have to press the button play to start)
+						1 launch VREP in normal mode and automatically start it	 (you will not be able to pause!) -->
+
+
+  <arg name="hid" default="0" />
+  <arg name="use_telop" default="true" />
+
+  <!--include file="$(find vrep_pioneer_simulation)/launch/sim_pioneer.launch">   
+  </include-->
+
+  <arg name="model" default="$(find p3dx_description)/urdf/pioneer3dx.xml"/>
+  <param name="robot_description" textfile="$(arg model)" />  	
+  
+  
+  <node name="vrep_pioneer_simulation" pkg="vrep_pioneer_simulation" type="vrep_ugv_simulation" args="$(arg scene) $(arg headless)" />
+
+  <!--include file="$(find vrep_pioneer_simulation)/launch/vrep_ugv_teleop_keyboard.launch" unless="$(arg hid)" /-->
+  <include file="$(find vrep_pioneer_simulation)/launch/vrep_ugv_teleop_keyboard2.launch" unless="$(arg hid)" />
+    
+  <!--include file="$(find vrep_pioneer_simulation)/launch/vrep_ugv_teleop_joy.launch" if="$(arg hid)" /-->
+  
+  <!--include file="$(find vrep_pioneer_simulation)/launch/vrep_ugv_teleop_joy.launch" if="$(arg use_telop)" /-->
+  
+</launch>

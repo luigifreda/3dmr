@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+echo "usage: ./${0##*/} <num-robots>"
+
+
+export DEST_FOLDER="/tmp"
+export NUM_ROBOTS=5
+
+
+echo "saving map"
+
+echo "trying to save shared map"
+rosservice call /volumetric_mapping/save_map "file_path: '$DEST_FOLDER/map.bt'"
+
+# save the map in the volumetric mapping system of each robot (for independent volumetric mapping systems)
+for i in `seq 1 $NUM_ROBOTS`;
+do
+	echo "trying to save ugv$i map"
+	rosservice call /volumetric_mapping_ugv$i/save_map "file_path: '$DEST_FOLDER/map_ugv$i.bt'"
+done
+
+echo "trying to save the trajectory"  
+# this works only for ugv1 or ugv2 (do not use other robots)
+rosservice call /robot_trajectory_saver_node/save_robot_trajectories_only "file_path: '$DEST_FOLDER/trajectory.dot'"
+
+echo DONE
+
+

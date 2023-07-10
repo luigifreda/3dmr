@@ -1,0 +1,39 @@
+# speed limits
+max_linear: 0.3
+max_angular: 1.0
+max_linear_run: 0.6
+max_angular_run: 2.0
+max_scanning_speed: 1.20
+tracks_distance: 0.397
+
+nifti_teleop_joy: {
+	# joystick axes
+	axis_linear: 1,
+	axis_angular: 0,
+	flipper_axis: 5,
+	scanning_speed_axis: 4,
+	# joystick buttons
+	deadman_button: 1,
+	run_button: 0,
+	enable_button: 9,
+	differential_brake_button: 8,
+	flipper_reset_button: 3,
+	front_left_flipper_button: 4,
+	front_right_flipper_button: 5,
+	rear_left_flipper_button: 6,
+	rear_right_flipper_button: 7,
+	# increments
+	scanning_speed_increment: 0.2,
+	flipper_increment: 20*pi/180.,
+	# topic names
+	cmd_vel_topic: '/cmd_vel',
+	flippers_cmd_topic: '/flippers_cmd',
+	flipper_cmd_topic: '/flipper_cmd',
+	flippers_state_topic: '/flippers_state',
+	brake_topic: '/brake',
+	enable_topic: '/enable',
+	scanning_speed_topic: '/scanning_speed_cmd',
+	robot_status_topic: '/robot_status',
+	joy_topic: '/joy',
+	laser_center_topic: '/laser_center'
+}  

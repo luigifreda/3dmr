@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+  <node name="vrep_ugv_teleop_key" pkg="vrep_ugv_simulation" type="vrep_ugv_teleop_key_robot" />
+</launch>

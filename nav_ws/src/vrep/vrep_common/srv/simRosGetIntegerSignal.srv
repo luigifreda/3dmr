@@ -1,0 +1,8 @@
+#
+# simInt simGetIntegerSignal(const simChar* signalName,simInt* signalValue)
+#
+
+string signalName
+---
+int32 result
+int32 signalValue

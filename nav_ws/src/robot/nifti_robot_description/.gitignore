@@ -1,0 +1,5 @@
+*~
+.*.sw[op]
+.idea
+*.gradle
+CMakeLists.txt.user

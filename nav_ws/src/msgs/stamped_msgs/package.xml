@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>stamped_msgs</name>
+
+  <version>1.0.0</version>
+
+  <description>std_msgs with headers (timestamps).</description>
+
+  <maintainer email="martin.pecka@cvut.cz">Martin Pecka</maintainer>
+  <maintainer email="freda@diag.uniroma1.it">Luigi Freda</maintainer>
+  
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>message_generation</build_depend>
+
+  <depend>std_msgs</depend>
+  
+  <exec_depend>message_runtime</exec_depend>
+</package>

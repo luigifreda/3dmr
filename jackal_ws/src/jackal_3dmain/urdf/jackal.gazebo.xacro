@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<robot name="jackal_gazebo" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="jackal_gazebo" params="name frame_prefix topic_prefix imuRate:=100 cameraRate:=30">
+
+    <!-- different management if we don't want multiple robots -->
+    <xacro:if value="${(frame_prefix == '')}">
+      <xacro:property name="namespace" value="" />
+    </xacro:if>
+    <xacro:unless value="${(frame_prefix == '')}">  
+      <xacro:property name="namespace" value="${name}" />  
+    </xacro:unless>  
+
+    <gazebo>
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        <robotNamespace>/${namespace}</robotNamespace>
+        <!--robotParam>robot_description</robotParam-->
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
+        <updateRate>10</updateRate>
+        <robotNamespace>/</robotNamespace>
+        <bodyName>${frame_prefix}navsat_link</bodyName>
+        <frameId>base_link</frameId>
+        <topicName>${topic_prefix}/gps/fix</topicName>
+        <velocityTopicName>${topic_prefix}/gps/vel</velocityTopicName>
+        <referenceLatitude>49.9</referenceLatitude>
+        <referenceLongitude>8.9</referenceLongitude>
+        <referenceHeading>0</referenceHeading>
+        <referenceAltitude>0</referenceAltitude>
+        <drift>0.0001 0.0001 0.0001</drift>
+      </plugin>
+    </gazebo>
+
+    <gazebo>
+      <plugin name="imu_controller" filename="libhector_gazebo_ros_imu.so">
+        <robotNamespace>/</robotNamespace>
+        <updateRate>${imuRate}</updateRate>
+        <bodyName>${frame_prefix}imu_link</bodyName>
+        <topicName>${topic_prefix}imu/data</topicName>
+        <accelDrift>0.005 0.005 0.005</accelDrift>
+        <accelGaussianNoise>0.005 0.005 0.005</accelGaussianNoise>
+        <rateDrift>0.005 0.005 0.005 </rateDrift>
+        <rateGaussianNoise>0.005 0.005 0.005 </rateGaussianNoise>
+        <headingDrift>0.005</headingDrift>
+        <headingGaussianNoise>0.005</headingGaussianNoise>
+      </plugin>
+    </gazebo>
+    
+    <gazebo reference="${frame_prefix}base_link">
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <gazebo reference="${frame_prefix}chassis_link">
+      <material>Gazebo/DarkGrey</material>
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <gazebo reference="${frame_prefix}imu_link">
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <gazebo reference="${frame_prefix}navsat_link">
+      <material>Gazebo/DarkGrey</material>
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <gazebo reference="${frame_prefix}front_fender_link">
+      <material>Gazebo/Yellow</material>
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <gazebo reference="${frame_prefix}rear_fender_link">
+      <material>Gazebo/Yellow</material>
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <!--Ground Truth-->
+    <gazebo>
+        <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>60.0</updateRate>
+        <bodyName>${frame_prefix}base_link</bodyName>
+        <topicName>${topic_prefix}ground_truth/base_link_odom</topicName>
+        <gaussianNoise>0.00</gaussianNoise>
+        <frameName>world</frameName>
+        <xyzOffsets>0 0 0</xyzOffsets>
+        <rpyOffsets>0 0 0</rpyOffsets>
+        </plugin>
+    </gazebo>
+
+    <!-- Camera -->
+    <gazebo reference="${frame_prefix}camera_link">
+      <sensor type="camera" name="camera">
+        <update_rate>${cameraRate}</update_rate>
+        <camera name="head">
+          <horizontal_fov> 1.9199</horizontal_fov> <!-- 110 degs-->
+          <image>
+            <width>1280</width>
+            <height>720</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>300</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <!-- Noise is sampled independently per pixel on each frame.
+                That pixel's noise value is added to each of its color
+                channels, which at that point lie in the range [0,1]. -->
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>0.0</updateRate>
+          <cameraName>camera</cameraName>
+          <imageTopicName>${topic_prefix}image_raw</imageTopicName>
+          <cameraInfoTopicName>${topic_prefix}camera_info</cameraInfoTopicName>
+          <frameName>${frame_prefix}camera_link</frameName>
+          <!-- setting hackBaseline to anything but 0.0 will cause a misalignment
+            between the gazebo sensor image and the frame it is supposed to
+            be attached to -->        
+          <hackBaseline>0.0</hackBaseline>
+          <distortionK1>0.0</distortionK1>
+          <distortionK2>0.0</distortionK2>
+          <distortionK3>0.0</distortionK3>
+          <distortionT1>0.0</distortionT1>
+          <distortionT2>0.0</distortionT2>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

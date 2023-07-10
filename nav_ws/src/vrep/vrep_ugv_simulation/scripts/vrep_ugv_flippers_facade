@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+import rospy
+import nifti_robot_driver_msgs.msg
+import vrep_common.srv
+
+def main():
+
+    rospy.init_node('vrep_ugv_flippers_facade')
+    robot_name = rospy.get_param('~robot_name', 'ugv1')
+    print('using robot: %s' % robot_name)
+               
+    rospy.wait_for_service('/vrep/simRosGetObjectHandle')
+    rospy.wait_for_service('/vrep/simRosGetJointState')
+
+    get_handle = rospy.ServiceProxy('/vrep/simRosGetObjectHandle', vrep_common.srv.simRosGetObjectHandle, persistent=True)
+    get_joint_state = rospy.ServiceProxy('/vrep/simRosGetJointState', vrep_common.srv.simRosGetJointState, persistent=True)
+
+    flippers_pub = rospy.Publisher('/vrep/'+robot_name+'/flippers_state', nifti_robot_driver_msgs.msg.FlippersStateStamped, queue_size=10)
+
+    fl_flipper_handle = get_handle("front_left_flipper_j").handle
+    fr_flipper_handle = get_handle("front_right_flipper_j").handle
+    rl_flipper_handle = get_handle("rear_left_flipper_j").handle
+    rr_flipper_handle = get_handle("rear_right_flipper_j").handle
+
+    rate = rospy.Rate(20)
+    while not rospy.is_shutdown():
+        msg = nifti_robot_driver_msgs.msg.FlippersStateStamped()
+        msg.header.stamp = rospy.Time.now()
+
+        msg.frontLeft = get_joint_state(fl_flipper_handle).state.position[0]
+        msg.frontRight = -get_joint_state(fr_flipper_handle).state.position[0]
+        msg.rearLeft = get_joint_state(rl_flipper_handle).state.position[0]
+        msg.rearRight = -get_joint_state(rr_flipper_handle).state.position[0]
+
+        flippers_pub.publish(msg)
+
+        rate.sleep()
+
+if __name__ == '__main__':
+    main()

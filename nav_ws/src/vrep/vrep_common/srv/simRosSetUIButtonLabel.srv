@@ -1,0 +1,10 @@
+#
+# simInt simSetUIButtonLabel(simInt uiHandle,simInt buttonHandle,const simChar* upStateLabel,const simChar* downStateLabel)
+#
+
+int32 uiHandle
+int32 buttonID
+string upStateLabel
+string downStateLabel
+---
+int32 result

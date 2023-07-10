@@ -1,0 +1,9 @@
+#
+# simInt simReadVisionSensor(simInt visionSensorHandle,simFloat** auxValues,simInt** auxValuesCount)
+#
+
+int32 handle
+---
+int32 result
+float32[] packetData
+int32[] packetSizes

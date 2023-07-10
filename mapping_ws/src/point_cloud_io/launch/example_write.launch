@@ -1,0 +1,21 @@
+<launch>
+
+  <!-- Play bag file containing point clouds -->
+  <node pkg="rosbag" type="play" name="bag_player" output="screen" args="--clock $(find point_cloud_io)/examples/some_cows.bag"/>
+  
+  <!-- Write point clouds to file -->
+  <node pkg="point_cloud_io" type="write" name="write" output="screen">
+    <param name="topic"                  value="/point_cloud" />
+    <param name="folder_path"            value="$(find point_cloud_io)/examples" />
+    <param name="file_prefix"            value="received_cloud" />
+    <param name="file_ending"            value="ply" />
+    <param name="add_counter_to_path"    value="true" />
+    <param name="add_frame_id_to_path"   value="true" />
+    <param name="add_stamp_sec_to_path"  value="true" />
+    <param name="add_stamp_nsec_to_path" value="true" />
+  </node>
+    
+  <!-- Visualize the point cloud in rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find point_cloud_io)/examples/point_cloud_io.rviz" />
+    
+</launch>

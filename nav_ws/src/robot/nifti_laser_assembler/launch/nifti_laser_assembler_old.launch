@@ -1,0 +1,12 @@
+<launch>
+    <!-- This launch file needs robot.yaml to be loaded by nifti_robot_description/load_robot_model.launch. This is done e.g. from robot_node.launch or play_ugv_min.launch. -->
+
+	<node type="nifti_laser_assembler_old" pkg="nifti_laser_assembler"
+			name="nifti_laser_assembler_old" output="screen">
+		<param name="publish_in_motion" value="false"/>
+		<param name="time_offset" value="-0.025" />
+		<!--param name="min_distance" value="0.10" /-->
+		<param name="shadow_filter_min_angle" value="0.14" />
+		<param name="using_gmapping" value="false" />
+	</node>
+</launch>

@@ -1,0 +1,9 @@
+#
+# simInt simSetObjectIntParameter(simInt objectHandle,simInt parameterID,simInt parameter)
+#
+
+int32 handle
+int32 parameter
+int32 parameterValue
+---
+int32 result

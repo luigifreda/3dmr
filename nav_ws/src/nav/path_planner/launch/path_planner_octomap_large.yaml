@@ -1,0 +1,29 @@
+ClusteringPcl:
+  max_superable_height: 0.2
+  normal_clustering_thres: 0.1
+  normal_radius_search: 0.3
+  pcl_cluster_tolerance: 0.3
+DynamicJoinPcl:
+  bucket_volume_model_type: 0
+  colorize_points: true
+  global_frame: map
+  laser_frame: laser
+  leaf_size: 0.035
+  mean_k: 50
+  min_neighbors: 3
+  num_subdivisions: 50
+  outlier_removal: 2
+  radius_near: 5.0
+  radius_search: 0.1
+  ransac_distance_threshold: 0.05
+  ransac_min_inliers: 4
+  stddev_mul_thresh: 1.0
+NormalEstimationPcl:
+  flatness_curvature_threshold: 0.4
+  kernel_type: 0
+  laser_frame: laser
+  num_threads: 1
+  radius: 0.3   # large radius
+  smoothing: 1.0
+TravAnal:
+  foo: 0.3

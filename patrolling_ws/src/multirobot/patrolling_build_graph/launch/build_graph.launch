@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>  
+    
+    <arg name="robot_name" default="ugv1"/>
+    
+    <arg name="map" default="/vrep"/>
+    <arg name="user_build_graph" default="true"/>
+    
+    <node name="patrolling_build_graph" pkg="patrolling_build_graph" type="patrolling_build_graph" output="screen" launch-prefix="gdb -ex run --args"> 
+        
+        <param name="filename" value="$(find patrolling3d_sim)/maps/$(arg map)/$(arg map).graph" />
+                
+        <param name="interactive" value="$(arg user_build_graph)"/>
+        
+        <param name="node_branching_factor"    value="3"/>
+        <param name="node_max_dist_neighbours" value="5"/>
+        
+        <param name="path_planner_service_name" value="/$(arg robot_name)/path_planning_service"/>
+        <param name="pcl_wall_topic"            value="/$(arg robot_name)/clustered_pcl/wall"/>
+        <param name="pcl_traversability_topic"  value="/$(arg robot_name)/trav/traversability"/>
+        <param name="cancel_graph_topic"        value="/$(arg robot_name)/planner/tasks/remove"/>
+                
+        <param name="traj_robot_saver_check_path_service_name" value="/robot_trajectory_saver_node/check_path"/>
+        <param name="build_graph_event_topic" value="/build_graph_event"/>
+        <param name="graph_topic" value="/patrolling/graph" />
+        
+        <!--param name="pcl_traversability_topic" value="/volumetric_mapping/octomap_pcl"/-->
+        
+    </node>          
+</launch>
+
+
+

@@ -1,0 +1,52 @@
+<launch>
+    <!-- This launch file needs robot.yaml to be loaded by nifti_robot_description/load_robot_model.launch. This is done e.g. from robot_node.launch or play_ugv_min.launch. -->
+
+	<arg name="assemble_cloud_without_bbox" default="true" />
+
+	<node type="nifti_laser_assembler" pkg="nifti_laser_assembler"
+			name="nifti_laser_assembler" output="screen">
+        <param name="laser_frame" value="laser"/>
+        <param name="robot_frame" value="base_link"/>
+        <param name="world_frame" value="odom"/>
+
+        <param name="max_size"       value="1000000"/>
+
+        <!-- Deprecated functionality from NIFTi. -->
+        <param name="using_gmapping" value="false"/>
+        <param name="publish2d"      value="false"/>
+        <param name="relay_scans"    value="false"/>
+
+        <!-- Subscribed -->
+        <remap from="scan"               to="scan_filtered"/>  <!-- DEPRECATED, not used. -->
+        <remap from="scan_point_cloud"   to="scan_point_cloud_color"/>
+        <remap from="pointcloud_control" to="pointcloud_control"/>
+        <!-- Advertised -->
+        <remap from="scan2d"              to="scan2d"/>
+        <remap from="scan_relay"          to="scan_relay"/>
+        <remap from="static_point_cloud"  to="static_point_cloud"/>
+        <remap from="dynamic_point_cloud" to="dynamic_point_cloud"/>
+	</node>
+
+        <node type="nifti_laser_assembler" pkg="nifti_laser_assembler"
+			name="nifti_laser_assembler_no_bbox" output="screen" if="$(arg assemble_cloud_without_bbox)">
+        <param name="laser_frame" value="laser"/>
+        <param name="robot_frame" value="base_link"/>
+        <param name="world_frame" value="odom"/>
+
+        <param name="max_size"       value="1000000"/>
+
+        <!-- Deprecated functionality from NIFTi. -->
+        <param name="using_gmapping" value="false"/>
+        <param name="publish2d"      value="false"/>
+        <param name="relay_scans"    value="false"/>
+
+        <!-- Subscribed -->
+        <remap from="scan_point_cloud"   to="scan_point_cloud_no_bbox"/>
+        <remap from="pointcloud_control" to="pointcloud_control_no_bbox"/>
+        <!-- Advertised -->
+        <remap from="scan2d"              to="scan2d_no_bbox"/>
+        <remap from="scan_relay"          to="scan_relay_no_bbox"/>
+        <remap from="static_point_cloud"  to="static_point_cloud_no_bbox"/>
+        <remap from="dynamic_point_cloud" to="dynamic_point_cloud_no_bbox"/>
+	</node>
+</launch>

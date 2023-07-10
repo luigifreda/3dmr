@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+  
+  <arg name="robot_name" default="ugv1" />
+  <arg name="robot_topic_prefix" default="$(arg robot_name)/" />  <!-- prefix for topics, must be with final slash -->
+  <arg name="robot_frame_prefix" default="$(arg robot_name)/" />  <!-- prefix for frames, must be with final slash -->
+  <arg name="robot_model" default="$(find jackal_3dmain)/urdf/jackal.urdf.xacro"/>
+
+  <arg name="x" default="0" />
+  <arg name="y" default="0" />
+  <arg name="z" default="2" />
+  <arg name="yaw" default="0" />
+
+  <!-- Select only one among OS0, OS1, VPL16-->  
+  <arg name="OS0" default="false" />
+  <arg name="OS1" default="false" />
+  <arg name="VLP16" default="false" />
+
+  <arg name="imuRate" default="200" />
+  <arg name="cameraRate" default="30" />
+
+  <arg name="organize_cloud" default="false" />
+
+  <!-- load jackal description -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(arg robot_model)'
+    robot_name:=$(arg robot_name)  
+    robot_topic_prefix:=$(arg robot_topic_prefix)
+    robot_frame_prefix:=$(arg robot_frame_prefix)    
+    OS0:=$(arg OS0) OS1:=$(arg OS1) VLP16:=$(arg VLP16) 
+    imuRate:=$(arg imuRate) 
+    cameraRate:=$(arg cameraRate)
+    organize_cloud:=$(arg organize_cloud)"/>
+
+  <!-- state publisher -->
+  <node pkg="robot_state_publisher"
+    type="robot_state_publisher" name="robot_state_publisher_$(arg robot_name)">
+        <!--remap from="robot_description" to="robot_description"/-->
+        <!--remap from="/joint_states" to="/joint_states" /-->    
+        <param name="publish_frequency" type="double" value="30.0" />
+  </node>
+
+
+</launch>

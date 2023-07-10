@@ -1,0 +1,7 @@
+#
+# simInt simGetCollisionHandle(const simChar* collisionObjectName)
+#
+
+string collisionName
+---
+int32 handle

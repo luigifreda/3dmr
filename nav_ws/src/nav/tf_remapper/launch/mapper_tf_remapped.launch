@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+
+<launch>
+      
+    <remap from="tf" to="tf_old"/>
+              
+    <!-- here you list all the robot launch files we want to use -->              
+
+	<include file="$(find nifti_mapping_launchers)/launch/nifti_laser_assembler.launch"/>
+        
+    <!-- ROS parameters -->
+    <rosparam command="load" file="$(find laser_mapper)/launch/nifti_sick/ros_parameters_outdoor.yaml"/>
+    
+    <include file="$(find laser_mapper)/launch/laser_mapper.launch">
+        <arg name="icp_configuration_file" value="$(find laser_mapper)/launch/nifti_sick/icp.yaml"/>
+        <arg name="icp_input_filters_file" value="$(find laser_mapper)/launch/nifti_sick/input_filters.yaml"/>
+    </include>  
+    
+</launch>

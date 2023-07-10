@@ -1,0 +1,104 @@
+#!/bin/bash
+# Author: Luigi Freda 
+
+# N.B.: 
+# 1) this script is designed just for testing the path planning nodes; no SLAM nodes are called; SLAM is assumed to be faked by a proper V-REP environment
+# 2) you can kill all the spawned terminals together by right clicking on the X icon on the left bar and selecting "Quit"
+
+
+export LAUNCH_VREP=1      # 1 automatic launch of VREP, 0 no automatic launch
+export LAUNCH_VREP_MODE=1 # 0 launch VREP in normal mode (you have to press the button play to start)
+	                        # 1 launch VREP in normal mode and automatically start it (you will not be able to pause!)
+
+# ================  Values set by default if none is given ============
+# the following worlds are available in the folder "pioneer_ws/src/pioneer_nav/vrep_pioneer_simulation/data"
+declare -A worlds
+worlds=(
+	#["corridor_test1"]="1" # ["world_name"]="num_robots"
+	["pioneer"]="1"
+	["pioneer2"]="2"
+	["rooms1_pioneer"]="1"  
+	["rooms2_pioneer"]="2"
+	["rooms2_pioneer_new"]="2"m
+	["rooms3_pioneer"]="3"
+	["3Drings2"]="2"
+  ["pioneer_test"]="1"
+)
+
+# select the world for the exploration simulation: specify here the world name you want
+WORLD_NAME="3Drings2"
+
+export NUM_ROBOTS="${worlds[$WORLD_NAME]}"
+#NUM_ROBOTS=1 # you could also override NUM_ROBOTS for debugging or other reasons
+#======================================================================
+
+export XTERM_OPTIONS="-hold -iconic" # the "iconic" option allows to automatically minimize all the launched xterms
+
+########################################################################################################
+
+if [[ -z "${MR3D_HOME}" ]]; then
+    echo "ERROR: missing env var MR3D_HOME"
+    echo "please, source source_all.bash in the main 3DMR folder"
+    exit 
+else
+    source $MR3D_HOME/source_all.bash
+fi
+
+########################################################################################################
+
+if [[ -z "${LAUNCH_VREP_MODE_ENV}" ]]; then
+  #using default value
+  true
+else
+  LAUNCH_VREP_MODE="${LAUNCH_VREP_MODE_ENV}"
+  echo "set from env var - LAUNCH_VREP_MODE: $LAUNCH_VREP_MODE"  
+fi
+
+if [[ -z "${ENABLE_MULTI_ROBOT_COORDINATION}" ]]; then
+    ENABLE_MULTI_ROBOT_COORDINATION="true"
+fi
+
+if [[ -z "${ENABLE_TEB_LOCAL_PLANNER}" ]]; then
+    ENABLE_TEB_LOCAL_PLANNER=0
+fi
+
+if [[ -z "${ENABLE_VOXBLOX}" ]]; then
+    ENABLE_VOXBLOX=0
+fi
+
+########################################################################################################
+#- VREP
+
+if [ $LAUNCH_VREP -eq 1 ]; then
+    echo "launching vrep"
+    open_term VREP "echo vrep; roslaunch vrep_pioneer_simulation vrep_pioneer_simulation.launch map:=$WORLD_NAME headless:=$LAUNCH_VREP_MODE; bash" &
+    sleep 8
+fi
+
+########################################################################################################
+#- RVIZ
+
+open_term RVIZ "echo rviz; roslaunch pioneer_3dnav rviz_sim_path_planning.launch; bash" &
+
+
+########################################################################################################
+#- PATH PLANNERS
+
+for i in `seq 1 $NUM_ROBOTS`; do
+  echo launching robot ugv$i
+  roslaunch p3dx_description rviz_p3dx_ugv1.launch robot_name:="ugv$i" & 
+	rosrun pioneer_3dnav sim_launcher_ugv $i $ENABLE_MULTI_ROBOT_COORDINATION $ENABLE_TEB_LOCAL_PLANNER $ENABLE_VOXBLOX  
+  sleep 1
+done  
+
+########################################################################################################
+
+echo DONE 
+
+# NOTE: you can use the following command to get the xterm window live if the app terminates or crashes
+# xterm $XTERM_OPTIONS -e "<you_command>; bash" &
+
+                                                   
+
+
+

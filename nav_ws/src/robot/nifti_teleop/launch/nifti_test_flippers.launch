@@ -1,0 +1,14 @@
+<launch>
+	<node pkg="joy" type="joy_node" name="joy_node" >
+		<param name="dev" value="/dev/input/by-id/usb-Logitech_Logitech_Cordless_RumblePad_2-joystick" />
+		<param name="autorepeat_rate" value="10.0" />
+	</node>
+
+	<node pkg="nifti_robot_driver" type="nifti_robot_node"
+		name="nifti_robot_node" output="screen" />
+
+	<node pkg="nifti_teleop" type="nifti_test_flippers.py"
+		name="nifti_test_flippers" output="screen">
+	</node>
+
+</launch>

@@ -1,0 +1,12 @@
+#request position
+float32[] x_position
+float32[] y_position
+float32[] z_position
+
+#request source id 
+int32 source
+
+---
+#response corresponding RSS values in dBm
+float32[] rssi_m
+float32[] rssi_var

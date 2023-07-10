@@ -1,0 +1,9 @@
+#
+# simInt simReadForceSensor(simInt objectHandle,simFloat* forceVector,simFloat* torqueVector)
+#
+
+int32 handle
+---
+int32 result
+geometry_msgs/Vector3 force
+geometry_msgs/Vector3 torque

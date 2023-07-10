@@ -1,0 +1,35 @@
+# CMake
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+*~
+.DS_Store
+
+# Eclipse
+.project
+.cproject
+.directory
+
+build/*
+bin/*
+lib/*
+
+# Generated header file.
+include/message_logger/log/log_messages_backend_config.hpp

@@ -1,0 +1,9 @@
+#
+# 
+# ...
+
+int32[] handles
+uint8[] setModes
+float32[] values
+---
+int32 result

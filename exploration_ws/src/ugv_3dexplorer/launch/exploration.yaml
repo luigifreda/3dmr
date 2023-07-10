@@ -1,0 +1,82 @@
+# System 
+system/v_max: 0.2
+system/dyaw_max: 0.75
+system/camera/verticalFov: 90
+
+system/robot/robotSensorHeight: 0.07    # height of the sensor (along ROS z) w.r.t. robot body (do not put it to zero otherwise with a rough octomap resolution there will be troubles)
+
+# this is a soft collision checking for verifying visibility and not if robot is able to pass along the path (that is a task of path-planner)
+system/bbx/x: 0.01
+system/bbx/y: 0.01
+system/bbx/z: 0.01
+system/bbx/overshoot: 0.0
+
+# team Model
+team/conflict_distance: 2.5 # distance for node conflict checking
+
+# NBVP
+nbvp/gain/unmapped: 1.0
+nbvp/gain/free: 0.0
+nbvp/gain/occupied: 0.0
+nbvp/gain/probabilistic: 0.0
+# new
+#nbvp/gain/unmapped: 100.0
+#nbvp/gain/free: 0.0
+#nbvp/gain/occupied: 10.0
+#nbvp/gain/probabilistic: 1.0
+nbvp/gain/area: 0.0
+
+nbvp/gain/range: 5.0             # NOTE: without a space filter this should match the set octomap value `sensor_max_range: 5.0` below 
+nbvp/gain/zero: 20.0             # minimum gain
+nbvp/gain/degressive_coeff: 0.2            # 0.2
+
+nbvp/tree/extension_range: 0.45            # minimum step (edge length) on the search trees; N.B. this cannot be too high otherwise the search trees do not succeed to actually grow and capture the terrain connectivity
+nbvp/tree/frontier_clustering_radius: 1.0  # should be bigger than extension_range
+nbvp/tree/num_edge_steps: 5                # not used
+nbvp/tree/expl_step: 3.0                   # maximum distance to new selected node on the exploration tree
+nbvp/tree/exact_root: true
+nbvp/tree/initial_iterations: 15
+nbvp/tree/cuttoff_iterations: 200
+
+nbvp/dt: 0.1
+
+nbvp/log/throttle: 0.25
+nbvp/log/on: false
+
+# downsample traversability
+nbvp/downsample_traversability: true
+nbvp/downsample_trav_resolution: 0.1
+
+# bounding box: necessary to limit the simulation
+# scenario (smaller than actual gazebo scenario)
+bbx/minX: -100.0
+bbx/minY: -100.0
+bbx/minZ: -100.0
+bbx/maxX: 100.0
+bbx/maxY: 100.0
+bbx/maxZ: 100.0
+bbx/softBounds: false
+
+pcl_throttle: 0.1
+inspection_throttle: 0.1
+
+# scan history manager 
+scan_history/tf_frame: "map"
+scan_history/tf_cache_length: 20 
+scan_history/pose_cache_time_length: 1000 # longer pose cache for better spatial sampling 
+scan_history/pcl_throttle: 10
+scan_history/dist_pose_thres: 1
+scan_history/rot_pose_thres: 45 # set in angles
+
+# octomap params
+tf_frame: "map"
+tf_cache_length: 40.0
+resolution: 0.3  # 0.3
+probability_hit: 0.75   # 0.65
+probability_miss: 0.4
+threshold_min: 0.12
+threshold_max: 0.97
+threshold_occupancy: 0.7
+visualize_max_z: 1000
+sensor_max_range: 5.0
+map_publish_frequency: 1.0

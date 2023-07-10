@@ -1,0 +1,5 @@
+<launch>
+	<arg name="dev" default="/dev/input/js0" />
+
+	<include file="$(find nifti_teleop)/launch/nifti_ugv_teleop.launch" pass_all_args="true" />
+</launch>

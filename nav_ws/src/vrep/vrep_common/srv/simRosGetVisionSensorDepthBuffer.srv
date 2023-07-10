@@ -1,0 +1,9 @@
+#
+# simxInt simxGetVisionSensorDepthBuffer(simxInt sensorHandle,simxInt* resolution,simxFloat** buffer,simxInt operationMode)
+#
+
+int32 handle
+---
+int32 result
+int32[] resolution
+float32[] buffer

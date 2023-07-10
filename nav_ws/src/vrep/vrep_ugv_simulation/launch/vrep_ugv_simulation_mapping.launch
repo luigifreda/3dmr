@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+  
+  <!--arg name="scene" default="$(find vrep_ugv_simulation)/data/rescue4.ttt" /-->
+  <arg name="scene" default="$(find vrep_ugv_simulation)/data/ugv1n2_rescue_mapping.ttt" />    
+  
+  <arg name="headless" default="0" />
+  <arg name="hid" default="0" />
+
+  <!--param name="robot_description" textfile="$(find nifti_robot_driver)/robot_model/nifti_robot.urdf" /-->
+  <!--param name="robot_description" textfile="$(find nifti_robot_description)/old_model/nifti_robot.urdf" /-->
+  <include file="$(find nifti_robot_description)/launch/load_robot_model.launch">   
+	<arg name="use_old_robot" value="true" />
+  </include>	
+  
+  <!--node name="nifti_laser_assembler" pkg="nifti_laser_assembler" type="nifti_laser_assembler" /-->
+  
+  <node name="vrep_ugv_simulation" pkg="vrep_ugv_simulation" type="vrep_ugv_simulation" args="$(arg scene) $(arg headless)" />
+
+  <include file="$(find vrep_ugv_simulation)/launch/vrep_ugv_teleop_keyboard2.launch" unless="$(arg hid)" />
+  <!--include file="$(find vrep_ugv_simulation)/launch/vrep_ugv_teleop_joy.launch" if="$(arg hid)" /-->
+  <!--include file="$(find vrep_ugv_simulation)/launch/vrep_ugv_teleop_flipperduino.launch" if="$(arg hid)" /-->
+</launch>

@@ -1,0 +1,742 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 0
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /Status1
+      Splitter Ratio: 0.5882936716079712
+    Tree Height: 951
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /2D Pose Estimate1
+      - /2D Nav Goal1
+      - /Publish Point1
+    Name: Tool Properties
+    Splitter Ratio: 0.5886790156364441
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Name: Time
+    SyncMode: 0
+    SyncSource: /firefly2/vi_sensor/camera_depth/camera/image_raw - Image
+Preferences:
+  PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 10
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): ""
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        fcu1:
+          Value: true
+        fcu2:
+          Value: true
+        fcu3:
+          Value: true
+        firefly1/base_link:
+          Value: true
+        firefly1/base_link_inertia:
+          Value: true
+        firefly1/imu_link:
+          Value: true
+        firefly1/odometry_sensor1:
+          Value: true
+        firefly1/vi_sensor/base_link:
+          Value: true
+        firefly1/vi_sensor/camera_depth_link:
+          Value: true
+        firefly1/vi_sensor/camera_depth_optical_center_link:
+          Value: true
+        firefly1/vi_sensor/camera_left_link:
+          Value: true
+        firefly1/vi_sensor/camera_right_link:
+          Value: true
+        firefly1/vi_sensor/vi_sensor_link:
+          Value: true
+        firefly2/base_link:
+          Value: true
+        firefly2/base_link_inertia:
+          Value: true
+        firefly2/imu_link:
+          Value: true
+        firefly2/odometry_sensor1:
+          Value: true
+        firefly2/vi_sensor/base_link:
+          Value: true
+        firefly2/vi_sensor/camera_depth_link:
+          Value: true
+        firefly2/vi_sensor/camera_depth_optical_center_link:
+          Value: true
+        firefly2/vi_sensor/camera_left_link:
+          Value: true
+        firefly2/vi_sensor/camera_right_link:
+          Value: true
+        firefly2/vi_sensor/vi_sensor_link:
+          Value: true
+        firefly3/base_link:
+          Value: true
+        firefly3/base_link_inertia:
+          Value: true
+        firefly3/imu_link:
+          Value: true
+        firefly3/odometry_sensor1:
+          Value: true
+        firefly3/vi_sensor/base_link:
+          Value: true
+        firefly3/vi_sensor/camera_depth_link:
+          Value: true
+        firefly3/vi_sensor/camera_depth_optical_center_link:
+          Value: true
+        firefly3/vi_sensor/camera_left_link:
+          Value: true
+        firefly3/vi_sensor/camera_right_link:
+          Value: true
+        firefly3/vi_sensor/vi_sensor_link:
+          Value: true
+        world:
+          Value: true
+      Marker Alpha: 1
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        world:
+          firefly1/base_link:
+            firefly1/base_link_inertia:
+              {}
+            firefly1/imu_link:
+              {}
+            firefly1/vi_sensor/vi_sensor_link:
+              {}
+          firefly1/odometry_sensor1:
+            {}
+          firefly1/vi_sensor/base_link:
+            fcu1:
+              firefly1/vi_sensor/camera_depth_link:
+                {}
+              firefly1/vi_sensor/camera_depth_optical_center_link:
+                {}
+              firefly1/vi_sensor/camera_left_link:
+                {}
+              firefly1/vi_sensor/camera_right_link:
+                {}
+          firefly2/base_link:
+            firefly2/base_link_inertia:
+              {}
+            firefly2/imu_link:
+              {}
+            firefly2/vi_sensor/vi_sensor_link:
+              {}
+          firefly2/odometry_sensor1:
+            {}
+          firefly2/vi_sensor/base_link:
+            fcu2:
+              firefly2/vi_sensor/camera_depth_link:
+                {}
+              firefly2/vi_sensor/camera_depth_optical_center_link:
+                {}
+              firefly2/vi_sensor/camera_left_link:
+                {}
+              firefly2/vi_sensor/camera_right_link:
+                {}
+          firefly3/base_link:
+            firefly3/base_link_inertia:
+              {}
+            firefly3/imu_link:
+              {}
+            firefly3/vi_sensor/vi_sensor_link:
+              {}
+          firefly3/odometry_sensor1:
+            {}
+          firefly3/vi_sensor/base_link:
+            fcu3:
+              firefly3/vi_sensor/camera_depth_link:
+                {}
+              firefly3/vi_sensor/camera_depth_optical_center_link:
+                {}
+              firefly3/vi_sensor/camera_left_link:
+                {}
+              firefly3/vi_sensor/camera_right_link:
+                {}
+      Update Interval: 0
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+      Name: RobotModel
+      Robot Description: firefly/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        firefly1/base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly1/base_link_inertia:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly1/imugt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly1/odometry_sensor1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly1/odometry_sensorgt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly1/rotor_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/rotor_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/rotor_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/rotor_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/rotor_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/rotor_5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/vi_sensor/camera_depth_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/vi_sensor/camera_depth_optical_center_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly1/vi_sensor/camera_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/vi_sensor/camera_left_optical_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly1/vi_sensor/camera_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly1/vi_sensor/ground_truth/odometry_sensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly1/vi_sensor/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly1/vi_sensor/vi_sensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel1
+      Robot Description: firefly1/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        firefly2/base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly2/base_link_inertia:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly2/imugt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly2/odometry_sensor1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly2/odometry_sensorgt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly2/rotor_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/rotor_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/rotor_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/rotor_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/rotor_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/rotor_5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/vi_sensor/camera_depth_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/vi_sensor/camera_depth_optical_center_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly2/vi_sensor/camera_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/vi_sensor/camera_left_optical_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly2/vi_sensor/camera_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly2/vi_sensor/ground_truth/odometry_sensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly2/vi_sensor/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly2/vi_sensor/vi_sensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel2
+      Robot Description: firefly2/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        firefly3/base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly3/base_link_inertia:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly3/imugt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly3/odometry_sensor1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly3/odometry_sensorgt_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly3/rotor_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/rotor_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/rotor_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/rotor_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/rotor_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/rotor_5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/vi_sensor/camera_depth_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/vi_sensor/camera_depth_optical_center_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly3/vi_sensor/camera_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/vi_sensor/camera_left_optical_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly3/vi_sensor/camera_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        firefly3/vi_sensor/ground_truth/odometry_sensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly3/vi_sensor/imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        firefly3/vi_sensor/vi_sensor_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel3
+      Robot Description: firefly3/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Class: rviz/MarkerArray
+      Enabled: false
+      Marker Topic: /firefly/nbvPlanner/octomap_free
+      Name: octomap free - MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /firefly/nbvPlanner/octomap_occupied
+      Name: octomap occupied - MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /firefly/inspectionPath
+      Name: inspectionPath - Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /firefly1/inspectionPath
+      Name: firefly1/inspectionPath - Marker
+      Namespaces:
+        vp_branches: true
+        vp_tree: true
+        workspace: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: false
+      Marker Topic: /firefly1/nbvPlanner/octomap_free
+      Name: firefly1/octomap free - MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /firefly1/nbvPlanner/octomap_occupied
+      Name: firefly1/octomap occupied - MarkerArray
+      Namespaces:
+        map: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /firefly2/inspectionPath
+      Name: firefly2/inspectionPath - Marker
+      Namespaces:
+        vp_branches: true
+        vp_tree: true
+        workspace: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: false
+      Marker Topic: /firefly2/nbvPlanner/octomap_free
+      Name: firefly2/octomap free - MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /firefly2/nbvPlanner/octomap_occupied
+      Name: firefly2/octomap occupied - MarkerArray
+      Namespaces:
+        map: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /firefly3/inspectionPath
+      Name: firefly3/inspectionPath - Marker
+      Namespaces:
+        vp_branches: true
+        vp_tree: true
+        workspace: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: false
+      Marker Topic: /firefly3/nbvPlanner/octomap_free
+      Name: firefly3/octomap free - MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /firefly3/nbvPlanner/octomap_occupied
+      Name: firefly3/octomap occupied - MarkerArray
+      Namespaces:
+        map: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Image
+      Enabled: true
+      Image Topic: /firefly1/vi_sensor/camera_depth/camera/image_raw
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: /firefly1/vi_sensor/camera_depth/camera/image_raw - Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
+    - Class: rviz/Image
+      Enabled: true
+      Image Topic: /firefly2/vi_sensor/camera_depth/camera/image_raw
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: /firefly2/vi_sensor/camera_depth/camera/image_raw - Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
+    - Class: rviz/Image
+      Enabled: true
+      Image Topic: /firefly3/vi_sensor/camera_depth/camera/image_raw
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: /firefly3/vi_sensor/camera_depth/camera/image_raw - Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Default Light: true
+    Fixed Frame: world
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Theta std deviation: 0.2617993950843811
+      Topic: /initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
+    - Class: rviz/SetGoal
+      Topic: /move_base_simple/goal
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 6.596750259399414
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Field of View: 0.7853981852531433
+      Focal Point:
+        X: 1.3036751747131348
+        Y: 0.8619599938392639
+        Z: 0.7190536260604858
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05000000074505806
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.009999999776482582
+      Pitch: 0.4054003655910492
+      Target Frame: <Fixed Frame>
+      Yaw: 2.2853951454162598
+    Saved: ~
+Window Geometry:
+  /firefly1/vi_sensor/camera_depth/camera/image_raw - Image:
+    collapsed: false
+  /firefly2/vi_sensor/camera_depth/camera/image_raw - Image:
+    collapsed: false
+  /firefly3/vi_sensor/camera_depth/camera/image_raw - Image:
+    collapsed: false
+  Displays:
+    collapsed: false
+  Height: 2622
+  Hide Left Dock: false
+  Hide Right Dock: true
+  QMainWindow State: 000000ff00000000fd0000000400000000000003f20000091bfc020000000bfb0000001200530065006c0065006300740069006f006e00000001e10000009b000000c800fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000c8fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000007a00000432000001b500fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb00000072002f00660069007200650066006c00790032002f00760069005f00730065006e0073006f0072002f00630061006d006500720061005f00640065007000740068002f00630061006d006500720061002f0069006d006100670065005f0072006100770020002d00200049006d00610067006501000004b90000019e0000002b00fffffffb00000072002f00660069007200650066006c00790033002f00760069005f00730065006e0073006f0072002f00630061006d006500720061005f00640065007000740068002f00630061006d006500720061002f0069006d006100670065005f0072006100770020002d00200049006d0061006700650100000664000001900000002b00fffffffb00000072002f00660069007200650066006c00790031002f00760069005f00730065006e0073006f0072002f00630061006d006500720061005f00640065007000740068002f00630061006d006500720061002f0069006d006100670065005f0072006100770020002d00200049006d0061006700650100000801000001940000002b00ffffff000000010000018d000007b4fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000007a000007b40000015800fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000010a800000069fc0100000002fb0000000800540069006d00650100000000000010a8000007ef00fffffffb0000000800540069006d0065010000000000000450000000000000000000000ca90000091b00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: true
+  Width: 4264
+  X: 120
+  Y: 62

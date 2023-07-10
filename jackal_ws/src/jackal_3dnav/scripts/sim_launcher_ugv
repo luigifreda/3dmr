@@ -1,0 +1,222 @@
+#!/bin/bash
+# Author: Luigi Freda
+
+# N.B.:
+# 1) this script is designed just for testing the path planning nodes; no SLAM nodes are called; SLAM is assumed to be faked by a proper V-REP environment
+# 2) you can kill all the spawned terminals together by right clicking on the X icon on the left bar and selecting "Quit"
+
+echo "usage: ./${0##*/} <robot-id> <enable-muti-robot-traversability> <enable-TEB-local-planner> <enable-voxblox> <enable-elevation-mapping>"
+
+
+export ROBOT_ID=$1
+export ROBOT_NAME="ugv$ROBOT_ID"
+#ROBOT_ID_1=$(($ROBOT_ID-1)) # robot id zero based
+
+if [[ -n "$ROBOT_ID" ]]; then
+    echo "STARTING PP ROBOT $ROBOT_NAME"
+else
+    echo "give me a name please"
+    exit 1
+fi
+
+export XTERM_OPTIONS="-hold -iconic" # the "iconic" option allows to automatically minimize all the launched xterms
+
+export ROS_LOG_OPTIONS="--wait" # --log"  # uncomment if you want roslaunch to be used with this option 
+
+########################################################################################################
+
+ENABLE_VOXBLOX=0 # 1 use voxblox for mapping instead of octomap, 0 use octomap 
+
+ENABLE_QUEUE_PATH_PLANNER=1 # 1 queue path (multi-WP) planner, 0 (single-WP) path planner
+
+ENABLE_LASER_ASSEMBLER=1 #1 laser assembler enabled, 0 disabled
+
+ENABLE_MULTI_ROBOT_COORDINATION="true" # true or false
+
+ENABLE_LASER_PROXIMITY_CHECKER=1 # 1 use laser proximity checker
+
+ENABLE_LOCAL_PATH_PLANNER=1 # 1 enable local planner,
+                     # 0 disable local path planner
+
+ENABLE_TRAJECTORY_CONTROL=1 # 1 enable trajectory control,
+                     # 0 disable trajectory control 
+
+ENABLE_TEB_LOCAL_PLANNER=0 # 1 enable TEB local planner,
+                    # 0 disable TEB local path planner
+
+#USE_MULITPLE_VOLUMETRIC_MAPPING=0 # 1 use an independent mapping node for each robot
+#                                  # 0 use a single shared mapping system with just one volumetric mapping node: light but can generate self-ghosts due to mutual robot-perceptions!
+
+########################################################################################################
+
+if [[ -z "${MR3D_HOME}" ]]; then
+    echo "ERROR: missing env var MR3D_HOME"
+    echo "please, source source_all.bash in the main 3DMR folder"
+    exit
+else
+    source $MR3D_HOME/source_all.bash
+fi
+
+########################################################################################################
+
+# check if we want to enable/disable multi-robot from input
+export ENABLE_MULTI_ROBOT_COORDINATION_INPUT=$2
+if [[ -n "$ENABLE_MULTI_ROBOT_COORDINATION_INPUT" ]]
+then
+    echo "setting ENABLE_MULTI_ROBOT_COORDINATION_INPUT: $ENABLE_MULTI_ROBOT_COORDINATION_INPUT"
+    ENABLE_MULTI_ROBOT_COORDINATION=$ENABLE_MULTI_ROBOT_COORDINATION_INPUT
+fi
+echo "ENABLE_MULTI_ROBOT_COORDINATION: $ENABLE_MULTI_ROBOT_COORDINATION"
+
+########################################################################################################
+
+# check if we want to enable/disable TEB local planner
+export TEB_LOCAL_PLANNER_INPUT=$3
+if [[ -n "$TEB_LOCAL_PLANNER_INPUT" ]]; then
+    echo "setting TEB_LOCAL_PLANNER_INPUT: $TEB_LOCAL_PLANNER_INPUT"
+    ENABLE_TEB_LOCAL_PLANNER=$TEB_LOCAL_PLANNER_INPUT   
+fi
+echo "ENABLE_TEB_LOCAL_PLANNER: $ENABLE_TEB_LOCAL_PLANNER"
+
+if [ $ENABLE_TEB_LOCAL_PLANNER -eq 1 ]; then
+    ENABLE_LOCAL_PATH_PLANNER=0 # enforce
+    ENABLE_TRAJECTORY_CONTROL=0 # enforce 
+    echo "ENABLE_LOCAL_PATH_PLANNER: $ENABLE_LOCAL_PATH_PLANNER" 
+    echo "ENABLE_TRAJECTORY_CONTROL: $ENABLE_TRAJECTORY_CONTROL" 
+fi 
+
+########################################################################################################
+
+# check if we want to enable/disable voxblox
+export ENABLE_VOXBLOX_INPUT=$4
+if [[ -n "$ENABLE_VOXBLOX_INPUT" ]]; then
+    echo "setting ENABLE_VOXBLOX_INPUT: $ENABLE_VOXBLOX_INPUT"
+    ENABLE_VOXBLOX=$ENABLE_VOXBLOX_INPUT   
+fi
+echo "ENABLE_VOXBLOX: $ENABLE_VOXBLOX"
+
+########################################################################################################
+
+# check if we want to enable/disable voxblox
+export ENABLE_ELEVATION_MAPPING_INPUT=$5
+if [[ -n "$ENABLE_ELEVATION_MAPPING_INPUT" ]]; then
+    echo "setting ENABLE_ELEVATION_MAPPING_INPUT: $ENABLE_ELEVATION_MAPPING_INPUT"
+    ENABLE_ELEVATION_MAPPING=$ENABLE_ELEVATION_MAPPING_INPUT   
+fi
+echo "ENABLE_ELEVATION_MAPPING: $ENABLE_ELEVATION_MAPPING"
+
+########################################################################################################
+
+if [ $ENABLE_QUEUE_PATH_PLANNER -eq 1 ]
+then
+    echo "using queue path planner"
+fi
+
+########################################################################################################
+#- Here we use an independent volumetric MAPPING node for each ugv
+
+#- Laser assembler
+#open_term "$ROBOT_NAME"laser_assembler "echo $ROBOT_NAME laser assembler; roslaunch path_planner sim_nifti_laser_assembler_ugv2.launch robot_name:=$ROBOT_NAME world_frame:=odom; bash" &
+
+#- Scan filter
+echo "$ROBOT_NAME scan filter"
+open_term "$ROBOT_NAME"scanfilter  "echo $ROBOT_NAME scanfilter; roslaunch $ROS_LOG_OPTIONS scan_space_time_filter sim_scan_filter_jackal_ugv.launch robot_name:=$ROBOT_NAME; bash" &
+sleep 1
+
+
+if [ $ENABLE_VOXBLOX -eq 1 ]
+then
+
+    #- Mapping (Voxblox)  + Normal Estimation
+    echo "$ROBOT_NAME mapping with voxblox"
+    open_term "$ROBOT_NAME"mapping_voxblox  "echo $ROBOT_NAME voxblox mapping; roslaunch $ROS_LOG_OPTIONS voxblox_ros pointcloud_ugv1.launch robot_name:=$ROBOT_NAME pointcloud_in:=/$ROBOT_NAME/filtered_pointcloud; bash" &
+    sleep 2
+    open_term "$ROBOT_NAME"normal_estimation  "echo $ROBOT_NAME normal_estimation mapping; roslaunch $ROS_LOG_OPTIONS path_planner sim_compute_normals_jackal_ugv.launch robot_name:=$ROBOT_NAME cloud_in:=/voxblox_node_$ROBOT_NAME/mesh_pointcloud; bash" &
+
+else 
+
+    #- Mapping (Octomap) + Normal Estimation
+    echo "$ROBOT_NAME mapping with octomap"
+    open_term "$ROBOT_NAME"mapping_octomap  "echo $ROBOT_NAME octomap mapping; roslaunch $ROS_LOG_OPTIONS path_planner sim_volumetric_mapping_jackal_ugv.launch robot_name:=$ROBOT_NAME laser_frame_name:=$ROBOT_NAME/ouster_lidar octomap_cloud_in:=/$ROBOT_NAME/filtered_pointcloud tf_cache_length:=10; bash" &
+    sleep 2
+
+fi 
+
+########################################################################################################
+
+#- Traversability 
+echo "$ROBOT_NAME traversability"
+open_term "$ROBOT_NAME"traversability  "echo $ROBOT_NAME traversability; roslaunch $ROS_LOG_OPTIONS path_planner sim_traversability_jackal_ugv.launch robot_name:=$ROBOT_NAME enable_multi_robot_avoidance:=$ENABLE_MULTI_ROBOT_COORDINATION; bash" &
+# to test traversability with the normals coming from voxblox (CONS: they are locally computed by using the 3 points of the mesh triangle around the corresponding point, no "averaging")
+#open_term "$ROBOT_NAME"traversability  "echo $ROBOT_NAME traversability; roslaunch $ROS_LOG_OPTIONS path_planner sim_traversability_jackal_ugv.launch robot_name:=$ROBOT_NAME cloud_in:=/voxblox_node_$ROBOT_NAME/mesh_pointcloud enable_multi_robot_avoidance:=$ENABLE_MULTI_ROBOT_COORDINATION; bash" &
+sleep 2
+
+
+########################################################################################################
+
+#- Path Planner
+
+if [ $ENABLE_QUEUE_PATH_PLANNER -eq 1 ]
+then
+	# global path planner (queue path planner) + local path planner (path planner manager)
+    echo "$ROBOT_NAME queue path planner"
+    open_term "$ROBOT_NAME"queue_path_planner  "echo $ROBOT_NAME queue path planner; roslaunch $ROS_LOG_OPTIONS path_planner sim_queue_path_planner_jackal_ugv.launch robot_name:=$ROBOT_NAME; bash" &
+	sleep 2
+    if [ $ENABLE_LOCAL_PATH_PLANNER -eq 1 ]; then    
+        echo "$ROBOT_NAME path planner manager"
+	    open_term "$ROBOT_NAME"path_planner_manager  "echo $ROBOT_NAME path planner manager; roslaunch path_planner sim_path_planner_manager_jackal_ugv.launch robot_name:=$ROBOT_NAME use_marker_controller:=false; bash" &
+    fi
+else
+    if [ $ENABLE_LOCAL_PATH_PLANNER -eq 1 ]; then
+	    #xterm $XTERM_OPTIONS -e "echo ugv1 path planner; roslaunch path_planner sim_path_planner_ugv1.launch; bash" &
+        echo "$ROBOT_NAME path planner manager"
+	    open_term "$ROBOT_NAME"path_planner_manager  "echo $ROBOT_NAME path planner manager; roslaunch path_planner sim_path_planner_manager_jackal_ugv.launch robot_name:=$ROBOT_NAME; bash" &
+    fi
+fi
+
+sleep 2
+
+########################################################################################################
+
+#- Trajectory Control
+if [ $ENABLE_TRAJECTORY_CONTROL -eq 1 ]; then
+    echo "$ROBOT_NAME trajectory control"
+    #open_term "$ROBOT_NAME"trajectory_control  "echo $ROBOT_NAME trajectory control; roslaunch $ROS_LOG_OPTIONS pioneer_trajectory_control sim_trajectory_control_ugv2.launch robot_name:=$ROBOT_NAME; bash" &
+    open_term "$ROBOT_NAME"trajectory_control  "echo $ROBOT_NAME trajectory control; roslaunch trajectory_control sim_trajectory_control_jackal.launch robot_name:=$ROBOT_NAME; bash" &
+fi 
+
+########################################################################################################
+
+#- TEB Local Planner 
+if [ $ENABLE_TEB_LOCAL_PLANNER -eq 1 ]; then
+    echo "$ROBOT_NAME teb_local_planner"
+    open_term "$ROBOT_NAME"teb_local_planner  "echo $ROBOT_NAME TEB local planner; roslaunch teb_optim_local_planner sim_teb_optim_node_jackal_ugv.launch robot_name:=$ROBOT_NAME; bash" &
+fi 
+
+########################################################################################################
+
+#- Elevation Mapping 
+if [ $ENABLE_ELEVATION_MAPPING_INPUT -eq 1 ]; then
+    echo "$ROBOT_NAME elevation mapping"
+    open_term "$ROBOT_NAME"elevation_mapping  "echo $ROBOT_NAME elevation mapping; roslaunch elevation_mapping_ugvs elevation_mapping_ugv.launch robot_name:=$ROBOT_NAME use_rviz:=false; bash" &
+fi 
+
+
+########################################################################################################
+
+#- Laser proximity checker
+
+if [ $ENABLE_LASER_PROXIMITY_CHECKER -eq 1 ]
+then
+    open_term "$ROBOT_NAME"laser_proximity_checker  "echo $ROBOT_NAME laser proximity checker; roslaunch laser_proximity_checker sim_laser_proximity_checker_jackal_ugv.launch robot_name:=$ROBOT_NAME; bash" &
+fi
+
+echo "DONE WITH ROBOT $ROBOT_NAME"
+
+# NOTE: you can use the following command to get the xterm window live if the app terminates or crashes
+# xterm $XTERM_OPTIONS -e "<you_command>; bash" &
+
+
+
+
+

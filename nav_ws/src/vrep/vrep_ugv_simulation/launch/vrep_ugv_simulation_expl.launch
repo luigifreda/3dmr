@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    
+  
+  <arg name="scene" default="$(find vrep_ugv_simulation)/data/ugv1n2_rooms.ttt" />    
+  
+
+  <include file="$(find vrep_ugv_simulation)/launch/vrep_ugv_simulation.launch">   
+	<arg name="scene" value="$(arg scene)" />
+  </include>	
+
+  
+  
+</launch>

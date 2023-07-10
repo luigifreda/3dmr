@@ -1,0 +1,43 @@
+/**
+ * \defgroup posesdiff Time Derivatives of Poses
+ *  \see \ref page_posesdiff "Chapter Time Derivatives of Poses" 
+ */
+ 
+ /*! \page page_posesdiff Time Derivatives of Poses
+
+This library defines an \ref posesdiff_interface "interface" for the time derivative of a pose (position and orientation) of a rigid body or a (displacement) frame to enable different representations of a time derivative of a pose (twist, etc.). 
+
+\tableofcontents
+
+\section posesdiff_interface Generic Interface
+The class kindr::PoseDiffBase serves as an interface for the time derivative of a pose of a rigid body, i.e. the position and orientation of a rigid body. All types of representations of time derivatives of a pose, such as twist motions, are derived from this base class.
+
+
+\section posesdiff_implementations Parameterizations
+
+\subsection posesdiff_implementations_twist Twist
+
+The class kindr::Twist implements a 6d twist:
+
+\f$\boxed{\mathbf{\phi} = \begin{pmatrix} {}_B\mathbf{v}_B \\ {}_B\mathbf{\omega}_{I\!B}\end{pmatrix}}\f$
+
+where \f${}_B\mathbf{v}_B\f$ is the linear velocity in body-fixed frame and \f${}_B\mathbf{\omega}_{I\!B}\f$ is the local angular velocity.
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+*/

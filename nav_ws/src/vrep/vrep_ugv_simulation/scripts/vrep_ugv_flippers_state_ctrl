@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+import roslib; roslib.load_manifest('vrep_ugv_simulation')
+import rospy
+import itertools
+
+from std_msgs.msg import Float32
+from nifti_robot_driver_msgs.msg import FlippersState
+
+def callback(data):
+    for fr, lr in itertools.product(('front','rear'),('Left','Right')):
+        v = getattr(data,fr+lr)
+        #rospy.loginfo('%s%s = %s' % (fr, lr, v))
+        pub[fr+lr].publish(Float32(v))
+
+if __name__ == '__main__':
+    rospy.init_node('vrep_ugv_flippers_state_ctrl');
+    rospy.Subscriber('/flippers_cmd', FlippersState, callback)
+    pub = {}
+    for fr, lr in itertools.product(('front','rear'),('Left','Right')):
+        pub[fr+lr] = rospy.Publisher('/vrep/%s_%s_flipper/position' % (fr, lr.lower()), Float32)
+    rospy.spin()

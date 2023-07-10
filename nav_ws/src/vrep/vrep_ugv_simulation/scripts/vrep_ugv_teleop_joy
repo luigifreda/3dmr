@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+
+import rospy
+import geometry_msgs.msg
+import nifti_robot_driver_msgs.msg
+import std_msgs.msg
+
+robot_name='ugv1'
+
+QUEUE_SIZE=10
+
+travel_speed = 0.8 #0.5 #8
+steering_speed = travel_speed #0.66 * travel_speed
+
+def on_cmd_vel(msg):
+    trv = msg.linear.x + msg.angular.z * 0.397 / 2 / 0.09;
+    tlv = msg.linear.x - msg.angular.z * 0.397 / 2 / 0.09;    
+
+    tracks_msg = nifti_robot_driver_msgs.msg.Tracks()
+    tracks_msg.left = tlv
+    tracks_msg.right = trv
+    tradr_pub.publish(tracks_msg)
+
+def on_flippers(msg):
+    ffl.publish(msg.frontLeft);
+    ffr.publish(msg.frontRight);
+    frl.publish(msg.rearLeft);
+    frr.publish(msg.rearRight);
+
+def main():
+
+    global robot_name, tw, tradr_pub, travel_speed, steering_speed, ffl, ffr, frl, frr
+
+    rospy.init_node('vrep_absolem_teleop_joy')
+    robot_name = rospy.get_param('~robot_name', robot_name)
+    print('using robot: %s' % robot_name)
+               
+    tw = rospy.Subscriber('cmd_vel', geometry_msgs.msg.Twist, on_cmd_vel, queue_size=QUEUE_SIZE)
+    flipper_sub = rospy.Subscriber('flippers_cmd', nifti_robot_driver_msgs.msg.FlippersState, on_flippers, queue_size=QUEUE_SIZE)
+
+    tradr_pub = rospy.Publisher('/vrep/'+robot_name+'/tracks_vel_cmd', nifti_robot_driver_msgs.msg.Tracks,queue_size=QUEUE_SIZE)
+
+    ffl = rospy.Publisher('/vrep/'+robot_name+'/front_left_flipper/position', std_msgs.msg.Float32,queue_size=QUEUE_SIZE)
+    ffr = rospy.Publisher('/vrep/'+robot_name+'/front_right_flipper/position', std_msgs.msg.Float32,queue_size=QUEUE_SIZE)
+    frl = rospy.Publisher('/vrep/'+robot_name+'/rear_left_flipper/position', std_msgs.msg.Float32,queue_size=QUEUE_SIZE)
+    frr = rospy.Publisher('/vrep/'+robot_name+'/rear_right_flipper/position', std_msgs.msg.Float32,queue_size=QUEUE_SIZE)
+ 
+    rospy.spin()
+
+if __name__ == '__main__':
+    main()

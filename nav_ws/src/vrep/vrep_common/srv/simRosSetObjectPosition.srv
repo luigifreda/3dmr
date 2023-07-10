@@ -1,0 +1,9 @@
+#
+# simInt simSetObjectPosition(simInt objectHandle,simInt relativeToObjectHandle,simFloat* position)
+#
+
+int32 handle
+int32 relativeToObjectHandle
+geometry_msgs/Point position
+---
+int32 result

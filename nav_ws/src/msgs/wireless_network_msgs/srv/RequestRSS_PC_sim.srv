@@ -1,0 +1,6 @@
+#request position
+sensor_msgs/PointCloud2 surveypoints
+---
+#response rssi values
+sensor_msgs/PointCloud2 rssi
+

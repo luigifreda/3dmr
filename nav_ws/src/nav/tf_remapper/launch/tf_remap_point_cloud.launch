@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+      
+    <arg name="robot_name" default="ugv1"/>  
+    <arg name="input_topic"  default="dynamic_point_cloud"/>  
+    <arg name="output_topic" default="dynamic_point_cloud_tf_remapped"/>         
+      
+    <node pkg="tf_remapper" type="tf_remap_point_cloud" name="tf_remap_point_cloud_$(arg robot_name)" output="screen" respawn="true">
+        <param name = "robot_name" value = "$(arg robot_name)"/>
+        <remap from="input_topic"  to="$(arg input_topic)"/> 
+        <remap from="output_topic" to="$(arg output_topic)"/> 
+    </node>
+
+</launch>

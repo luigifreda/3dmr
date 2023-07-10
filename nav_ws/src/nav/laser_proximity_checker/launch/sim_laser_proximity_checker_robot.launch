@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <arg name="robot_name" default="robot" />
+    <arg name="simulator" value="" />
+    
+    <arg name="world_frame" default="odom"/>
+    <arg name="laser_frame" default="ouster_lidar"/>
+
+    <arg name="cloud_in" default="os_cloud_node/points" />  <!-- from scan space-time filter -->
+    <arg name="cloud_out" default="obst_point_cloud" />
+    
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+
+	<node type="laser_proximity_checker2" pkg="laser_proximity_checker" name="laser_proximity_checker_$(arg robot_name)" output="screen"  respawn="$(arg respawn_value)">
+        <param name="laser_frame" value="$(arg laser_frame)"/>
+        <param name="robot_frame" value="base_link"/>
+        <param name="world_frame" value="$(arg world_frame)"/>
+
+        <param name="min_proximity_distance"  value="1.0"/>
+
+        <param name="max_size"       value="1000000"/>
+
+        <!-- Deprecated functionality from NIFTi. -->
+        <param name="publish2d"      value="false"/>
+        <param name="relay_scans"    value="false"/>
+
+        <!-- Subscribed -->
+        <!-- NOTE: "scan" is DEPRECATED, not used. -->
+        <!-- 
+        <remap from="scan"               to="scan_filtered"/>  
+        <remap from="scan_point_cloud"   to="scan_point_cloud_color"/>
+        <remap from="pointcloud_control" to="pointcloud_control"/> 
+        -->
+        <remap from="scan_point_cloud"   to="$(arg cloud_in)"/>
+        
+        <!-- Advertised -->
+        <!-- 
+        <remap from="scan2d"                to="scan2d"/>
+        <remap from="scan_relay"            to="scan_relay"/>
+        <remap from="static_point_cloud"    to="static_point_cloud"/>
+        <remap from="dynamic_point_cloud"   to="dynamic_point_cloud"/>
+        <remap from="obst_point_cloud"      to="obst_point_cloud"/>
+        <remap from="laser_proximity_topic" to="laser_proximity_topic"/>
+        <remap from="closest_obst_point"    to="closest_obst_point"/> 
+        -->
+        <remap from="obst_point_cloud"      to="$(arg cloud_out)"/>     
+
+	</node>
+</launch>
+
+
+
+
+

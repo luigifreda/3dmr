@@ -1,0 +1,8 @@
+#
+# simInt simSetJointTargetPosition(simInt objectHandle,simFloat targetPosition)
+#
+
+int32 handle
+float64 targetPosition
+---
+int32 result

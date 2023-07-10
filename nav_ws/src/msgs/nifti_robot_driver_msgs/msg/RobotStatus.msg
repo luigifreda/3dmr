@@ -1,0 +1,9 @@
+#int32 BAT_CRITICAL=2
+#int32 BAT_WARNING=1
+#int32 BAT_OK=0
+float64 battery_level
+int32 battery_status
+bool brake_on
+float64 scanning_speed
+ControllersStatus controllers_status
+ControllersStatus controllers_error

@@ -1,0 +1,8 @@
+#
+# simInt simAuxiliaryConsoleClose(simInt consoleHandle)
+#
+
+int32 consoleHandle
+---
+int32 result
+

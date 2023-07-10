@@ -1,0 +1,6 @@
+<launch>
+	<include file="$(find nifti_drivers_launchers)/launch/robot.launch"/>
+	<include file="$(find nifti_drivers_launchers)/launch/laser.launch"/>
+	<include file="$(find nifti_drivers_launchers)/launch/imu.launch"/> 
+	<include file="$(find nifti_teleop)/launch/nifti_ugv_teleop.launch"/> 
+</launch>

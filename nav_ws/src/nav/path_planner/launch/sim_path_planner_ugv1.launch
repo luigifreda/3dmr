@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+  <arg name="robot_name" value="ugv1" />
+  <arg name="simulator" default="/vrep" />
+  
+  <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+
+
+    <node name="path_planner_$(arg robot_name)" pkg="path_planner" type="path_planner" respawn="$(arg respawn_value)" output="screen">
+
+	<param name = "robot_frame_name" value = "$(arg robot_name)/base_link"/>
+	<param name = "int_marker_server_name" value = "$(arg simulator)/$(arg robot_name)/marker_controller"/>
+	<param name = "int_marker_name" value = "$(arg robot_name)"/>
+    <!--param name = "goal_topic_name" value = "$(arg simulator)/$(arg robot_name)/goal_topic"/-->
+	<!--param name = "goal_abort_topic_name" value = "$(arg simulator)/$(arg robot_name)/goal_abort_topic_name"/-->
+	
+    <param name = "trajectory_control_action_server_name" value = "trajectory_control_action_server_$(arg robot_name)"/>
+
+	<remap from = "/clustered_pcl/wall" to = "$(arg simulator)/$(arg robot_name)/clustered_pcl/wall"/>
+	<remap from = "/trav/traversability" to = "$(arg simulator)/$(arg robot_name)/trav/traversability"/> 
+	<remap from = "/goal_topic" to = "$(arg simulator)/$(arg robot_name)/goal_topic"/>
+    <remap from = "/goal_abort_topic" to = "$(arg simulator)/$(arg robot_name)/goal_abort_topic"/>
+	<remap from = "/robot_path" to = "$(arg simulator)/$(arg robot_name)/robot_path"/>
+    
+	<remap from = "/robot_pp_path" to = "$(arg simulator)/$(arg robot_name)/robot_pp_path"/>
+
+	<remap from = "/path_planner/visited_nodes" to = "$(arg simulator)/$(arg robot_name)/path_planner/visited_nodes"/>
+	<remap from = "/path_planner/localPath" to = "$(arg simulator)/$(arg robot_name)/path_planner/localPath"/>
+
+    </node> 
+  
+</launch>

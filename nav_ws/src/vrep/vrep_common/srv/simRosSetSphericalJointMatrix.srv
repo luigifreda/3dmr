@@ -1,0 +1,8 @@
+#
+# simInt simSetSphericalJointMatrix(simInt objectHandle,simFloat* matrix)
+#
+
+int32 handle
+geometry_msgs/Quaternion quaternion
+---
+int32 result

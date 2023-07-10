@@ -1,0 +1,9 @@
+#
+# simInt simSetObjectParent(simInt objectHandle,simInt parentObjectHandle,simBool keepInPlace)
+#
+
+int32 handle
+int32 parentHandle
+uint8 keepInPlace
+---
+int32 result

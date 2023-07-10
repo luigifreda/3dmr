@@ -1,0 +1,8 @@
+#
+# simInt simSetJointForce(simInt objectHandle,simFloat forceOrTorque)
+#
+
+int32 handle
+float64 forceOrTorque
+---
+int32 result

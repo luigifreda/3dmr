@@ -1,0 +1,9 @@
+#
+# simInt simCreateDummy(simFloat size,const simFloat* colors)
+#
+
+float32 size
+int8[] colors
+---
+int32 dummyHandle
+

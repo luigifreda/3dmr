@@ -1,0 +1,15 @@
+# only values different from default-environment.yaml need to be defined here; the default config is always loaded
+
+# Venice - inside factory
+#initial_lat: deg(45.45009418)
+#initial_lon: deg(12.23766288)
+#initial_altitude: 1.0
+#initial_heading: deg(29)
+
+# Venice - in front of factory
+initial_lat: deg(45.449832)
+initial_lon: deg(12.237302)
+initial_altitude: 1.0
+initial_heading: deg(29)
+
+

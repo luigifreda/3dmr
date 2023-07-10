@@ -1,0 +1,8 @@
+#
+# simInt simSetVisionSensorImage(simInt sensorHandle,simFloat* image)
+#
+
+int32 handle
+sensor_msgs/Image image
+---
+int32 result

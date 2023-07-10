@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ouster_os1_64</name>
+  <version>2.0.2</version>
+  <description>
+    Package for the simulation of the Lidar Ouster OS1-64.
+  </description>
+
+  <license>BSD</license>
+
+  <author email="tlasguigne@laas.fr">Thibaud Lasguignes</author>
+  <maintainer email="guilhem.saurel@laas.fr">Guilhem Saurel</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>

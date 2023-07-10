@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+      
+    <arg name="prefix" default="robot" /> 
+    <arg name="second_prefix" default="" /> 
+      
+    <!-- here we have to list all the frames we want to rename -->
+    <arg name="mappings" default="
+            [
+             {old: odom, new: $(arg prefix)/odom}, {old: /odom, new: $(arg prefix)/odom},
+             {old: base_link, new: $(arg prefix)/base_link}, {old: /base_link, new: $(arg prefix)/base_link},
+             {old: laser, new: $(arg prefix)/laser}, {old: /laser, new: $(arg prefix)/laser},
+             {old: laser_base, new: $(arg prefix)/laser_base}, {old: /laser_base, new: $(arg prefix)/laser_base},
+             {old: imu, new: $(arg prefix)/imu}, {old: /imu, new: $(arg prefix)/imu},
+             {old: antenna, new: $(arg prefix)/antenna}, {old: /antenna, new: $(arg prefix)/antenna},
+             {old: battery, new: $(arg prefix)/battery}, {old: /battery, new: $(arg prefix)/battery},
+             {old: left_track, new: $(arg prefix)/left_track}, {old: /left_track, new: $(arg prefix)/left_track},
+             {old: front_left_flipper, new: $(arg prefix)/front_left_flipper}, {old: /front_left_flipper, new: $(arg prefix)/front_left_flipper},
+             {old: front_left_flipper_end_point, new: $(arg prefix)/front_left_flipper_end_point}, {old: /front_left_flipper_end_point, new: $(arg prefix)/front_left_flipper_end_point},
+             {old: rear_left_flipper, new: $(arg prefix)/rear_left_flipper}, {old: /rear_left_flipper, new: $(arg prefix)/rear_left_flipper},             
+             {old: right_track, new: $(arg prefix)/right_track}, {old: /right_track, new: $(arg prefix)/right_track},
+             {old: front_right_flipper, new: $(arg prefix)/front_right_flipper}, {old: /front_right_flipper, new: $(arg prefix)/front_right_flipper},
+             {old: front_right_flipper_end_point, new: $(arg prefix)/front_right_flipper_end_point}, {old: /front_right_flipper_end_point, new: $(arg prefix)/front_right_flipper_end_point},
+             {old: rear_right_flipper, new: $(arg prefix)/rear_right_flipper}, {old: /rear_right_flipper, new: $(arg prefix)/rear_right_flipper},
+             {old: rear_right_box, new: $(arg prefix)/rear_right_box}, {old: /rear_right_box, new: $(arg prefix)/rear_right_box},
+             {old: top_box, new: $(arg prefix)/top_box}, {old: /top_box, new: $(arg prefix)/top_box},                                                                             
+             {old: omnicam, new: $(arg prefix)/omnicam}, {old: /top_box, new: $(arg prefix)/omnicam},     
+             {old: ptz, new: $(arg prefix)/ptz}, {old: /ptz, new: $(arg prefix)/ptz},
+             {old: pano, new: $(arg prefix)/pano}, {old: /pano, new: $(arg prefix)/pano},                         
+             {old: jaco_api_origin, new: $(arg prefix)/jaco_api_origin}, {old: /jaco_api_origin, new: $(arg prefix)/jaco_api_origin},
+             {old: jaco_link_base, new: $(arg prefix)/jaco_link_base}, {old: /jaco_link_base, new: $(arg prefix)/jaco_link_base},
+             {old: jaco_link_1, new: $(arg prefix)/jaco_link_1}, {old: /jaco_link_1, new: $(arg prefix)/jaco_link_1},
+             {old: jaco_link_2, new: $(arg prefix)/jaco_link_2}, {old: /jaco_link_2, new: $(arg prefix)/jaco_link_2},
+             {old: jaco_link_3, new: $(arg prefix)/jaco_link_3}, {old: /jaco_link_3, new: $(arg prefix)/jaco_link_3},
+             {old: jaco_link_4, new: $(arg prefix)/jaco_link_4}, {old: /jaco_link_4, new: $(arg prefix)/jaco_link_4},
+             {old: jaco_link_5, new: $(arg prefix)/jaco_link_5}, {old: /jaco_link_5, new: $(arg prefix)/jaco_link_5},
+             {old: jaco_link_hand, new: $(arg prefix)/jaco_link_hand}, {old: /jaco_link_hand, new: $(arg prefix)/jaco_link_hand},
+             {old: jaco_link_finger_1, new: $(arg prefix)/jaco_link_finger_1}, {old: /jaco_link_finger_1, new: $(arg prefix)/jaco_link_finger_1},
+             {old: jaco_link_finger_2, new: $(arg prefix)/jaco_link_finger_2}, {old: /jaco_link_finger_2, new: $(arg prefix)/jaco_link_finger_2},
+             {old: jaco_link_finger_3, new: $(arg prefix)/jaco_link_finger_3}, {old: /jaco_link_finger_3, new: $(arg prefix)/jaco_link_finger_3}
+            ]
+    "/> 
+    
+   <!-- ===================================================================================================== -->
+   <!-- frames inside topics are not renamed; here you can reconnect old-frames with new frames but this cannot be used with multiple robots -->    
+   
+   <!--node pkg="tf" type="static_transform_publisher" name="tf_static_map_to_robotmap_broadcaster" args="0 0 0 0 0 0 1 map sim2/map  100"/-->
+    
+   
+   <!-- ===================================================================================================== -->
+      
+    <node pkg="tf" type="tf_remap" name="tf_remapper_$(arg prefix)" output="screen">
+        <rosparam param="mappings" subst_value="true">$(arg mappings)</rosparam>
+        <remap from="tf_old" to="$(arg prefix)/tf" /> 
+        <!--remap to="$(arg prefix)_prefixed/tf" from="tf"/--> 
+    </node>
+      
+</launch>

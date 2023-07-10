@@ -1,0 +1,28 @@
+#!/bin/bash
+# see this link for other options 
+# http://www.coppeliarobotics.com/helpFiles/en/commandLine.htm
+#
+# -h: runs V-REP in headless mode (i.e. without any GUI)
+# -sXXX: automatically start the simulation. XXX represents an optional simulation time in milliseconds after which simulation should stop again.
+# -q: automatically quits V-REP after the first simulation run ended.
+# -aXXX: loads and runs an additional add-on script specified via its filename (XXX). The add-on will be loaded and run only for the first scene.
+# -bXXX: loads and runs an additional add-on script specified via its filename (XXX). The add-on will be loaded and run for all the scenes that will be opened.
+# -gXXX: XXX represents an optional argument that can be queried within V-REP with the sim_stringparam_app_arg parameter. The argument can be used for various custom purposes.
+# -gREMOTEAPISERVERSERVICE_PORT_DEBUG_PREENABLESYNC: the argument can be used to request a continuous remote API server service to be started at V-REP start-up. For that to happen, replace in above string following:
+# PORT is the port number
+# DEBUG is the debug mode (set to TRUE or FALSE)
+# PREENABLESYNC allows to preenable the synchronous mode (set to TRUE or FALSE)
+# -gGUIITEMS_XXX: the argument can be used to disable specific GUI items. For that to happen, replace in above string XXX with a decimal bit-coded value taken from the start-up options.
+
+echo "usage: ./${0##*/} <scene> <mode> <g-argument>"
+
+cd $VREP_ROOT_DIR
+ARGS=""
+if [[ $2 -gt 0 ]]; then
+	if [[ $2 -eq 1 ]]; then
+		ARGS="-s -q"   # start it 
+	else
+		ARGS="-h -s -q" # headless and start it
+	fi	
+fi
+./vrep.sh $ARGS -g"$3" "$1"

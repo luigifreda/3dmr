@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <arg name="robot_name" default="robot" />  <!-- this also defines the robot id, the last digit after "ugv" -->     
+    <arg name="simulator" value="" />
+    
+    <arg name="robot_radius" default="0.5" /> <!-- default TRADR robot radius -->    
+
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+           
+    <arg name="enable_multi_robot_avoidance" default="false" />  <!-- multi -->
+    <arg name="number_of_robots" default="2"/>                  <!-- multi -->
+  
+
+    <node name="traversability_$(arg robot_name)" pkg="path_planner" type="traversability" respawn="$(arg respawn_value)" output="screen">
+        
+        <rosparam file="$(find  path_planner)/launch/path_planner_octomap.yaml" /> 
+
+        <param name="robot_name" value="$(arg robot_name)" /> 
+
+        <param name="robot_frame_name" value = "base_link"/>   
+
+        <param name="robot_radius" value="$(arg robot_radius)"/> 
+
+        <param name="number_of_robots" value="$(arg number_of_robots)"/> 
+
+        <param name="enable_multi_robot_avoidance" value="$(arg enable_multi_robot_avoidance)"/>  <!-- multi -->
+
+        <!-- Input -->
+        <remap from = "/dynjoinpcl" to = "/local_map_normals"/>
+        <!-- 
+        <remap from = "/obst_point_cloud" to = "/obst_point_cloud"/> 
+        -->
+
+        <!-- Output -->
+        <!-- 
+        <remap from = "/clustered_pcl/no_wall" to = "/clustered_pcl/no_wall"/>
+        <remap from = "/clustered_pcl/wall" to = "/clustered_pcl/wall"/>
+        <remap from = "/trav/traversability" to = "/trav/traversability"/>
+
+        <remap from = "/trav/clearence" to = "/trav/clearence"/>
+        <remap from = "/trav/density" to = "/trav/density"/>     
+        <remap from = "/trav/label" to = "/trav/label"/>          
+        <remap from = "/trav/roughness" to = "/trav/roughness"/>  
+
+        <remap from = "/clustered_pcl/segmented" to = "/clustered_pcl/segmented"/>  
+        <remap from = "/normals_pcl" to = "/normals_pcl"/>  
+        <remap from = "/normals_marker" to = "/normals_marker"/>   
+        -->
+
+    </node>
+
+</launch>

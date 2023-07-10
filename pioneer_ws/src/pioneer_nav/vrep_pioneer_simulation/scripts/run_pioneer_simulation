@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [[ -z "${MR3D_HOME}" ]]; then
+    echo "ERROR: missing env var MR3D_HOME"
+    echo "please, source source_all.bash in the main 3DMR folder"
+    exit 
+else
+    source $MR3D_HOME/source_all.bash
+fi
+
+cd $VREP_ROOT_DIR
+open_term"./vrep.sh -s $(rospack find vrep_pioneer_simulation)/data/pioneer.ttt; bash"  & # -s -> starts the simulation automatically
+

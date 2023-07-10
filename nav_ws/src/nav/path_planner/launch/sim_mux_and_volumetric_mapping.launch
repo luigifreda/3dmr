@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+	  <arg name="robot_name1" default="ugv1" />
+      <arg name="robot_name2" default="ugv2" />
+	  <arg name="simulator" default="/vrep" />
+	  
+	  <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+      
+       <!-- pointcloud2 mux -->
+      <include file="$(find octomap_mux)/launch/pointcloud2_mux.launch" >
+          
+          <!-- Input -->
+          <arg name="topic_in1" value="$(arg simulator)/$(arg robot_name1)/laser_mapper" />
+          <arg name="topic_in2" value="$(arg simulator)/$(arg robot_name2)/laser_mapper" />
+          
+          <!-- Output -->
+          <arg name="topic_out" value="/volumetric_mapping/input_pcl" />  <!-- to volumetric mapping node -->
+          
+      </include>
+      
+      
+
+      <!-- octomap_manager from volumetric_mapping package -->
+      <include file="$(find path_planner)/launch/sim_volumetric_mapping.launch" >
+        <arg name="respawn_value" value="$(arg respawn_value)" />
+      </include>
+      
+            
+</launch>

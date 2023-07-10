@@ -1,0 +1,13 @@
+<launch>
+	<node pkg="joy" type="joy_node" name="tank_joy_node" >
+		<param name="dev" value="/dev/input/by-id/usb-Logitech_Logitech_Cordless_RumblePad_2-joystick" />
+		<remap from="/joy" to="/tank_joy"/>
+		<!--param name="autorepeat_rate" value="10.0" /-->
+	</node>
+
+	<node pkg="nifti_teleop" type="nifti_teleop_tank.py"
+		name="nifti_teleop_tank" output="screen">
+		<remap from="/joy" to="/tank_joy"/>
+	</node>
+
+</launch>

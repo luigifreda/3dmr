@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    <arg name="use_old_robot" default="false" />
+    <arg name="run_dynamic_server" default="true" />
+    <arg name="yaml_file" default="$(find nifti_launchers)/launch/robot.yaml" /> <!-- Definitions specific for each device. You must create it. -->
+    <arg name="force_yaml_file" default="false" />
+
+    <rosparam command="load" file="$(find nifti_launchers)/launch/default-robot.yaml"/> <!-- Common definitions. -->
+    <rosparam command="load" file="$(arg yaml_file)"/>
+
+    <group unless="$(arg use_old_robot)">
+        <!-- This line is not actually needed, since the dynamic model server updates nifti_robot_description param
+         on the fly. But it makes no harm to do it here just for sure, and as well you can take it as a template on how
+         to load the robot model inside a parameter if you needed it for some reason (e.g. when replaying bag files,
+         it makes no sense to run the reconfiguration server). -->
+        <param name="nifti_robot_description" command="$(find nifti_robot_description)/scripts/print_robot_model.py" unless="$(arg force_yaml_file)" />
+        <param name="nifti_robot_description" command="$(find nifti_robot_description)/scripts/print_robot_model.py $(arg yaml_file)" if="$(arg force_yaml_file)"/>
+
+        <!-- If your node needs to work with the robot model and it makes sense to trigger some reaction when the model
+        changes (e.g. arm attached or so), please, get the model through a dynamic_reconfigure client. -->
+        <node name="dynamic_robot_model_server" pkg="nifti_robot_description" type="dynamic_robot_model_server.py"
+              if="$(arg run_dynamic_server)"/>
+    </group>
+
+    <param if="$(arg use_old_robot)" name="nifti_robot_description" textfile="$(find nifti_robot_description)/old_model/nifti_robot.urdf"/>
+</launch>

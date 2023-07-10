@@ -1,0 +1,6 @@
+#
+# simxInt simxSynchronousTrigger()
+#
+
+---
+int32 result

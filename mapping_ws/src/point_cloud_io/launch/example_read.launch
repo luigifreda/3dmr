@@ -1,0 +1,14 @@
+<launch>
+  
+  <!-- Publish point cloud from file -->
+  <node pkg="point_cloud_io" type="read" name="read" output="screen">
+    <param name="file_path" value="$(find point_cloud_io)/examples/cow.ply" />
+    <param name="topic"     value="/point_cloud" />
+    <param name="frame"     value="map" />
+    <param name="rate"      value="1.0" />
+  </node>
+    
+  <!-- Visualize the point cloud in rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find point_cloud_io)/examples/point_cloud_io.rviz" />
+    
+</launch>

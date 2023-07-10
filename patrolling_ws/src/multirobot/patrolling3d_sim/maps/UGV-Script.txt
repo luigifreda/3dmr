@@ -1,0 +1,355 @@
+------------------------------------------------------------------------------ 
+-- Following few lines automatically added by V-REP to guarantee compatibility 
+-- with V-REP 3.1.3 and later: 
+if (sim_call_type==sim_childscriptcall_initialization) then 
+    simSetScriptAttribute(sim_handle_self,sim_childscriptattribute_automaticcascadingcalls,false) 
+end 
+if (sim_call_type==sim_childscriptcall_cleanup) then 
+ 
+end 
+if (sim_call_type==sim_childscriptcall_sensing) then 
+    simHandleChildScripts(sim_call_type) 
+end 
+if (sim_call_type==sim_childscriptcall_actuation) then 
+    if not firstTimeHere93846738 then 
+        firstTimeHere93846738=0 
+    end 
+    simSetScriptAttribute(sim_handle_self,sim_scriptattribute_executioncount,firstTimeHere93846738) 
+    firstTimeHere93846738=firstTimeHere93846738+1 
+ 
+------------------------------------------------------------------------------ 
+ 
+robot_name = simGetScriptSimulationParameter(sim_handle_self,'name')
+use_ros = simGetScriptSimulationParameter(sim_handle_self, 'use_ros')
+use_light = simGetScriptSimulationParameter(sim_handle_self, 'use_light')
+laser_rot_speed = simGetScriptSimulationParameter(sim_handle_self, 'laser_rot_speed')
+
+function toString(name)
+    return robot_name..'/'..name
+end
+
+function prefix(name)
+    return robot_name..'_'..name
+end
+
+function suffix(name)
+    return name..'_'..robot_name.."#"
+end
+
+    if (simGetScriptExecutionCount()==0) then
+        pose_cov = {0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 99999.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 99999.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 99999.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.15}
+        twist_cov = {0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 99999.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 99999.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 99999.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.15}
+    
+        map0 = simGetObjectHandle('map#')
+        odom0 = simGetObjectHandle('odom#')
+        map = simGetObjectHandle(suffix('map'))
+        odom = simGetObjectHandle(suffix('odom'))
+        base_link = simGetObjectHandle('base_link')
+        imu = simGetObjectHandle('imu')
+        laser = simGetObjectHandle('laser')
+        left_track = simGetObjectHandle('left_track')
+        right_track = simGetObjectHandle('right_track')
+        front_left_flipper = simGetObjectHandle('front_left_flipper')
+        front_right_flipper = simGetObjectHandle('front_right_flipper')
+        rear_left_flipper = simGetObjectHandle('rear_left_flipper')
+        rear_right_flipper = simGetObjectHandle('rear_right_flipper')
+        
+        left_track_j = simGetObjectHandle('left_track_j')
+        right_track_j = simGetObjectHandle('right_track_j')
+        front_left_flipper_j = simGetObjectHandle('front_left_flipper_j')
+        front_right_flipper_j = simGetObjectHandle('front_right_flipper_j')
+        rear_left_flipper_j = simGetObjectHandle('rear_left_flipper_j')
+        rear_right_flipper_j = simGetObjectHandle('rear_right_flipper_j')
+        left_track_wh_a_j = simGetObjectHandle('left_track_wh_a_j')
+        left_track_wh_b_j = simGetObjectHandle('left_track_wh_b_j')
+        left_track_wh_c_j = simGetObjectHandle('left_track_wh_c_j')
+        left_track_wh_d_j = simGetObjectHandle('left_track_wh_d_j')
+        left_track_wh_e_j = simGetObjectHandle('left_track_wh_e_j')
+        right_track_wh_a_j = simGetObjectHandle('right_track_wh_a_j')
+        right_track_wh_b_j = simGetObjectHandle('right_track_wh_b_j')
+        right_track_wh_c_j = simGetObjectHandle('right_track_wh_c_j')
+        right_track_wh_d_j = simGetObjectHandle('right_track_wh_d_j')
+        right_track_wh_e_j = simGetObjectHandle('right_track_wh_e_j')
+        front_left_flipper_wh_1_j = simGetObjectHandle('front_left_flipper_wh_1_j')
+        front_left_flipper_wh_2_j = simGetObjectHandle('front_left_flipper_wh_2_j')
+        front_left_flipper_wh_3_j = simGetObjectHandle('front_left_flipper_wh_3_j')
+        front_left_flipper_wh_4_j = simGetObjectHandle('front_left_flipper_wh_4_j')
+        rear_left_flipper_wh_1_j = simGetObjectHandle('rear_left_flipper_wh_1_j')
+        rear_left_flipper_wh_2_j = simGetObjectHandle('rear_left_flipper_wh_2_j')
+        rear_left_flipper_wh_3_j = simGetObjectHandle('rear_left_flipper_wh_3_j')
+        rear_left_flipper_wh_4_j = simGetObjectHandle('rear_left_flipper_wh_4_j')
+        front_right_flipper_wh_1_j = simGetObjectHandle('front_right_flipper_wh_1_j')
+        front_right_flipper_wh_2_j = simGetObjectHandle('front_right_flipper_wh_2_j')
+        front_right_flipper_wh_3_j = simGetObjectHandle('front_right_flipper_wh_3_j')
+        front_right_flipper_wh_4_j = simGetObjectHandle('front_right_flipper_wh_4_j')
+        rear_right_flipper_wh_1_j = simGetObjectHandle('rear_right_flipper_wh_1_j')
+        rear_right_flipper_wh_2_j = simGetObjectHandle('rear_right_flipper_wh_2_j')
+        rear_right_flipper_wh_3_j = simGetObjectHandle('rear_right_flipper_wh_3_j')
+        rear_right_flipper_wh_4_j = simGetObjectHandle('rear_right_flipper_wh_4_j')
+        laser_j = simGetObjectHandle('laser_j')
+
+        targetObj=simGetObjectHandle('Robot_target')
+        simSetObjectParent(targetObj,-1,true)
+
+        node0 = simGetObjectHandle('node0')
+        node1 = simGetObjectHandle('node1')
+        node2 = simGetObjectHandle('node2')
+        node3 = simGetObjectHandle('node3')
+        node4 = simGetObjectHandle('node4')
+        node5 = simGetObjectHandle('node5')
+        node6 = simGetObjectHandle('node6')
+        node7 = simGetObjectHandle('node7')
+        node8 = simGetObjectHandle('node8')
+        node9 = simGetObjectHandle('node9')
+        node10 = simGetObjectHandle('node10')
+        node11 = simGetObjectHandle('node11')
+        node12 = simGetObjectHandle('node12')
+        node13 = simGetObjectHandle('node13')
+        node14 = simGetObjectHandle('node14')
+        node15 = simGetObjectHandle('node15')
+        node16 = simGetObjectHandle('node16')
+
+        --jaco_api_origin=simGetObjectHandle('jaco_api_origin')
+        --jaco_link_base=simGetObjectHandle('jaco_link_base')
+        --jaco_link_1=simGetObjectHandle('jaco_link_1')
+        --jaco_link_2=simGetObjectHandle('jaco_link_2')
+        --jaco_link_3=simGetObjectHandle('jaco_link_3')
+        --jaco_link_4=simGetObjectHandle('jaco_link_4')
+        --jaco_link_5=simGetObjectHandle('jaco_link_5')
+        --jaco_link_hand=simGetObjectHandle('jaco_link_hand')
+        --jaco_link_finger_1=simGetObjectHandle('jaco_link_finger_1')
+        --jaco_link_finger_2=simGetObjectHandle('jaco_link_finger_2')
+        --jaco_link_finger_3=simGetObjectHandle('jaco_link_finger_3')
+
+    
+        --laser_rot_speed = math.pi * 0.5
+        laser_rot_dir = 1
+    
+        console = -1
+        oldprint = print
+        print = function(...)
+            if console == -1 then
+                console = simAuxiliaryConsoleOpen("Aux Console", 500, 0x10)
+            end
+            simAuxiliaryConsolePrint(console, ...)
+        end
+    
+        front_left_flipper_j_k = 1
+        front_right_flipper_j_k = -1
+        rear_left_flipper_j_k = 1
+        rear_right_flipper_j_k = -1
+        front_left_flipper_j_offset = 0
+        front_right_flipper_j_offset = 0
+        rear_left_flipper_j_offset = 0
+        rear_right_flipper_j_offset = 0
+    
+        robot_baseline = 0.397
+        wheel_radius = 0.090
+
+        displacement = 0.1
+        vel_ref = 0.1
+        gain_k1 = 0.6
+        gain_k2 = 0.6
+    
+        if use_ros then
+           
+            -- broadcast TF frames:
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, odom, map, '')
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, map, map0, toString('map'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, odom, map, toString('odom'))  -- fake laser mapper
+            if use_light then
+                simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, odom, map, toString('odom'))
+            end
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, base_link, odom, toString('base_link'))
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, laser, base_link, toString('laser'))
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, imu, base_link, toString('imu'))
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, left_track, base_link, toString('left_track'))
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, front_left_flipper, left_track, toString('front_left_flipper'))
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, rear_left_flipper, left_track, toString('rear_left_flipper'))
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, right_track, base_link, toString('right_track'))
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, front_right_flipper, right_track, toString('front_right_flipper'))
+            simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, rear_right_flipper, right_track, toString('rear_right_flipper'))
+
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_api_origin, base_link, toString('jaco_api_origin'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_base, jaco_api_origin, toString('jaco_link_base'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_1, jaco_link_base, toString('jaco_link_1'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_2, jaco_link_1, toString('jaco_link_2'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_3, jaco_link_2, toString('jaco_link_3'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_4, jaco_link_3, toString('jaco_link_4'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_5, jaco_link_4, toString('jaco_link_5'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_hand, jaco_link_5, toString('jaco_link_hand'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_finger_1, jaco_link_hand,toString('jaco_link_finger_1'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_finger_2, jaco_link_hand,toString('jaco_link_finger_2'))
+            --simExtROS_enablePublisher('/tf', 1, simros_strmcmd_get_transform, jaco_link_finger_3, jaco_link_hand,toString('jaco_link_finger_3'))
+
+            -- broadcast point cloud:
+            simExtROS_enablePublisher(toString('scan_point_cloud_color'), 1, simros_strmcmd_get_range_finder_data, laser, -1, prefix('laser_data'))
+    
+            -- subscribe to Twist commands:
+            -- use_twist = true
+            --simExtROS_enableSubscriber('/local_joy/cmd_vel', 1, simros_strmcmd_set_twist_command, -1, -1, 'twist')
+            simExtROS_enableSubscriber(toString('/tracks_vel_cmd'), 1, simros_strmcmd_set_tracks_vel_command, -1, -1, prefix('tracks_vel'))
+            -- subscribe to low-level motors control:
+            -- simExtROS_enableSubscriber(toString('left_track/velocity'), 1, simros_strmcmd_set_float_signal, -1, -1, 'left_track_velocity')
+            -- simExtROS_enableSubscriber(toString('right_track/velocity'), 1, simros_strmcmd_set_float_signal, -1, -1, 'right_track_velocity')
+            simExtROS_enableSubscriber(toString('front_left_flipper/position'), 1, simros_strmcmd_set_float_signal, -1, -1, prefix('front_left_flipper_position'))
+            simExtROS_enableSubscriber(toString('front_right_flipper/position'), 1, simros_strmcmd_set_float_signal, -1, -1, prefix('front_right_flipper_position'))
+            simExtROS_enableSubscriber(toString('rear_left_flipper/position'), 1, simros_strmcmd_set_float_signal, -1, -1, prefix('rear_left_flipper_position'))
+            simExtROS_enableSubscriber(toString('rear_right_flipper/position'), 1, simros_strmcmd_set_float_signal, -1, -1, prefix('rear_right_flipper_position'))
+            
+            
+    
+            odom_cov = ''..simPackFloats(pose_cov)..simPackFloats(twist_cov)
+            simExtROS_enablePublisher(toString('odom'), 1, simros_strmcmd_get_odom_data, base_link, odom, odom_cov)
+            quadPosPublisher=simExtROS_enablePublisher(toString('/pose'),1,simros_strmcmd_get_object_pose,base_link,-1,'')
+            tarPosSubscriber=simExtROS_enableSubscriber(toString('/target_pose'),1,simros_strmcmd_set_object_pose,targetObj,-1,'')
+        end
+    end
+    
+    simHandleChildScripts(sim_call_type)
+    
+    -- get script params:
+    front_left_flipper_target_pos = simGetScriptSimulationParameter(sim_handle_self, 'front_left_flipper_target_pos')
+    front_right_flipper_target_pos = simGetScriptSimulationParameter(sim_handle_self, 'front_right_flipper_target_pos')
+    rear_left_flipper_target_pos = simGetScriptSimulationParameter(sim_handle_self, 'rear_left_flipper_target_pos')
+    rear_right_flipper_target_pos = simGetScriptSimulationParameter(sim_handle_self, 'rear_right_flipper_target_pos')
+    left_track_vel = simGetScriptSimulationParameter(sim_handle_self, 'left_track_vel')
+    right_track_vel = simGetScriptSimulationParameter(sim_handle_self, 'right_track_vel')
+    
+    -- process servo control from topics:
+    --if use_ros then
+    --    if use_twist then
+            -- apply twist:
+            -- local twist_raw_data=simGetStringSignal('twist')
+            -- if (twist_raw_data) then
+            --    local twist_data=simUnpackFloats(twist_raw_data)
+                --print('received '..#twist_data..' floats for twist\n')
+            --    left_track_vel = (twist_data[1] - twist_data[6] * robot_baseline * 0.5) / wheel_radius
+            --    right_track_vel = (twist_data[1] + twist_data[6] * robot_baseline * 0.5) / wheel_radius
+            -- end
+    --    else
+            -- apply raw velocity commands:
+    --        if simGetFloatSignal('left_track_velocity') then left_track_vel = simGetFloatSignal('left_track_velocity') end
+    --        if simGetFloatSignal('right_track_velocity') then right_track_vel = simGetFloatSignal('right_track_velocity') end
+        local tracks_vel_data = simGetStringSignal(prefix('tracks_vel'))
+        if (tracks_vel_data) then
+             local tracks_vel = simUnpackFloats(tracks_vel_data)
+             -- vel_tracks are angular velocities [rad/s], they need to be transformed in m/s
+             wheel_radius = 10
+             left_track_vel  = tracks_vel[1]*wheel_radius
+             right_track_vel = tracks_vel[2]*wheel_radius
+        end
+    --    end
+        if simGetFloatSignal(prefix('front_left_flipper_position')) then front_left_flipper_target_pos = simGetFloatSignal(prefix('front_left_flipper_position')) end
+        if simGetFloatSignal(prefix('front_right_flipper_position')) then front_right_flipper_target_pos = simGetFloatSignal(prefix('front_right_flipper_position')) end
+        if simGetFloatSignal(prefix('rear_left_flipper_position')) then rear_left_flipper_target_pos = simGetFloatSignal(prefix('rear_left_flipper_position')) end
+        if simGetFloatSignal(prefix('rear_right_flipper_position')) then rear_right_flipper_target_pos = simGetFloatSignal(prefix('rear_right_flipper_position')) end
+    -- end
+    
+    -- handle flippers servos:
+    simSetJointTargetPosition(front_left_flipper_j, front_left_flipper_j_k * front_left_flipper_target_pos)
+    simSetJointTargetPosition(front_right_flipper_j, front_right_flipper_j_k * front_right_flipper_target_pos)
+    simSetJointTargetPosition(rear_left_flipper_j, rear_left_flipper_j_k * rear_left_flipper_target_pos)
+    simSetJointTargetPosition(rear_right_flipper_j, rear_right_flipper_j_k * rear_right_flipper_target_pos)
+
+    -- input-output feedback linearization
+    -- robot_position = simGetObjectPosition(base_link,map)
+    -- robot_orientation = simGetObjectOrientation(base_link,-1)
+    -- target_position=simGetObjectPosition(targetObj,base_link)
+    -- target_orientation=simGetObjectOrientation(targetObj,base_link)
+    -- error_x = target_position[1] - robot_position[1]
+    -- error_y = target_position[2] - robot_position[2]
+    -- yaw_target = math.atan(target_position[2],target_position[1])
+    --target_vel_x = vel_ref * math.cos(target_orientation[3])
+    --target_vel_y = vel_ref * math.sin(target_orientation[3])
+    -- target_vel_x = vel_ref * math.cos(yaw_target)
+    -- target_vel_y = vel_ref * math.sin(yaw_target)
+    -- u1 = target_vel_x + gain_k1 * error_x
+    --u2 = target_vel_y + gain_k2 * error_y
+    --a = math.cos(robot_orientation[3])
+    --b = math.sin(robot_orientation[3])
+    --c = -math.sin(robot_orientation[3])/displacement
+    --d = math.cos(robot_orientation[3])/displacement
+    --linear_vel = a * u1 + b * u2
+    --angular_vel = c * u1 + d * u2
+    --left_track_vel = linear_vel - (0.5 * robot_baseline * angular_vel)
+    --right_track_vel = linear_vel + (0.5 * robot_baseline * angular_vel)
+    --print('Left track vel '..left_track_vel..'\n')
+    --print('Right track vel '..right_track_vel..'\n')
+    --if(left_track_vel < -0.6) then left_track_vel = -0.6 end
+    --if(left_track_vel > 0.6) then left_track_vel = 0.6 end
+    --if(right_track_vel < -0.6) then right_track_vel = -0.6 end
+    --if(right_track_vel > 0.6) then right_track_vel = 0.6 end
+    --robot_position_map = simGetObjectPosition(base_link,map)
+    --robot_position_abs = simGetObjectPosition(base_link,-1)
+    --print('robot_pos_map x: '..robot_position_map[1]..' y: '..robot_position_map[2]..' z: '..robot_position_map[3]..'\n')
+    --print('robot_position_abs x: '..robot_position_abs[1]..' y: '..robot_position_abs[2]..' z: '..robot_position_abs[3]..'\n')
+    target_position=simGetObjectPosition(targetObj,-1)
+    simSetObjectPosition(targetObj,-1,target_position)
+    
+    
+    -- handle tracks rotation (simulated with wheels):
+    simSetJointTargetVelocity(left_track_wh_a_j, left_track_vel)
+    simSetJointTargetVelocity(left_track_wh_b_j, left_track_vel)
+    simSetJointTargetVelocity(left_track_wh_c_j, left_track_vel)
+    simSetJointTargetVelocity(left_track_wh_d_j, left_track_vel)
+    simSetJointTargetVelocity(left_track_wh_e_j, left_track_vel)
+    simSetJointTargetVelocity(front_left_flipper_wh_1_j, left_track_vel*180/140)
+    simSetJointTargetVelocity(front_left_flipper_wh_2_j, left_track_vel*180/100)
+    simSetJointTargetVelocity(front_left_flipper_wh_3_j, left_track_vel*180/75)
+    simSetJointTargetVelocity(front_left_flipper_wh_4_j, left_track_vel*180/50)
+    simSetJointTargetVelocity(rear_left_flipper_wh_1_j, left_track_vel*180/140)
+    simSetJointTargetVelocity(rear_left_flipper_wh_2_j, left_track_vel*180/100)
+    simSetJointTargetVelocity(rear_left_flipper_wh_3_j, left_track_vel*180/75)
+    simSetJointTargetVelocity(rear_left_flipper_wh_4_j, left_track_vel*180/50)
+    simSetJointTargetVelocity(right_track_wh_a_j, -right_track_vel)
+    simSetJointTargetVelocity(right_track_wh_b_j, -right_track_vel)
+    simSetJointTargetVelocity(right_track_wh_c_j, -right_track_vel)
+    simSetJointTargetVelocity(right_track_wh_d_j, -right_track_vel)
+    simSetJointTargetVelocity(right_track_wh_e_j, -right_track_vel)
+    simSetJointTargetVelocity(front_right_flipper_wh_1_j, -right_track_vel*180/140)
+    simSetJointTargetVelocity(front_right_flipper_wh_2_j, -right_track_vel*180/100)
+    simSetJointTargetVelocity(front_right_flipper_wh_3_j, -right_track_vel*180/75)
+    simSetJointTargetVelocity(front_right_flipper_wh_4_j, -right_track_vel*180/50)
+    simSetJointTargetVelocity(rear_right_flipper_wh_1_j, -right_track_vel*180/140)
+    simSetJointTargetVelocity(rear_right_flipper_wh_2_j, -right_track_vel*180/100)
+    simSetJointTargetVelocity(rear_right_flipper_wh_3_j, -right_track_vel*180/75)
+    simSetJointTargetVelocity(rear_right_flipper_wh_4_j, -right_track_vel*180/50)
+    
+    
+    dt = simGetSimulationTimeStep()
+    
+    -- compute differential joint for tracks:
+    l = simGetJointPosition(left_track_j)
+    r = simGetJointPosition(right_track_j)
+    simSetJointPosition(left_track_j, (l-r)/2)
+    simSetJointPosition(right_track_j, (r-l)/2)
+    
+    -- handle laser rotation:
+    if (( laser_rot_dir == 1) and ( simGetJointPosition(laser_j) >= 0.5 * math.pi) ) or
+       (( laser_rot_dir == -1) and ( simGetJointPosition(laser_j) <= -0.5 * math.pi) ) then
+        laser_rot_dir = -laser_rot_dir
+    end
+    --simSetJointTargetPosition(laser_j, laser_rot_dir * 0.51 * math.pi)
+    simSetJointTargetVelocity(laser_j, laser_rot_dir * laser_rot_speed)
+    
+    -- if (simGetSimulationState() == sim_simulation_advancing_lastbeforestop) then
+        -- Put some restoration code here
+    -- end
+    if (simGetSimulationState()==sim_simulation_advancing_lastbeforestop) then
+        -- Now reset the manipulation sphere:
+        simSetObjectParent(targetObj,base_link,true)
+        simSetObjectPosition(targetObj,sim_handle_parent,{0,0,0})
+        simSetObjectOrientation(targetObj,sim_handle_parent,{0,0,0})
+    end
+ 
+    
+
+   
+    
+------------------------------------------------------------------------------ 
+-- Following few lines automatically added by V-REP to guarantee compatibility 
+-- with V-REP 3.1.3 and later: 
+end 
+------------------------------------------------------------------------------ 
+

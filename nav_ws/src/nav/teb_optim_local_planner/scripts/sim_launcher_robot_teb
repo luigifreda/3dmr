@@ -1,0 +1,38 @@
+#!/bin/bash
+# Author: Luigi Freda 
+
+export NUM_ROBOTS=1
+export ROBOT_NAME="robot"
+
+export XTERM_OPTIONS="-hold -iconic" # the "iconic" option allows to automatically minimize all the launched xterms
+
+########################################################################################################
+
+if [[ -z "${NAV_HOME}" ]]; then
+    echo "ERROR: missing env var NAV_HOME"
+    echo "please, source source_all.bash in the main 3DMR folder"
+    exit 
+else
+    source $NAV_HOME/source_all.bash
+fi
+
+########################################################################################################
+#- TEB PLANNERS
+
+for i in `seq 1 $NUM_ROBOTS`; do
+    #- Trajectory Control 
+    open_term "$ROBOT_NAME"teb_local_planner "echo $ROBOT_NAME teb local planner; roslaunch teb_optim_local_planner optim_node.launch; bash" &
+
+done  
+
+########################################################################################################
+
+echo DONE 
+
+# NOTE: you can use the following command to get the xterm window live if the app terminates or crashes
+# xterm $XTERM_OPTIONS -e "<you_command>; bash" &
+
+                                                   
+
+
+

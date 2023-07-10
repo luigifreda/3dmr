@@ -1,0 +1,8 @@
+#
+# simInt simSetIntegerParameter(simInt parameter,simInt intState)
+#
+
+int32 parameter
+int32 parameterValue
+---
+int32 result

@@ -1,0 +1,8 @@
+#
+# simxInt simxLoadModel(const simxChar* modelPathAndName,simxChar options,simxInt* baseHandle,simxInt operationMode)
+#
+
+string fileName
+---
+int32 result
+int32 baseHandle

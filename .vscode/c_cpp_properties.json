@@ -1,0 +1,42 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "${workspaceFolder}/nav_ws/devel/include/**",
+                "${workspaceFolder}/mapping_ws/devel/include/**",
+                "${workspaceFolder}/mapping_ws/src/eigen_checks/include/**",
+                "${workspaceFolder}/mapping_ws/src/minkindr/minkindr/include/**",
+                "${workspaceFolder}/mapping_ws/src/minkindr_ros/minkindr_conversions/include/**",
+                "${workspaceFolder}/mapping_ws/src/volumetric_mapping/octomap_world/include/**",
+                "${workspaceFolder}/mapping_ws/src/volumetric_mapping/volumetric_map_base/include/**",     
+                "${workspaceFolder}/mapping_ws/src/voxblox/voxblox/include/**",
+                "${workspaceFolder}/mapping_ws/src/voxblox/voxblox_ros/include/**",
+                "${workspaceFolder}/mapping_ws/src/point_cloud_io/include/**",  
+                "${workspaceFolder}/exploration_ws/src/expl_planner/include/expl_planner/**"              
+                "${workspaceFolder}/nav_ws/src/nav/octomap_mux/include/**",           
+                "${workspaceFolder}/nav_ws/src/nav/path_planner/include/path_planner/**",
+                "${workspaceFolder}/nav_ws/src/nav/path_planner/include/kdtree/**",                
+                "${workspaceFolder}/nav_ws/src/nav/path_planner_rviz_wp_plugin/include/**",
+                "${workspaceFolder}/nav_ws/src/nav/jackal_trajectory_control/include/**",
+                "${workspaceFolder}/nav_ws/src/msgs/trajectory_control_msgs/include/**",
+                "${workspaceFolder}/nav_ws/src/vrep/vrep_ugv_plugin/include/**",
+                "${workspaceFolder}/nav_ws/src/nav/teb_local_planner/include/**",
+                "${workspaceFolder}/nav_ws/src/nav/teb_local_planner/include/optim_local_planner/**",                
+                "${workspaceFolder}/teb_ws/src/teb_local_planner/include/teb_local_planner/**",      
+                "${workspaceFolder}/teb_ws/src/teb_local_planner/include/**",                              
+                "/opt/ros/noetic/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+  <arg name="robot_name" default="ugv1" />
+  <arg name="robot_topic_prefix" default="$(arg robot_name)/" />  <!-- prefix for topics, must be with final slash -->
+  <arg name="robot_frame_prefix" default="$(arg robot_name)/" />  <!-- prefix for frames, must be with final slash -->
+
+
+  <node name="gazebo_ugv_teleop_key_$(arg robot_name)" pkg="gazebo_utils" type="gazebo_ugv_teleop_key_thread" output="screen">
+        <param name="robot_name" value="$(arg robot_name)"/>
+        <param name="robot_prefix" value="$(arg robot_topic_prefix)"/>        
+  </node>
+
+</launch>

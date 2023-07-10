@@ -1,0 +1,8 @@
+#
+# simInt simGetFloatSignal(const simChar* signalName,simFloat* signalValue)
+#
+
+string signalName
+---
+int32 result
+float32 signalValue

@@ -1,0 +1,16 @@
+byte START_SCANNING=0
+byte STOP_SCANNING=1
+byte action
+float64 speed
+---
+
+byte SUCCESS=0
+byte WARNING=1
+byte ERROR=2
+byte result
+---
+byte ERROR=2
+byte WAITING_FOR_FIRST_SWIPE=3
+byte WAITING_FOR_COMPLETE_SWIPE=4
+byte READY=0
+byte status

@@ -1,0 +1,22 @@
+
+
+pubThread/sleep_time: 100  # in milliseconds
+pubThread/no_sleep_max_queue_size: 6  # do not sleep if the queue size is bigger than this number 
+
+# ==== 
+
+scan_filter1/tf_frame: "map"
+scan_filter1/tf_cache_length: 20 
+
+scan_filter1/pcl_throttle: 2
+scan_filter1/dist_pose_thres: 0.20
+scan_filter1/rot_pose_thres: 30 # set in angles
+
+# ==== 
+
+scan_filter2/tf_frame: "map"
+scan_filter2/tf_cache_length: 20 
+
+scan_filter2/pcl_throttle: 2
+scan_filter2/dist_pose_thres: 0.20
+scan_filter2/rot_pose_thres: 30 # set in angles

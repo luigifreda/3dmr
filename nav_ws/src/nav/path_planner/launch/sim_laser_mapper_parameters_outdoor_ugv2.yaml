@@ -1,0 +1,55 @@
+LaserMapper: {
+  publish_cloud_every_x_scan: 10,
+  max_number_of_points: 1000000,
+  use_max_density_filter: true,
+  max_point_cloud_density: "10000",
+  distance_to_consider_fixed: 30,
+  separate_distant_map: true,
+  publish_by_service_call: false,
+  publish_local_map: true,
+  publish_distant_map: false,
+  publish_full_map: false,
+  map_publication_rate_hz: 0.3,
+  covariances_publication_rate_hz: 0.1,
+  process_every_x_scan: 1,
+  publish_world_to_odom: true,
+  tf_publication_rate_hz: 10,
+  
+  assembled_cloud_sub_topic: "/vrep/ugv2/dynamic_point_cloud",
+  trajectory_pub_topic: "/vrep/ugv2/trajectory",
+  odometry_trajectory_pub_topic: "/vrep/ugv2/odometry_trajectory",
+  full_map_pub_topic: "/vrep/ugv2/full_map",
+  local_map_pub_topic: "/vrep/ugv2/local_map",
+  distant_map_pub_topic: "/vrep/ugv2/distant_map",
+  covariances_pub_topic: "/vrep/ugv2/covariances",
+  
+  world_frame: "ugv2/map",
+  odom_frame: "/odom_ugv2",
+  sensor_frame: "ugv2/base_link",
+
+  create_filtered_map: true,
+  minimum_distance_to_add_pose: 0,
+  voxel_size_m: 0.10,
+  minimum_point_number_per_voxel: 2,
+  
+  LaserTrack: {
+    use_icp_factors: true,
+    strategy_for_icp_transformations: "local_scan_to_sub_map",
+    nscan_to_match: 3,
+    nscan_in_sub_map: 30,
+    save_icp_results: false
+  },
+
+  OnlineEstimator: {
+    odometry_noise_model: [500, 500, 500, 500, 0.015, 500],
+    icp_noise_model: [0.05, 0.05, 0.05, 0.015, 0.015, 0.015],
+    loop_closure_noise_model: [0.05, 0.005, 0.005, 0.015, 0.15, 0.015],
+    add_m_estimator_on_odom: false,
+    add_m_estimator_on_icp: true,
+    add_m_estimator_on_loop_closures: true,
+    sliding_window_size: 3,
+    add_intermediate_poses: false,
+    publish_covariances: false    
+  }
+}
+

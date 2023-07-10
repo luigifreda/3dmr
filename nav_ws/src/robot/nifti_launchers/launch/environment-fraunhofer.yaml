@@ -1,0 +1,7 @@
+# only values different from default-environment.yaml need to be defined here; the default config is always loaded
+
+# Room C1-208 heading from the window towards the door
+initial_lat: deg(50.74895022)
+initial_lon: deg(7.20240077)
+initial_altitude: 237.0
+initial_heading: deg(100.0)

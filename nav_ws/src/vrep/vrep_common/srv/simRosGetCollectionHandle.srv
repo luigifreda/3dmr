@@ -1,0 +1,7 @@
+#
+# simInt simGetCollectionHandle(const simChar* collectionName)
+#
+
+string collectionName
+---
+int32 handle

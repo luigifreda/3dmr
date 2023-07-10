@@ -1,0 +1,13 @@
+# 1 "WaypointsToolSimUgv1.h"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "<command-line>" 2
+# 1 "WaypointsToolSimUgv1.h"
+# 9 "WaypointsToolSimUgv1.h"
+namespace path_planner_rviz_wp_plugin
+{
+# 65 "WaypointsToolSimUgv1.h"
+class WaypointsToolSimUgv1: public WaypointsTool { Q_OBJECT public: WaypointsToolSimUgv1( const std::string& pcl_input_topic_name = "/vrep/ugv1" "/local_map", const std::string& planner_task_feedback_topic_name = "/vrep/ugv1" "/planner/tasks/feedback", const std::string& planner_task_append_topic_name = "/vrep/ugv1" "/planner/tasks/append", const std::string& planner_task_remove_topic_name = "/vrep/ugv1" "/planner/tasks/remove", const std::string& planner_waypoints_server_name = "/vrep/ugv1" "/planner/waypoints/server" );};
+
+}

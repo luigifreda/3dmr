@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+  <arg name="robot_number" default="1"/>
+  <arg name="robot_name" default="ugv1"/>
+  <arg name="map" default="/vrep" />   
+  <arg name="interactive" default="false"/>
+  
+  
+  <arg name="map_graph_filename" value="$(find patrolling3d_sim)/maps/$(arg map)/$(arg map).graph" />
+  
+  <arg name="robot_frame" default="base_link"/>
+  <arg name="odom_frame_topic" default="odom"/>
+  
+  <arg name="use_marker_controller" default="true" /> <!-- boolean: true, false -->
+    
+  <!-- global parameters -->
+  <param name="/goal_reached_wait"   value="0"/>
+  <param name="/communication_delay" value="0"/> 
+
+  <node name="Conscientious_Reactive_$(arg robot_number)" pkg="patrolling3d_sim" type="Conscientious_Reactive" 
+   args="__name:=patrol_robot_$(arg robot_number) $(arg map_graph_filename) $(arg robot_number) $(arg interactive)"  output="screen">
+	    
+        <param name="check_interference_timeout" value="5" />
+        
+        <param name="robot_frame" value="$(arg robot_frame)"/>
+    
+        <param name="traj_act_client_name" value="/trajectory_control_action_server_$(arg robot_name)"/>
+        
+        <param name="patrolling_pause_topic" value="/patrolling/task/pause"/>
+        
+        <param name = "use_marker_controller" value = "$(arg use_marker_controller)"/>        
+        <!--param name = "int_marker_server_name" value = "$(arg simulator)/$(arg robot_name)/patrolling_marker_controller"/-->
+        <param name = "int_marker_name" value = "patrolling_marker_$(arg robot_name)"/>          
+                
+        <!-- Input -->        
+        <param name="odom_frame_topic" value="$(arg odom_frame_topic)"/>
+        <param name="build_graph_event_topic" value="/build_graph_event" />
+        <param name="graph_topic" value="/patrolling/graph" />
+        <param name="path_plan_stat_topic" value= "/path_planning_status"/>
+        
+        <!-- Output --> 
+        <param name="goal_topic" value="/goal_topic"/>
+        <param name="planning_goal_abort_topic" value="/goal_abort_topic"/>
+        <param name="nodes_topic" value="/patrolling_nodes_updated_markers"/>       
+        
+  </node>
+
+</launch>

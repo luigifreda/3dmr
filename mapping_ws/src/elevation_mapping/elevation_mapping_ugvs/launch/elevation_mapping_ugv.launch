@@ -1,0 +1,53 @@
+<launch>
+
+  <arg name="simulator" default="" />
+  <arg name="robot_name" default="ugv1" />  <!-- this also defines the robot id, the last digit after "ugv" -->        
+  <arg name="use_rviz" default="true" />  
+
+  <!-- override elevation map extension params specified in simple_map_ugv.yaml -->
+  <arg name="length_in_x" default="5" />
+  <arg name="length_in_y" default="5" />  
+
+  <!-- override input source params specified in robot_ugv.yaml -->
+  <arg name="ignore_points_below" default="-0.5" />
+  <arg name="ignore_points_above" default="0.5" />  
+
+
+  <!-- Elevation mapping node -->
+  <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping_$(arg robot_name)" output="screen">
+    <rosparam command="load" file="$(find elevation_mapping_ugvs)/config/robots/robot_ugv.yaml" />
+    <rosparam command="load" file="$(find elevation_mapping_ugvs)/config/elevation_maps/simple_map_ugv.yaml" />
+    <rosparam command="load" file="$(find elevation_mapping_ugvs)/config/postprocessing/postprocessor_pipeline.yaml" />
+    
+    <!-- override with input params -->
+    <rosparam param="input_sources/ground_truth_cloud/topic" subst_value="True">/$(arg robot_name)/os_cloud_node/points</rosparam>   
+    <rosparam param="input_sources/ground_truth_cloud/sensor_processor/ignore_points_below" subst_value="True">$(arg ignore_points_below)</rosparam>   
+    <rosparam param="input_sources/ground_truth_cloud/sensor_processor/ignore_points_above" subst_value="True">$(arg ignore_points_above)</rosparam>    
+    <rosparam param="length_in_x" subst_value="True">$(arg length_in_x)</rosparam>   
+    <rosparam param="length_in_y" subst_value="True">$(arg length_in_y)</rosparam>       
+    <rosparam param="robot_base_frame_id" subst_value="True">$(arg robot_name)/base_link</rosparam>   
+    <rosparam param="track_point_frame_id" subst_value="True">$(arg robot_name)/base_link</rosparam>
+  </node>
+
+
+  <!-- Publish some points -->
+  <!-- <node pkg="point_cloud_io" type="read" name="read_ply" output="screen">
+    <param name="file_path" value="$(find elevation_mapping_ugvs)/sample_data/maze.ply" />
+    <param name="topic" value="/points" />
+    <param name="frame" value="map" />
+    <param name="rate" value="1.0" />
+  </node> -->
+
+  <!-- Setup a transform between the world and the robot -->
+  <!-- <node pkg="tf" type="static_transform_publisher" name="world_to_robot" args="2.0 6.0 0 0 0.0 0 /map /base 100"/> -->
+
+  <!-- Launch visualizations for the resulting elevation map -->
+  <include file="$(find elevation_mapping_ugvs)/launch/visualization_ugv.launch">
+    <arg name="simulator" value="$(arg simulator)" />
+    <arg name="robot_name" value="$(arg robot_name)" />    
+  </include> 
+
+  <!-- Launch RViz with the demo configuration -->
+  <node if="$(arg use_rviz)" name="rviz_em" pkg="rviz" type="rviz" args="-d $(find elevation_mapping_ugvs)/rviz/elevation_map_visualization.rviz" />
+
+</launch>

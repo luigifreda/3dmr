@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>jackal_3dmain</name>
+  <version>1.0.0</version>
+  <description>jackal 3D main</description>
+
+  <maintainer email="luigifreda@gamil.com">Luigi</maintainer>
+
+  <license>TODO</license>
+
+  <author>Luigi Freda</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <run_depend>roscpp</run_depend>
+
+  <build_depend>rospy</build_depend>
+  <run_depend>rospy</run_depend>
+  
+  <build_depend>tf</build_depend>
+  <run_depend>tf</run_depend>
+
+</package>

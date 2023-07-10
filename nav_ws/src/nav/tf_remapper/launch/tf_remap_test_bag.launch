@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+
+<!--
+links:
+http://answers.ros.org/question/216582/how-to-use-tf_remap/
+http://ros-users.122217.n3.nabble.com/wiki-entry-for-tf-remap-td1840280.html
+http://answers.ros.org/question/11875/set-tf_remap-private-parameters-from-console/ 
+http://wiki.ros.org/geometry/CoordinateFrameConventions
+-->
+
+<launch>
+      
+    <arg name="robot_name" value="ugv1" /> 
+      
+    <arg name="file" default="/home/luigi/Work/tradr_datasets/tjex_2016/ugv_2016-07-08-10-08-52.bag" /> <!-- put your bag file here --> 
+      
+     <!--remap from="tf" to="tf_old"/--> <!-- if you put this here there will be two tf trees: one with the new frames and one with the old frames -->
+      
+    <!-- here we have to list all the frames we want to rename -->
+    <arg name="mappings" default="
+            [
+             {old: odom, new: $(arg robot_name)/odom}, {old: /odom, new: $(arg robot_name)/odom},
+             {old: map, new: $(arg robot_name)/map}, {old: /map, new: $(arg robot_name)/map},
+             {old: base_link, new: $(arg robot_name)/base_link}, {old: /base_link, new: $(arg robot_name)/base_link},
+             {old: laser, new: $(arg robot_name)/laser}, {old: /laser, new: $(arg robot_name)/laser},
+             {old: imu, new: $(arg robot_name)/imu}, {old: /imu, new: $(arg robot_name)/imu},
+             {old: antenna, new: $(arg robot_name)/antenna}, {old: /antenna, new: $(arg robot_name)/antenna},
+             {old: battery, new: $(arg robot_name)/battery}, {old: /battery, new: $(arg robot_name)/battery},
+             {old: left_track, new: $(arg robot_name)/left_track}, {old: /left_track, new: $(arg robot_name)/left_track},
+             {old: front_left_flipper, new: $(arg robot_name)/front_left_flipper}, {old: /front_left_flipper, new: $(arg robot_name)/front_left_flipper},
+             {old: front_left_flipper_end_point, new: $(arg robot_name)/front_left_flipper_end_point}, {old: /front_left_flipper_end_point, new: $(arg robot_name)/front_left_flipper_end_point},
+             {old: rear_left_flipper, new: $(arg robot_name)/rear_left_flipper}, {old: /rear_left_flipper, new: $(arg robot_name)/rear_left_flipper},             
+             {old: right_track, new: $(arg robot_name)/right_track}, {old: /right_track, new: $(arg robot_name)/right_track},
+             {old: front_right_flipper, new: $(arg robot_name)/front_right_flipper}, {old: /front_right_flipper, new: $(arg robot_name)/front_right_flipper},
+             {old: front_right_flipper_end_point, new: $(arg robot_name)/front_right_flipper_end_point}, {old: /front_right_flipper_end_point, new: $(arg robot_name)/front_right_flipper_end_point},
+             {old: rear_right_flipper, new: $(arg robot_name)/rear_right_flipper}, {old: /rear_right_flipper, new: $(arg robot_name)/rear_right_flipper},
+             {old: rear_right_box, new: $(arg robot_name)/rear_right_box}, {old: /rear_right_box, new: $(arg robot_name)/rear_right_box},
+             {old: top_box, new: $(arg robot_name)/top_box}, {old: /top_box, new: $(arg robot_name)/top_box},                                                                             
+             {old: omnicam, new: $(arg robot_name)/omnicam}, {old: /top_box, new: $(arg robot_name)/omnicam},     
+             {old: ptz, new: $(arg robot_name)/ptz}, {old: /ptz, new: $(arg robot_name)/ptz},
+             {old: pano, new: $(arg robot_name)/pano}, {old: /pano, new: $(arg robot_name)/pano},                         
+             {old: jaco_api_origin, new: $(arg robot_name)/jaco_api_origin}, {old: /jaco_api_origin, new: $(arg robot_name)/jaco_api_origin},
+             {old: jaco_link_base, new: $(arg robot_name)/jaco_link_base}, {old: /jaco_link_base, new: $(arg robot_name)/jaco_link_base},
+             {old: jaco_link_1, new: $(arg robot_name)/jaco_link_1}, {old: /jaco_link_1, new: $(arg robot_name)/jaco_link_1},
+             {old: jaco_link_2, new: $(arg robot_name)/jaco_link_2}, {old: /jaco_link_2, new: $(arg robot_name)/jaco_link_2},
+             {old: jaco_link_3, new: $(arg robot_name)/jaco_link_3}, {old: /jaco_link_3, new: $(arg robot_name)/jaco_link_3},
+             {old: jaco_link_4, new: $(arg robot_name)/jaco_link_4}, {old: /jaco_link_4, new: $(arg robot_name)/jaco_link_4},
+             {old: jaco_link_5, new: $(arg robot_name)/jaco_link_5}, {old: /jaco_link_5, new: $(arg robot_name)/jaco_link_5},
+             {old: jaco_link_hand, new: $(arg robot_name)/jaco_link_hand}, {old: /jaco_link_hand, new: $(arg robot_name)/jaco_link_hand},
+             {old: jaco_link_finger_1, new: $(arg robot_name)/jaco_link_finger_1}, {old: /jaco_link_finger_1, new: $(arg robot_name)/jaco_link_finger_1},
+             {old: jaco_link_finger_2, new: $(arg robot_name)/jaco_link_finger_2}, {old: /jaco_link_finger_2, new: $(arg robot_name)/jaco_link_finger_2},
+             {old: jaco_link_finger_3, new: $(arg robot_name)/jaco_link_finger_3}, {old: /jaco_link_finger_3, new: $(arg robot_name)/jaco_link_finger_3}
+            ]
+    "/> 
+    
+
+   <!-- ===================================================================================================== -->
+   <!-- here we have to list all the topics we want to rename -->    
+   
+          <remap from="/magnetic" to="$(arg robot_name)/magnetic" />
+          <remap from="/odom" to="$(arg robot_name)/odom" />
+          <remap from="/scan" to="$(arg robot_name)/scan" />
+          <remap from="/filtered_joint_states" to="$(arg robot_name)/filtered_joint_states" />
+          <remap from="/flippers_state" to="$(arg robot_name)/flippers_state" />
+          <remap from="/robot_status" to="$(arg robot_name)/robot_status" />
+          <remap from="/temperature" to="$(arg robot_name)/temperature" />
+          <remap from="/diagnostics" to="$(arg robot_name)/diagnostics" />
+          <remap from="/cmd_vel" to="$(arg robot_name)/cmd_vel" />
+          <remap from="/local_joy/joy" to="$(arg robot_name)/local_joy/joy" />
+          <remap from="/joint_states" to="$(arg robot_name)/joint_states" />
+          <remap from="/imu/data" to="$(arg robot_name)/imu/data" />
+          <remap from="/local_joy/cmd_vel" to="$(arg robot_name)/local_joy/cmd_vel" />
+          <remap from="/diagnostics_toplevel_state" to="$(arg robot_name)/diagnostics_toplevel_state" />
+          <remap from="/tracks_vel" to="$(arg robot_name)/tracks_vel" />
+          <remap from="/posture" to="$(arg robot_name)/posture" />
+          <remap from="/diagnostics_agg" to="$(arg robot_name)/diagnostics_agg" />
+
+   <!-- ===================================================================================================== -->
+   <!-- frames inside topics are not renamed; here you can reconnect old-frames with new frames but this cannot be used with multiple robots -->    
+   
+   <node pkg="tf" type="static_transform_publisher" name="tf_laser_broadcaster" args="0 0 0 0 0 0 1 $(arg robot_name)/laser laser  100"/>
+   
+   <!-- ===================================================================================================== -->
+      
+    <node pkg="tf" type="tf_remap" name="tf_remapper" output="screen">
+        <rosparam param="mappings" subst_value="true">$(arg mappings)</rosparam>
+    </node>
+      
+      
+    <param name="use_sim_time" value="true" />
+    
+    <node pkg="rosbag" type="play" name="bag_player" args="--clock $(arg file)">
+      <remap from="tf" to="tf_old" />
+    </node>  
+      
+    <!-- this will create a file frames.pdf in your home folder ".ros" -->
+    <node pkg="tf" type="view_frames" name="frames_viewer" output="screen" respawn="true">
+     <!--remap from="tf" to="tf_old"/--> <!-- this is not needed here since we want the new remapped tf -->
+    </node>
+    
+    <!--node pkg="rqt_tf_tree" type="rqt_tf_tree" name="tf_tree_viewer" output="screen" respawn="true"/-->
+      
+
+</launch>

@@ -1,0 +1,9 @@
+#
+# simInt simSetObjectPosition(simInt objectHandle,simInt relativeToObjectHandle,simFloat* pos)
+# simInt simSetObjectQuaternion(simInt objectHandle,simInt relativeToObjectHandle,simFloat* quat)
+
+int32 handle
+int32 relativeToObjectHandle
+geometry_msgs/Pose pose
+---
+int32 result

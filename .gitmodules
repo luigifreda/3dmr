@@ -1,0 +1,18 @@
+[submodule "teb_ws/src/teb_local_planner"]
+	path = teb_ws/src/teb_local_planner
+	url = git@github.com:rst-tu-dortmund/teb_local_planner.git
+[submodule "mapping_ws/src/elevation_mapping/elevation_mapping"]
+	path = mapping_ws/src/elevation_mapping/elevation_mapping
+	url = git@github.com:ANYbotics/elevation_mapping.git
+[submodule "mapping_ws/src/elevation_mapping/grid_map"]
+	path = mapping_ws/src/elevation_mapping/grid_map
+	url = git@github.com:ANYbotics/grid_map.git
+[submodule "mapping_ws/src/elevation_mapping/kindr"]
+	path = mapping_ws/src/elevation_mapping/kindr
+	url = git@github.com:ANYbotics/kindr.git
+[submodule "mapping_ws/src/elevation_mapping/kindr_ros"]
+	path = mapping_ws/src/elevation_mapping/kindr_ros
+	url = git@github.com:ANYbotics/kindr_ros.git
+[submodule "mapping_ws/src/elevation_mapping/message_logger"]
+	path = mapping_ws/src/elevation_mapping/message_logger
+	url = git@github.com:ANYbotics/message_logger.git

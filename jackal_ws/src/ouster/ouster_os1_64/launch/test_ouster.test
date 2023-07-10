@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find ouster_os1_64)/launch/os1_64_alone.launch">
+      <arg name="gui" default="false"/>
+  </include>
+  <test test-name="test_ouster" pkg="ouster_os1_64" time-limit="60.0" type="test_ouster.py" />
+</launch>

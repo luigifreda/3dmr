@@ -1,0 +1,8 @@
+#
+# simInt simSetFloatingParameter(simInt parameter,simFloat floatState)
+#
+
+int32 parameter
+float32 parameterValue
+---
+int32 result

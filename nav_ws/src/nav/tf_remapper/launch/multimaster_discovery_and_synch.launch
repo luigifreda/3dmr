@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+
+<!--
+links:
+http://wiki.ros.org/multimaster_fkie/Tutorials/Setup%20a%20ROS%20master%20synchronization
+-->
+
+<launch>
+      
+    <node pkg="master_discovery_fkie" type="master_discovery" name="master_discovery" output="screen"/>
+    
+    <node pkg="master_sync_fkie" type="master_sync" name="master_sync" output="screen"/>
+
+</launch>

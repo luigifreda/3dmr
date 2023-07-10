@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    
+    <arg name="prefix" default="robot"/>
+      
+     <!--remap from="tf" to="tf_old"/--> <!-- if you put this here there will be two tf trees: one with the new frames and one with the old frames -->
+      
+    <!-- here we have to list all the frames we want to rename -->
+    <arg name="mappings" default="
+            [
+             {old: map, new: $(arg prefix)/map}, {old: /map, new: $(arg prefix)/map}
+            ]
+    "/> 
+    
+
+   <!-- ===================================================================================================== -->
+   <!-- frames inside topics are not renamed; here you can reconnect old-frames with new frames but this cannot be used with multiple robots -->    
+   
+   <node pkg="tf" type="static_transform_publisher" name="tf_static_map_to_robotmap_broadcaster" args="1 1 0 0 0 0 1 map $(arg prefix)/map  100"/>
+   
+   <!-- ===================================================================================================== -->
+      
+    <node pkg="tf" type="tf_remap" name="tf_remapper" output="screen">
+        <rosparam param="mappings" subst_value="true">$(arg mappings)</rosparam>
+    </node>
+    
+    <!-- here we include the main launch files which spawn our robot nodes and add <remap from="tf" to="tf_old"/> at the top of the file
+    -->
+    <!--include file="$(find tf_remapper)/launch/ugv_tf_remapped.launch">
+    </include-->
+
+                  
+</launch>

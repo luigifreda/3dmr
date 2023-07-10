@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+from __future__ import print_function
+import os
+import sys
+import doxygen_catkin
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
+
+usage="""
+
+This utility creates a basic doxygen Doxyfile.in and mainpage.dox based on your arguments
+"""
+
+parser = ArgumentParser(description=usage,formatter_class=RawDescriptionHelpFormatter)
+parser.add_argument("project", nargs=1, help="Pretty project name.")
+options = parser.parse_args()
+
+project = options.project[0]
+
+print("-- Creating Doxyfile.in")
+with open('Doxyfile.in', 'w') as outfile:
+    print(doxygen_catkin.doxyfile.format(project), file=outfile)
+print("-- Creating mainpage.dox")
+with open('mainpage.dox', 'w') as outfile:
+    print(doxygen_catkin.mainpage.format(project), file=outfile)

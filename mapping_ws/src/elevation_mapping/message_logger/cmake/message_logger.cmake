@@ -1,0 +1,7 @@
+if(NOT DEFINED ENV{ROS_DISTRO} OR DEFINED MELO_USE_COUT)
+  add_definitions(-DMELO_USE_COUT)
+endif()
+
+if(DEFINED MELO_FUNCTION_PRINTS)
+  add_definitions(-DMELO_FUNCTION_PRINTS)
+endif()

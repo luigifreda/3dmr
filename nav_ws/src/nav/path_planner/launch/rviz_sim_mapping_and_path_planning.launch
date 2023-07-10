@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <remap to="/volumetric_mapping/octomap_pcl"       from="/vrep/ugv1/local_map" />
+    <remap to="/volumetric_mapping/octomap_pcl"       from="/vrep/ugv2/local_map" />
+        
+	<include file="$(find path_planner)/launch/rviz_sim_path_planning.launch">   
+	</include>	
+	
+</launch>

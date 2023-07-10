@@ -1,0 +1,14 @@
+#
+# simInt simAuxiliaryConsoleOpen(const simChar* title,simInt maxLines,simInt mode,simInt* position,simInt* size,simFloat* textColor,simFloat* backgroundColor)
+#
+
+string title
+int32 maxLines
+int32 mode
+int32[] position
+int32[] size
+float32[] textColor
+float32[] backgroundColor
+---
+int32 consoleHandle
+

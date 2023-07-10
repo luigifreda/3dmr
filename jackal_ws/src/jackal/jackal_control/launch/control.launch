@@ -1,0 +1,40 @@
+<launch>
+
+  <arg name="robot_name" default="ugv1" />
+  <arg name="robot_topic_prefix" default="" />  <!-- prefix for topics, must be with final slash -->
+  <arg name="robot_frame_prefix" default="" />  <!-- prefix for frames, must be with final slash -->
+
+  <arg name="enable_ekf" default="$(optenv ENABLE_EKF false)"/>
+
+
+  <rosparam command="load" file="$(find jackal_control)/config/control.yaml" />
+
+  <!-- Load controllers -->
+  <node name="controller_spawner_$(arg robot_name)" 
+        pkg="controller_manager" type="spawner"
+        args="jackal_joint_publisher jackal_velocity_controller"/>
+
+  <group if="$(arg enable_ekf)" >
+    <node name="ekf_localization_$(arg robot_name)" 
+      pkg="robot_localization" type="ekf_localization_node">
+      <rosparam command="load" file="$(find jackal_control)/config/robot_localization.yaml" />
+    </node>
+
+    <group if="$(optenv JACKAL_GX5_IMU 0)">
+      <!-- Optionally load the configuration for the secondary GX5-family IMU -->
+      <rosparam command="load" file="$(find jackal_control)/config/robot_localization_gx5.yaml" />
+    </group>
+  </group>
+
+  <node pkg="twist_mux" 
+    type="twist_mux" name="twist_mux_$(arg robot_name)">
+    <rosparam command="load" file="$(find jackal_control)/config/twist_mux.yaml" />
+    <remap from="cmd_vel" to="$(arg robot_topic_prefix)cmd_vel"/>    
+    <remap from="cmd_vel_out" to="$(arg robot_topic_prefix)jackal_velocity_controller/cmd_vel"/>
+  </node>
+
+  <group if="$(optenv JACKAL_CONTROL_EXTRAS 0)" >
+    <rosparam command="load" file="$(env JACKAL_CONTROL_EXTRAS_PATH)" />
+  </group>
+
+</launch>

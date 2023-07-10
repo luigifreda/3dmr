@@ -1,0 +1,9 @@
+#
+# simInt simSetUISlider(simInt uiHandle,simInt buttonHandle,simInt position)
+#
+
+int32 uiHandle
+int32 buttonID
+int32 position
+---
+int32 result

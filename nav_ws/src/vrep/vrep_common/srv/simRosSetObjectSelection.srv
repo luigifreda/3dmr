@@ -1,0 +1,7 @@
+#
+# simxInt simxSetObjectSelection(const simxInt* objectHandles,simxInt objectCount,simxInt operationMode)
+#
+
+int32[] handles
+---
+int32 result

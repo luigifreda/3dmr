@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+      
+    <arg name="prefix" default="robot" /> 
+      
+    <!-- here we have to list all the frames we don't want to rename -->
+    <arg name="blacklist" default="
+	[ 
+		'map', 
+		'$(arg prefix)/map',
+		'$(arg prefix)/marker'
+	]
+    "/> 
+    
+    <arg name="blacklist_not_resend" default="
+	[ 
+        'ugv1/base_link','/ugv1/base_link',
+        'ugv2/base_link','/ugv2/base_link',
+        'ugv3/base_link','/ugv3/base_link',
+        'ugv4/base_link','/ugv4/base_link',
+        'ugv5/base_link','/ugv5/base_link'
+	]
+    "/> 
+    
+    <node pkg="tf_remapper" type="tf_prefixer" name="tf_prefixer_$(arg prefix)" output="screen">
+        <rosparam param="blacklist" subst_value="true">$(arg blacklist)</rosparam>
+        <param name="prefix" value="$(arg prefix)/" />
+        <remap from="tf_old" to="$(arg prefix)/tf" /> 
+    </node>
+
+    <!--group>
+        <remap from="tf" to="tf_old" />
+        <include file="$(find nifti_robot_description)/launch/display.launch">
+            <arg name="gui" value="false" />
+	    <arg name="simulate_robot" value="true" />
+        </include>
+	<node pkg="tf" type="static_transform_publisher" name="tf_static_robot_to_odom_broadcaster" args="1 1 0 0 0 0 1 base_link odom  100"/>
+    </group-->
+
+    <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find tf_remapper)/rviz/test.rviz" /--> 
+</launch>

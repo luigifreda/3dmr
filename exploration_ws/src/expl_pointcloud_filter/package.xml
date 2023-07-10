@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<package>
+  <name>expl_pointcloud_filter</name>
+  <version>0.0.0</version>
+  <description>The expl_pointcloud_filter package</description>
+
+    <maintainer email="luigifreda@gmail.com">Luigi Freda</maintainer>
+
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>GPL</license>
+
+
+  <author email="luigifreda@gmail.com">Luigi Freda</author> -->
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>laser_assembler</build_depend>
+  <build_depend>laser_geometry</build_depend>
+  <build_depend>pcl_ros</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>tf</build_depend>
+
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>laser_assembler</run_depend>
+  <run_depend>laser_geometry</run_depend>
+  <run_depend>pcl_ros</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>tf</run_depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- You can specify that this package is a metapackage here: -->
+    <!-- <metapackage/> -->
+
+    <!-- Other tools can request additional information be placed here -->
+  </export>
+  
+</package>

@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+echo "usage: ./${0##*/} <num-robots>"
+
+export DEST_FOLDER="/tmp"
+export NUM_ROBOTS=5
+
+# ========================================================================================
+
+function print_blue(){
+	printf "\033[34;1m"
+	printf "$@ \n"
+	printf "\033[0m"
+}
+
+
+function print_red(){
+	printf "\033[31;1m"
+	printf "$@ \n"
+	printf "\033[0m"
+}
+
+function check_status(){
+	if [ $? -eq 0 ]
+	then
+	  print_blue "Successfully performed operation"
+	else
+	  print_red "Could not perform operation" >&2
+	fi
+}
+
+# ========================================================================================
+
+if [[ -n "$MR3D_HOME" ]]; then
+	source $MR3D_HOME/source_all.bash
+else
+	print_red "please source the patrolling workspace before performing any operation!"
+	exit 1
+fi
+
+# ========================================================================================
+
+echo "loading map"
+
+echo "trying to load shared map"
+rosservice call /volumetric_mapping/load_map "file_path: '$DEST_FOLDER/map.bt'"
+check_status
+
+# save the map in the volumetric mapping system of each robot (for independent volumetric mapping systems)
+for i in `seq 1 $NUM_ROBOTS`;
+do
+	echo "trying to load ugv$i map"
+	rosservice call /volumetric_mapping_ugv$i/load_map "file_path: '$DEST_FOLDER/map_ugv$i.bt'"
+	check_status
+done
+
+echo DONE
+

@@ -1,0 +1,8 @@
+#
+# simChar* simGetStringSignal(const simChar* signalName,simInt* stringLength)
+#
+
+string signalName
+---
+int32 result
+string signalValue

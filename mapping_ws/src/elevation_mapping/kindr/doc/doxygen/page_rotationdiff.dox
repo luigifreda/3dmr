@@ -1,0 +1,130 @@
+ /*! \page page_rdiff Time Derivatives of Rotations
+
+This library defines an \ref rdiff_interface "interface" for time derivatives of rotations to enable different representations of the time derivative (angular velocity, time derivatives of Euler angles, time derivative of quaternion, etc.). 
+The section \ref rdiff_interface "Interface" describes the functionalities, whereas the section \ref rdiff_implementations "Parameterization" shows some examples.
+
+\tableofcontents
+
+\section rdiff_interface Generic Interface
+The class kindr::RotationDiffBase serves as an interface for the time derivative of a rotation. All types of representations of a time derivative of a rotation, such as angular velocity and time derivatives of Euler angles, are derived from this base class.
+
+\subsection rdiff_interfaces_otationdiff_type Type of a Time Derivative of a Rotation
+The type of a rotation is defined by 
+  - the \ref rdiff_interfaces_representations "kind of parameterization" (derivative of quaternion, rotation matrix, etc.), 
+  - the primitive data type of the parameters (float/double, etc.) and
+
+\subsection rdiff_interfaces_rotationdiff_constructor Construction of  a Time Derivative of a Rotation
+The default constructor always initializes all derivatives with zero.
+
+\subsection rdiff_zero Zero Time Derivatives
+All derivatives can be set to zero by the function \ref kindr::RotationDiffBase::setZero() "setZero()".
+
+\subsection rdiff_addition_and_subtraction Addition and Subtraction
+Addition and subtraction of the time derivatives are provided by the kindr::RotationDiffBase::operator+ and kindr::RotationDiffBase::operator-, respectively.
+
+\subsection rdiff_conversion Conversion between Time Derivatives of Rotations
+There are three kinds of conversions:
+- Conversion between different representations, i.e. between different parameterizations (e.g. rotation quaternion - angle-axis)
+- Conversion between different primitive data types (e.g. float - double)
+
+\subsubsection rdiff_interfaces_conversion_representations Conversion between Representations
+The following methods allow to convert between different representations of a rotation:
+\code{.cpp}
+LocalAngularVelocityD angularVelocity;								// representation of the time derivative
+RotationQuaternionD rotationQuaternion;							// the rotation the derivative is taken
+RotationQuaternionDiffD rotationQuaternionDiff(rotationQuaternion, angularVelocity);		// convert using the constructor
+rotationQuaternionDiff = angularVelocity.cast<RotationQuaternionDiffD>(rotationQuaternion);	// convert using the cast method
+
+\endcode
+
+\subsubsection rdiff_interfaces_conversion_primtype Conversion between Primitive Data Types
+Not yet supported.
+
+\subsubsection rdiff_interfaces_representations Representations of Time Derivatives of Rotations
+The following representations are currently provided by the library:
+
+\subsection rdiff_interfaces_angularvelocity Local Angular Velocity
+The class kindr::LocalAngularVelocity implements the local angular velocity in 3D-Space.
+The angular velocity expressed in body-fixed frame can be stated as:
+
+\f$\boxed{{}_B\mathbf{\omega}_{I\,B} = \begin{bmatrix} \omega_x \\ \omega_y \\ \omega_z \end{bmatrix}}\f$
+
+It stores the three coordinates of the angular velocity in Eigen::Matrix<PrimType, 3, 1>.
+
+The following two typedefs are provided for convenience:
+ - \ref kindr::AngularVelocityD "AngularVelocityD" for primitive type double
+ - \ref kindr::AngularVelocityF "AngularVelocityF" for primitive type float
+
+An angular velocity can be created as follows:
+\code{.cpp}
+double w_x = 1.0;
+double w_y = 2.0;
+double w_z = 3.0;
+LocalAngularVelocityD velocity1();		     			// creates a 3D-Velocity with all coordinates equal to zero
+LocalAngularVelocityD velocity2(w_x, w_y, w_z);	     		// initializes the three coordinates
+LocalAngularVelocityD velocity3(Eigen::Vector3d(w_x, w_y, w_z)); 	// creates a velocity from an Eigen vector
+\endcode
+
+The coordinates can be obtained as follows:
+\code{.cpp}
+w_x = velocity1.x();
+w_y = velocity1.y();
+w_z = velocity1.z();
+Eigen::Vector3d vector = velocity1.toImplementation();	// [w_x;w_y;w_z]
+\endcode
+
+Operations with angular velocities:
+\code{.cpp}
+  LocalAngularVelocityD velocity4 = velocity1 + velocity2;	// addition
+  LocalAngularVelocityD velocity3 -= velocity1;		// subtraction
+  std::cout << "Velocity 3 is: " << velocity3;		// print velocity
+\endcode
+
+\subsection rdiff_interfaces_rotationquaterniondiff Time Derivative of Rotation Quaternion
+The class kindr::RotationQuaternionDiff implements the time derivative of a Hamiltonian unit quaternion representation of a rotation:
+
+\f$\boxed{\begin{aligned}\dot{P} &= p_0 + p_1 i + p_2 j + p_3 k \in \mathbb{H}, \quad p_i \in \mathbb{R} \\
+i^2 &= j^2=k^2 = ijk = -1 \\
+\end{aligned}}\f$
+
+\subsection rdiff_interfaces_rotationmatrixdiff Time Derivative of Rotation Matrix
+The class kindr::RotationMatrixDiff implements the time derivative of a 3x3 rotation matrix representation of a rotation:
+
+\f$\boxed{\dot{C} = \begin{bmatrix} r_{11} & r_{12} & r_{13} \\  r_{21} & r_{22} & r_{23} \\ r_{31} & r_{32} & r_{33} \end{bmatrix}}\f$
+
+\subsection rdiff_interfaces_eulerangles_zyx_diff Time derivative of Euler Angles ZYX
+The class kindr::EulerAnglesZyxDiff implements the time derivatives of the Euler angles with the Z-Y-X convention:
+
+\f$\boxed{(\dot{z}, \dot{y}, \dot{x} ),}\f$
+
+where \f$\dot{z}\f$ is the time derivative of the yaw angle, \f$\dot{y}\f$ is the time derivative of the pitch angle, and \f$\dot{x}\f$ is the time derivative of the roll angle.
+
+\subsection rdiff_interfaces_eulerangles_xyz_diff Time Derivative of Euler Angles XYZ
+The class kindr::EulerAnglesXyzDiff implements the time derivatives of the Euler angles with the X-Y-Z convention:
+
+\f$\boxed{(\dot{x}, \dot{y}, \dot{z},}\f$
+
+where \f$\dot{z}\f$ is the time derivative of the yaw angle, \f$\dot{y}\f$ is the time derivative of the pitch angle, and \f$\dot{x}\f$ is the time derivative of the roll angle.
+
+
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+
+*/

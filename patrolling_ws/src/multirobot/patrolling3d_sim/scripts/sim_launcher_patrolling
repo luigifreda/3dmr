@@ -1,0 +1,344 @@
+#!/bin/bash
+# Author: Luigi Freda 
+
+echo "usage: ./${0##*/} <world-name> <num-robots> <enable-muti-robot-traversability> <max-sim-time>"
+
+# for instance 
+# ./sim_launcher_patrolling vrep_crossroad3 3 true 15
+
+# N.B.: 
+# 1) this script is designed for testing patrolling nodes; no SLAM nodes are called; 
+#    SLAM is assumed to be faked by a proper V-REP environment (in which the use_light parameter of the robots is set to  1)
+# 2) you can kill all the spawned terminals together by right clicking on the X icon on the left bar and selecting "Quit"
+
+LAUNCH_VREP=1 # 1 automatic launch of VREP, 0 no automatic launch
+LAUNCH_VREP_MODE=1 # 0 launch VREP in normal mode (you have to press the button play to start)
+	               # 1 launch VREP in headless mode (hidden) and automatically start it (less computationally demanding)
+	               # 2 launch VREP in normal mode and automatically start it
+
+LAUNCH_PATROLLING_AUTO=1 # for starting automatically the patrolling mission (instead of starting by using the GUI)
+
+
+# the following worlds are available in the folder "patrolling_ws/src/multirobot/patrolling3d_sim/maps"
+declare -A worlds
+worlds=( 
+	["vrep_rooms"]="2" # ["world_name"]="num_robots"
+    ["vrep_crossroad"]="2"     
+    ["vrep_crossroad3"]="3"
+	["vrep_crossroad"]="2" 
+	["vrep_crossroad3"]="3" 
+	["vrep_crossroad3_with4"]="4"
+	["vrep_crossroad4"]="4" 
+	["vrep_tshaped"]="2" 
+	["vrep_fork4"]="4" 
+	["vrep_long_corridor4"]="4"
+	["vrep_3D_ramps"]="4"
+	["vrep_3D_terrain"]="4"
+	["vrep_3D_ring"]="4"
+	["vrep_ring_tails"]="4"
+	["vrep_3ways"]="3"
+	["vrep_bumps"]="2"
+)
+
+# select the world for the patrolling simulation: specify here the world name you want (see the subfolders in the dir "maps")
+WORLD_NAME="vrep_crossroad3" 
+
+export NUM_ROBOTS="${worlds[$WORLD_NAME]}"
+#NUM_ROBOTS=2 # you could also override NUM_ROBOTS for debugging or other reasons 
+
+# N.B: at least the first 2 robots must be active in order to save the map
+ENABLE_UGV1=1   # 1/0 enable or not robot1
+ENABLE_UGV2=1   # 1/0 enable or not robot2
+ENABLE_UGV3=1   # 1/0 enable or not robot3
+ENABLE_UGV4=1   # 1/0 enable or not robot3
+ENABLE_UGV5=1   # 1/0 enable or not robot3
+#export NUM_ROBOTS=$(($ENABLE_UGV1+$ENABLE_UGV2+$ENABLE_UGV3+$ENABLE_UGV4+$ENABLE_UGV5))   # this is the number of robots the patrolling monitor will wait for!
+
+export BUILD_PATROLLING_GRAPH_ON_START="false" # look at the following two lines
+# "false" - patrolling graph is loaded from file
+# "true"  - user can assign points of interests by using RVIZ ('start' patrolling implemented but 'stop' still not)
+                            
+export ENABLE_PATROLLING=1   # 1/0 enable/disable the patrolling; if you want to first map the environment you can disable it
+
+export ENABLE_MULTI_ROBOT_COORDINATION="true" # true or false  enable/disable multi-robot coordination on path-planning level
+
+export USE_MULITPLE_VOLUMETRIC_MAPPING=1 # 1 use an independent mapping node for each robot
+                                         # 0 use a single shared mapping system with just one volumetric mapping node (light but can generate self-ghosts due to mutual robot-perceptions!)
+
+export ENABLE_ROBOT_TRAJECTORY_SAVER=1
+
+export XTERM_OPTIONS="-hold -iconic"  # the "iconic" option allows to automatically minimize all the launched xterms
+
+########################################################################################################
+
+export PATROLLING3D_FOLDER=$(rospack find patrolling3d_sim)
+
+########################################################################################################
+
+# check environment variables 
+
+if [[ -z "${MR3D_HOME}" ]]; then
+    echo "ERROR: missing env var MR3D_HOME"
+    echo "please, source source_all.bash in the main 3DMR folder"
+    exit 
+else
+    source $MR3D_HOME/source_all.bash
+fi
+
+########################################################################################################
+
+if [[ -z "${ENABLE_PATROLLING_ENV}" ]]; then
+  #using default value
+  true
+else
+  ENABLE_PATROLLING="${ENABLE_PATROLLING_ENV}"
+  echo "set from env var - ENABLE_PATROLLING: $ENABLE_PATROLLING"
+fi
+
+if [[ -z "${BUILD_PATROLLING_GRAPH_ON_START_ENV}" ]]; then
+  #using default value
+  true
+else
+  BUILD_PATROLLING_GRAPH_ON_START="${BUILD_PATROLLING_GRAPH_ON_START_ENV}"
+  echo "set from env var - BUILD_PATROLLING_GRAPH_ON_START: $BUILD_PATROLLING_GRAPH_ON_START"  
+fi
+
+if [[ -z "${LAUNCH_VREP_MODE_ENV}" ]]; then
+  #using default value
+  true
+else
+  LAUNCH_VREP_MODE="${LAUNCH_VREP_MODE_ENV}"
+  echo "set from env var - LAUNCH_VREP_MODE: $LAUNCH_VREP_MODE"  
+fi
+
+
+# check if we want to set the world from input and override
+export WORLD_NAME_FROM_INPUT=$1
+if [[ -n "$WORLD_NAME_FROM_INPUT" ]]; then 
+    echo "setting world from input"
+    WORLD_NAME=$WORLD_NAME_FROM_INPUT 
+    NUM_ROBOTS="${worlds[$WORLD_NAME]}"
+	if [[ "$NUM_ROBOTS" -eq "" ]]; then 
+		NUM_ROBOTS=4
+	fi    
+fi
+echo "WORLD_NAME: $WORLD_NAME"
+
+
+# check if we set number of robots
+export NUM_ROBOTS_INPUT=$2
+if [[ -n "$NUM_ROBOTS_INPUT" ]]; then
+    echo "set NUM_ROBOTS_INPUT: $NUM_ROBOTS_INPUT"
+    NUM_ROBOTS=$NUM_ROBOTS_INPUT
+fi
+echo "NUM_ROBOTS: $NUM_ROBOTS"
+
+# check if we want to enable/disable multi-robot from input 
+export ENABLE_MULTI_ROBOT_COORDINATION_INPUT=$3
+if [[ -n "$ENABLE_MULTI_ROBOT_COORDINATION_INPUT" ]]; then
+    echo "setting ENABLE_MULTI_ROBOT_COORDINATION_INPUT: $ENABLE_MULTI_ROBOT_COORDINATION_INPUT"
+    ENABLE_MULTI_ROBOT_COORDINATION=$ENABLE_MULTI_ROBOT_COORDINATION_INPUT   
+fi
+echo "ENABLE_MULTI_ROBOT_COORDINATION: $ENABLE_MULTI_ROBOT_COORDINATION"
+
+
+# check if we set max simulation time
+export MAX_SIMULATION_TIME=$4
+if [[ -n "$MAX_SIMULATION_TIME" ]]; then 
+    echo "set MAX_SIMULATION_TIME: $MAX_SIMULATION_TIME"
+fi
+
+########################################################################################################
+
+LOGS_FOLDER=$PATROLLING3D_FOLDER/logs
+
+if [ ! -d $LOGS_FOLDER ] 
+then
+	mkdir -p $LOGS_FOLDER 
+fi
+
+export TIME_NOW=$(date +"%Y-%m-%d-%H-%M-%S")
+export FILE_LOG_PATROL_MONITOR=$LOGS_FOLDER"/log_patrolling_monitor_$TIME_NOW.log"
+
+########################################################################################################
+
+echo "starting patrolling on $WORLD_NAME"
+
+NUM_ROBOTS=$(($NUM_ROBOTS>0?$NUM_ROBOTS:1))  # at least one robot should be considered by the monitor
+echo "number of robots: $NUM_ROBOTS"
+
+if [ $ENABLE_PATROLLING -eq 1 ] 
+then
+    echo "patrolling enabled"
+fi
+
+if [ "$BUILD_PATROLLING_GRAPH_ON_START" = "true" ] 
+then
+    echo "building the graph on start *****************************************************************"
+fi
+
+########################################################################################################
+#- VREP
+
+if [ $LAUNCH_VREP -eq 1 ] 
+then
+    echo "launching vrep"
+    open_term VREP  "echo vrep patrolling_world; roslaunch patrolling3d_sim vrep_patrolling3d_sim.launch map:=$WORLD_NAME headless:=$LAUNCH_VREP_MODE; bash" &
+    sleep 8
+fi
+
+
+########################################################################################################
+#- RVIZ
+
+open_term RVIZ  "echo rviz; roslaunch path_planner rviz_sim_path_planning.launch; bash" &
+
+
+########################################################################################################
+# ROBOT TRAJECTORY SAVER 
+
+RUN_IN_SIM="true" # true or false
+RUN_LASER_MAPPER="false" # true or false
+
+if [ $ENABLE_ROBOT_TRAJECTORY_SAVER -eq 1 ] 
+then
+    # Robot trajectory saver - services for saving/loading robot trajectories
+    open_term "trajectory_record_service"  "echo trajectory_record_service trajectory_record_service; roslaunch robot_trajectory_saver robot_trajectory_saver.launch map:=$WORLD_NAME simulation:=$RUN_IN_SIM laser_mapper_running:=$RUN_LASER_MAPPER; bash" &
+    #xterm $XTERM_OPTIONS -e "echo mapping mapping; roslaunch patrolling3d_sim global_mapping.launch; bash" &
+    sleep 3 
+fi
+
+########################################################################################################
+# PATROLLING GRAPH BUILDING VIA RVIZ
+
+if [ "$BUILD_PATROLLING_GRAPH_ON_START" = "true" ] 
+then
+    # Interface for Graph Building via RVIZ
+    echo "patrolling graph building"
+    open_term "build_graph build_graph"  "echo build_graph build_graph; roslaunch patrolling_build_graph  sim_build_graph.launch map:=$WORLD_NAME; bash" &
+fi
+
+########################################################################################################
+# SETTING PATROLLING PARAMETERS  
+
+#export GOAL_REACHED_WAIT=0.1
+#export COMMUNICATION_DELAY=0.2
+
+#echo "parameters of patrolling"
+#xterm $XTERM_OPTIONS -e 'echo params params; rosparam set /goal_reached_wait $GOAL_REACHED_WAIT && rosparam set /communication_delay $COMMUNICATION_DELAY ; bash' &
+
+
+########################################################################################################
+# PATROLLING MONITOR
+
+if [ $ENABLE_PATROLLING -eq 1 ] 
+then
+
+    open_term "patrolling_monitor"  "echo patrolling monitor; roslaunch patrolling3d_sim  sim_monitor.launch map:=$WORLD_NAME num_robots:=$NUM_ROBOTS interactive:=$BUILD_PATROLLING_GRAPH_ON_START &> $FILE_LOG_PATROL_MONITOR; bash" &
+    #xterm $XTERM_OPTIONS -e "echo patrolling monitor; roslaunch patrolling3d_sim  sim_monitor.launch map:=$WORLD_NAME num_robots:=$NUM_ROBOTS interactive:=$BUILD_PATROLLING_GRAPH_ON_START; bash" &
+	sleep 1
+
+fi
+
+########################################################################################################
+# LASER MAPPING
+
+if [ $USE_MULITPLE_VOLUMETRIC_MAPPING -eq 0 ]
+then
+
+	echo "using light solution for mapping -> only one mux and one volumetric"
+	# N.B.: This is just for simulation! 
+	#	Robots map each other in the map. This can generate a self-ghost when a robot remains still in the same configuration for a while. 
+	#       Nonetheless, that's a simple pragmatic approach which works and can be used for evaluating the multi-robot design in V-REP!
+	#       In our real TRADR robots, each robot comes with its own SLAM module.
+
+	#- Volumetric mapping and Point Cloud Mux  
+	open_term "pointcloud_mux"  "echo pointcloud mux; roslaunch path_planner sim_mux_and_volumetric_mapping_no_slam.launch; bash" &
+
+	#- Octomap demux  (demux for up to 5 robots)
+	open_term "octomap_demux"  "echo octomap demux; roslaunch octomap_demux octomap_demux5.launch; bash" &
+
+	sleep 3
+fi
+
+
+########################################################################################################
+# PATROLLING UGVS BLOCK
+
+for i in `seq 1 $NUM_ROBOTS`;
+do
+    ENABLE="ENABLE_UGV$i"
+    echo "ENABLE_UGV$i: ${!ENABLE}"
+    if [ ${!ENABLE} -eq 1 ] 
+    then
+        rosrun patrolling3d_sim sim_launcher_patrolling_ugv $i $WORLD_NAME $ENABLE_MULTI_ROBOT_COORDINATION $USE_MULITPLE_VOLUMETRIC_MAPPING
+	sleep 1
+    fi     
+done  
+
+sleep 5
+
+########################################################################################################
+# LOADING THE MAP  
+
+MAPS_FOLDER=$PATROLLING3D_FOLDER/maps
+
+FILE_MAP_PATH=$MAPS_FOLDER/$WORLD_NAME/$WORLD_NAME.bt
+#FILE_GRAPH_PATH="`pwd`/$WORLD_NAME/$WORLD_NAME.graph"
+
+echo "opening map file: $FILE_MAP_PATH"
+#echo "using graph file: $FILE_GRAPH_PATH"
+
+# loading the map 
+
+if [ $USE_MULITPLE_VOLUMETRIC_MAPPING -eq 0 ]
+then
+	# load the map in the shared volumetric mapping system
+	open_term "map_loader"  "echo map_loader; rosservice call /volumetric_mapping/load_map $FILE_MAP_PATH; bash" &   
+
+else
+	# load the map in the volumetric mapping system of each robot
+	for i in `seq 1 $NUM_ROBOTS`;
+	do
+	    ENABLE="ENABLE_UGV$i"
+	    echo "ENABLE_UGV$i: ${!ENABLE}"
+	    if [ ${!ENABLE} -eq 1 ] 
+	    then
+		open_term "ugv$i"map_loader""  "echo map_loader ugv$i; rosservice call /volumetric_mapping_ugv$i/load_map $FILE_MAP_PATH; bash" &
+	    fi     
+	done
+
+fi  
+
+sleep 3
+
+
+########################################################################################################
+
+
+if [ $LAUNCH_PATROLLING_AUTO -eq 1 ] 
+then
+    echo "starting patrolling"
+    rostopic pub /patrolling/task/pause std_msgs/Bool "data: false" &
+fi
+
+if [[ -n "$MAX_SIMULATION_TIME" ]] 
+then
+    sleep $MAX_SIMULATION_TIME
+    echo "killing vrep simulation"
+    ./kill_vrep_sim
+fi
+
+
+########################################################################################################
+
+echo DONE
+
+
+# NOTE: you can use the following command to get the xterm window live if the app terminates or crashes
+# xterm $XTERM_OPTIONS -e "<your_command>; bash" &
+
+                                                   
+
+
+

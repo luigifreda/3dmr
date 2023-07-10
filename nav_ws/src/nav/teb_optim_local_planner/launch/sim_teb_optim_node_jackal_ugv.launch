@@ -1,0 +1,23 @@
+<launch>
+	
+    <arg name="robot_name" default="ugv1"/>
+    <arg name="simulator" default="" />
+
+    <arg name="control_rate"        default="10"/>
+    <arg name="transform_tolerance" default="0.1"/>
+  
+    <arg name="factor_extending_plan_lookahead_dist_with_obs" default="2.0"/>
+
+    <arg name="enable_track_cmds" default="false"/>
+
+    <include file="$(find teb_optim_local_planner)/launch/sim_teb_optim_node_ugv1.launch" >
+        <arg name="simulator" value="$(arg simulator)" />
+        <arg name="robot_name" value="$(arg robot_name)" />
+        <arg name="control_rate" value="$(arg control_rate)" />
+        <arg name="factor_extending_plan_lookahead_dist_with_obs" value="$(arg factor_extending_plan_lookahead_dist_with_obs)" />        
+        <arg name="transform_tolerance" value="$(arg transform_tolerance)" />
+        <arg name="enable_track_cmds" value="$(arg enable_track_cmds)"/>        
+    </include>
+
+</launch>
+

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="robot_base_name" default="ugv" />
+
+    <arg name="world_name" default="jackal_baylands.world"/>  <!-- one of the worlds that are contained in the folder $(find jackal_3dmain)/worlds/ -->
+    <arg name="num_robots" default="2" />
+    <arg name="use_rviz" default="true"/>  
+
+    <!-- select only one among OS0, OS1, VPL16-->  
+    <arg name="OS0" default="true" />
+    <arg name="OS1" default="false" />
+    <arg name="VLP16" default="false" />
+    <arg name="imuRate" default="200" />
+    <arg name="cameraRate" default="30" />
+    <arg name="organize_cloud" default="false" />    
+
+    <arg name="x1" default="0" />
+    <arg name="y1" default="0" />
+
+    <arg name="x2" default="2" />
+    <arg name="y2" default="0" />
+
+
+    <include file="$(find jackal_3dmain)/launch/jackal_multi.launch">
+        <arg name="robot_name" value="$(arg robot_base_name)1"/>          
+        <arg name="robot_topic_prefix" value=""/>    <!-- no prefix-->      <!-- prefix for topics, must be with final slash -->
+        <arg name="robot_frame_prefix" value="$(arg robot_base_name)1/"/>   <!-- prefix for frames, must be with final slash -->           
+
+        <arg name="x" value="$(arg x1)" />
+        <arg name="y" value="$(arg y1)" />
+
+        <arg name="OS0" value="$(arg OS0)"/>     
+        <arg name="OS1" value="$(arg OS1)"/> 
+        <arg name="VLP16" value="$(arg VLP16)"/> 
+        <arg name="imuRate" value="$(arg imuRate)"/> 
+        <arg name="cameraRate" value="$(arg cameraRate)"/> 
+        <arg name="organize_cloud" value="$(arg organize_cloud)"/>         
+
+        <arg name="use_rviz" value="false"/>                                                                        
+    </include> 
+
+
+    <include file="$(find jackal_3dmain)/launch/jackal_multi.launch"
+        if="$(eval arg('num_robots') >= 2)">
+        <arg name="robot_name" value="$(arg robot_base_name)2"/>          
+        <arg name="robot_topic_prefix" value=""/>    <!-- no prefix-->     <!-- prefix for topics, must be with final slash -->
+        <arg name="robot_frame_prefix" value="$(arg robot_base_name)2/"/>  <!-- prefix for frames, must be with final slash -->   
+
+        <arg name="x" value="$(arg x2)" />
+        <arg name="y" value="$(arg y2)" />
+
+        <arg name="OS0" value="$(arg OS0)"/>     
+        <arg name="OS1" value="$(arg OS1)"/> 
+        <arg name="VLP16" value="$(arg VLP16)"/> 
+        <arg name="imuRate" value="$(arg imuRate)"/> 
+        <arg name="cameraRate" value="$(arg cameraRate)"/>
+        <arg name="organize_cloud" value="$(arg organize_cloud)"/>                 
+
+        <arg name="use_rviz" value="false"/>                                                                       
+    </include> 
+
+    <!-- rviz -->
+    <node if="$(arg use_rviz)" pkg="rviz" type="rviz" name="rviz" args="-d $(find jackal_3dmain)/rviz/jackal_ugvs.rviz" />
+
+</launch>

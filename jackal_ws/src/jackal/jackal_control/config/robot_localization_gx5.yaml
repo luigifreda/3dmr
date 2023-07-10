@@ -1,0 +1,9 @@
+# Additional configuration for the GX5
+ekf_localization:
+    imu1: gx5/imu/data
+    imu1_config: [false, false, false,
+                true, true, true,
+                false, false, false,
+                true, true, true,
+                false, false, false]
+    imu1_differential: false

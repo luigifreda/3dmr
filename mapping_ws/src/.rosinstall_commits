@@ -1,0 +1,35 @@
+- git: {local-name: GTSAM, uri: 'https://bitbucket.org/gtborg/gtsam', version: b66dda2fe5ed2cf9e801119e481530e4cf13a94e}
+- git: {local-name: catkin_simple, uri: 'https://github.com/catkin/catkin_simple.git',
+    version: 0e62848b12da76c8cc58a1add42b4f894d1ac21e}
+- git: {local-name: doxygen_catkin, uri: 'https://github.com/tradr-project/doxygen_catkin.git',
+    version: 12e5592b62830ddc6c4a4ca8612310f55ac97e4e}
+- git: {local-name: eigen_catkin, uri: 'https://github.com/tradr-project/eigen_catkin.git',
+    version: dd83e4a8cf4a075f662c16d7bc0359490e202b72}
+- git: {local-name: eigen_checks, uri: 'https://github.com/tradr-project/eigen_checks.git',
+    version: 22a6247a3df11bc285d43d1a030f4e874a413997}
+- git: {local-name: gflags_catkin, uri: 'https://github.com/tradr-project/gflags_catkin.git',
+    version: 8aa84ac014d512a5e71c8d9035e539716e2c8186}
+- git: {local-name: glog_catkin, uri: 'https://github.com/tradr-project/glog_catkin.git',
+    version: 5f05db04b6cab0480067bec59a96fbc853fe5429}
+- git: {local-name: gtsam_catkin, uri: 'https://github.com/tradr-project/gtsam_catkin.git',
+    version: c9f95e76bba7126ede3f98a967b1ba43e1372c22}
+- git: {local-name: libnabo, uri: 'https://github.com/tradr-project/libnabo.git',
+    version: e7d295b37d0bd7e0952f10a173dd580ed8703425}
+- git: {local-name: libpointmatcher, uri: 'https://github.com/tradr-project/libpointmatcher.git',
+    version: 5f4dd11a7583ae51bbc7cf421feed3971fffe49b}
+- git: {local-name: libpointmatcher_ros, uri: 'https://github.com/tradr-project/ethzasl_icp_mapping.git',
+    version: 2bf4e0a56553a4e13f1a277d24bd2a937d554813}
+- git: {local-name: mincurves, uri: 'https://github.com/tradr-project/mincurves.git',
+    version: 991eb58df2cf59e617c019f1dae6400505345174}
+- git: {local-name: minkindr, uri: 'https://github.com/tradr-project/minkindr.git',
+    version: bc4503c34970a13b7ef06f62505e3333395ce02c}
+- git: {local-name: minkindr_gtsam, uri: 'https://github.com/tradr-project/minkindr_gtsam.git',
+    version: ed433e64323f52b6c9d78a8a7348250eeb89b6ce}
+- git: {local-name: minkindr_ros, uri: 'https://github.com/tradr-project/minkindr_ros.git',
+    version: 88e0bd476f82027453f04fdf7c40c7c9a358aa1b}
+- git: {local-name: point_cloud_io, uri: 'https://github.com/tradr-project/point_cloud_io.git',
+    version: 73b402011a4e27b8e402c9df244462155af87c20}
+- git: {local-name: tradr-laser-slam, uri: 'git@gitlab.ciirc.cvut.cz:tradr/tradr-laser-slam.git',
+    version: b1d006ba0b02f6b2185e5881efbe89f5c8dc7693}
+- git: {local-name: volumetric_mapping, uri: 'https://github.com/tradr-project/volumetric_mapping.git',
+    version: 1d542b26e1dd8218ec67e37de97c8f328a12dd92}

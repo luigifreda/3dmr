@@ -1,0 +1,4 @@
+<launch>
+	<node type="throttle" pkg="topic_tools"
+			name="laser_throttle" args="messages /scan 30"/>
+</launch>

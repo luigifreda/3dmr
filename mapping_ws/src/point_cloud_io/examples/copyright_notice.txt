@@ -1,0 +1,3 @@
+The cow.ply demo files was taken from http://people.sc.fsu.edu/~jburkardt/data/ply/ply.html
+by John Burkardt and is distributed under the GNU PGPL license:
+http://people.sc.fsu.edu/~jburkardt/txt/gnu_lgpl.txt

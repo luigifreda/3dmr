@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package>
+  <name>volumetric_mapping</name>
+  <version>0.0.0</version>
+  <description>Stack for volumetric mapping implementations to use with path planning.</description>
+  <maintainer email="helen.oleynikova@mavt.ethz.ch">Helen Oleynikova</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>octomap_world</run_depend>
+  <run_depend>volumetric_map_base</run_depend>
+  <run_depend>volumetric_msgs</run_depend>
+  <run_depend>minkindr</run_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

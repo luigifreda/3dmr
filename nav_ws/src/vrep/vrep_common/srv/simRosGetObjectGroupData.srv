@@ -1,0 +1,11 @@
+#
+# simxInt simxGetObjectGroupData(simxInt clientID,simxInt objectType,simxInt dataType,simxInt* handlesCount,simxInt** handles,simxInt* intDataCount,simxInt** intData,simxInt* floatDataCount,simxFloat** floatData,simxInt* stringDataCount,simxChar** stringData,simxInt operationMode)
+#
+
+int32 objectType
+int32 dataType
+---
+int32[] handles
+int32[] intData
+float32[] floatData
+string[] strings

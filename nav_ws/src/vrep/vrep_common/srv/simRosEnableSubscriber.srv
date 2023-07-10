@@ -1,0 +1,12 @@
+#
+# 
+#
+
+string topicName
+int32 queueSize
+int32 streamCmd
+int32 auxInt1
+int32 auxInt2
+string auxString
+---
+int32 subscriberID

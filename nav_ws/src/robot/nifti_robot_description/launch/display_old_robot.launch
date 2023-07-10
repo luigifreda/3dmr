@@ -1,0 +1,20 @@
+<launch>
+    <arg name="gui" default="true"/>
+    
+    <param name="/use_sim_time" value="false"/>
+
+	<include file="$(find nifti_robot_description)/launch/load_robot_model.launch">
+        <arg name="use_old_robot" value="true" />
+    </include>
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <remap from="robot_description" to="nifti_robot_description"/>
+        <param name="use_gui" value="$(arg gui)"/>
+    </node>
+ 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+        <remap from="robot_description" to="nifti_robot_description"/>
+    </node>
+
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find nifti_robot_description)/rviz/urdf.rviz" />
+</launch>

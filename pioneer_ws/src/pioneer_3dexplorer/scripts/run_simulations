@@ -1,0 +1,178 @@
+#!/bin/bash
+echo "Starting simulations"
+
+cd ~/3dmr_devel
+source source_all.bash
+
+mkdir sim_results
+cd ~/3dmr_devel/sim_results
+
+export path=~/3dmr_devel/sim_results
+export param_dir=$(rospack find pioneer_3dexplorer)/launch
+export store=~/.ros/3dmr_devel
+export fail=0
+
+WORLDS="rooms2_pioneer rooms3_pioneer 3Drings2"
+range="3 3.25 3.5"
+touch $path/sim_status.txt
+touch $param_dir/sim_settings.yaml
+echo "% ID |     scene      | exp_stp | max_rng | ext_rng | gainunm |  nrº | t_sim |simST|t_rel|expled|failed|" >>$path/sim_status.txt
+
+for scene in $WORLDS; do
+	#rm $path/sim_status.txt
+	rm $param_dir/sim_settings.yaml
+	export j=1
+	cd $path
+	mkdir $scene
+	echo "set scene $scene"
+
+	for expl_step in {4..12..3}; do #3			nbvp/tree/expl_step
+		mkdir -p $scene/"expl_step_$expl_step"
+		echo "set expl_steps: $expl_step"
+
+		for max_range in {4..10..3}; do #3		sensor_max_range
+			mkdir -p $scene/"expl_step_$expl_step"/"max_range_$max_range"
+			echo "set max_range: "$max_range
+
+			for ext_range in {30..70..20}; do #4		nbvp/tree/extension_range
+				mkdir -p $scene/"expl_step_$expl_step"/"max_range_$max_range"/"ext_range_$ext_range"
+				echo "set ext_range: 0.$ext_range"
+
+				for gain_range in $range; do #4		nbvp/gain/unmapped
+					mkdir -p $scene/"expl_step_$expl_step"/"max_range_$max_range"/"ext_range_$ext_range"/"gain_range_$gain_range"
+					echo "set gain_range: $gain_range"
+
+					# Setting the parameters
+					#echo "===========   SETTING PARAMETERS   ==========="
+					echo "nbvp/tree/expl_step: $expl_step" >>$param_dir/sim_settings.yaml
+					echo "sensor_max_range: $max_range" >>$param_dir/sim_settings.yaml
+					echo "nbvp/tree/extension_range: 0.$ext_range" >>$param_dir/sim_settings.yaml
+					echo "nbvp/gain/range: $gain_range" >>$param_dir/sim_settings.yaml
+
+					for i in {1..10}; do # number of simulations with same params
+						#remove files from previous stored data
+						rm -rf $store/ugv1
+						rm -rf $store/ugv2
+
+						#TO RUN each simulations
+						#===============================================================================
+						echo "==================    Starting silumation    =================="
+						#rosrun pioneer_3dexplorer simulations_exploration $scene true
+						open_term SIM "echo Starting simulations; rosrun pioneer_3dexplorer simulations_exploration $scene true; bash" &
+						#===============================================================================
+						sleep 30
+						begin="$(TZ=UTC0 printf '%(%s)T\n' '-1')"
+						echo "checking"
+						while :; do
+							plan_1=$(rosnode list /expl_planner_ugv1)
+							plan_2=$(rosnode list /expl_planner_ugv2)
+							rout_1=$(rosnode list /expl_router_ugv1)
+							rout_2=$(rosnode list /expl_router_ugv2)
+							pman_1=$(rosnode list /path_planner_manager_ugv1)
+							pman_2=$(rosnode list /path_planner_manager_ugv2)
+							qpln_1=$(rosnode list /queue_path_planner_ugv1)
+							qpln_2=$(rosnode list /queue_path_planner_ugv2)
+							norm_1=$(rosnode list /compute_normals_ugv1)
+							norm_2=$(rosnode list /compute_normals_ugv2)
+							join_1=$(rosnode list /joint_state_publisher_ugv1)
+							join_2=$(rosnode list /joint_state_publisher_ugv2)
+							stat_1=$(rosnode list /robot_state_publisher_ugv1)
+							stat_2=$(rosnode list /robot_state_publisher_ugv2)
+							trav_1=$(rosnode list /traversability_ugv1)
+							trav_2=$(rosnode list /traversability_ugv2)
+							traj_1=$(rosnode list /trajectory_control_action_server_ugv1)
+							traj_2=$(rosnode list /trajectory_control_action_server_ugv2)
+
+							if [ -n "$plan_1" ] && [ -n "$plan_2" ] && [ -n "$rout_1" ] && [ -n "$rout_2" ] && [ -n "$pman_1" ] && [ -n "$pman_2" ] && [ -n "$qpln_1" ] && [ -n "$qpln_2" ] && [ -n "$norm_1" ] && [ -n "$norm_2" ] && [ -n "$join_1" ] && [ -n "$join_2" ] && [ -n "$stat_1" ] && [ -n "$stat_2" ] && [ -n "$trav_1" ] && [ -n "$trav_2" ] && [ -n "$traj_1" ] && [ -n "$traj_2" ]; then
+								rostopic pub /expl_pause_topic std_msgs/Bool "data: false" &
+								exit=0
+								break
+							fi
+							end=$(($(TZ=UTC0 printf '%(%s)T\n' '-1') - begin))
+							if [[ $end -gt 30 ]]; then
+								rosrun pioneer_3dexplorer kill_vrep_sim
+								i=$((i - 1))
+								exit=1
+								fail=$((fail + 1))
+								break
+							fi
+						done
+
+						if [[ exit -eq 0 ]]; then
+							echo "==================    Starting record    =================="
+							open_term ROSBAG "echo init Rosbag; rosbag record /vrep/info /vrep/ugv1/odom /vrep/ugv2/odom /vrep/ugv3/odom /vrep/ugv4/odom -O $store/aux.bag; bash" &
+
+							echo "===========   Starting exploration   ==========="
+							echo "===========   	 Test nr $j        ==========="
+
+							sim_start=$(rostopic echo -n 1 /vrep/info/simulationTime/data)
+							sim_start=$(echo $sim_start | grep -Po '(\d+.*\d+)(?=\.)')
+
+							init="$(TZ=UTC0 printf '%(%s)T\n' '-1')"
+							sleep 20
+
+							#Conditions to finish simulation
+							echo "============       checking finish conditions     =============="
+
+							while :; do
+								sim_state=$(rostopic echo -n 1 /vrep/info/simulatorState/data | tr -dc '0-9')
+
+								#status_1=$(rostopic echo -n 1 /vrep/ugv1/expl_planning_status/status | tr -dc '0-9')	#takes too much time
+								#status_2=$(rostopic echo -n 1 /vrep/ugv2/expl_planning_status/status | tr -dc '0-9')   #only gets the value when the node publishes the topic
+								source $store/expl_status/status_1.txt
+								source $store/expl_status/status_2.txt
+
+								if [[ $status_1 -eq 5 ]] && [[ $status_2 -eq 5 ]]; then # 5 corresponds to NO INFORMATION GAIN index
+									echo "EXPLORATION CONCLUDED"
+									timesim=$(rostopic echo -n 1 /vrep/info/simulationTime/data)
+									time_sim=$(echo $timesim | grep -Po '(\d+.*\d+)(?=\.)')
+									rosrun pioneer_3dexplorer kill_vrep_sim
+									break
+
+								elif [[ $sim_state -eq 3 ]]; then
+									echo "TIME OUT"
+									timesim=$(rostopic echo -n 1 /vrep/info/simulationTime/data)
+									time_sim=$(echo $timesim | grep -Po '(\d+.*\d+)(?=\.)')
+									rosrun pioneer_3dexplorer kill_vrep_sim
+									break
+								fi
+							done
+
+							end_time=$(($(TZ=UTC0 printf '%(%s)T\n' '-1') - init))
+							echo "Simulation finished"
+							sleep 3
+
+							rostopic echo /vrep/info/simulationTime -b $store/aux.bag -p >$store/sim_time.txt
+							rostopic echo /vrep/ugv1/odom/pose/pose -b $store/aux.bag -p >$store/odom_1.txt
+							rostopic echo /vrep/ugv2/odom/pose/pose -b $store/aux.bag -p >$store/odom_2.txt
+							#rostopic echo /vrep/ugv3/odom/pose/pose -b $store/aux.bag -p > $store/odom_3.txt
+
+							paste $store/sim_time.txt >$store/time.txt                   #saves vrep/info/simulationTime
+							paste $store/odom_1.txt $store/odom_2.txt >$store/odom12.txt # saves position from ugv1 and ugv2
+							paste $store/time.txt $store/odom12.txt >$scene/"expl_step_$expl_step"/"max_range_$max_range"/"ext_range_$ext_range"/"gain_range_$gain_range"/test_$i.txt
+							#paste odom_3.txt odom_4.txt > odom34.txt
+							paste $store/ugv1/mynteye_depth/points_map.txt >$scene/"expl_step_$expl_step"/"max_range_$max_range"/"ext_range_$ext_range"/"gain_range_$gain_range"/pts_1_test_$i.txt
+							paste $store/ugv1/mynteye_depth/points_map_rec.txt >$scene/"expl_step_$expl_step"/"max_range_$max_range"/"ext_range_$ext_range"/"gain_range_$gain_range"/rec_1_test_$i.txt
+							paste $store/ugv2/mynteye_depth/points_map.txt >$scene/"expl_step_$expl_step"/"max_range_$max_range"/"ext_range_$ext_range"/"gain_range_$gain_range"/pts_2_test_$i.txt
+							paste $store/ugv2/mynteye_depth/points_map_rec.txt >$scene/"expl_step_$expl_step"/"max_range_$max_range"/"ext_range_$ext_range"/"gain_range_$gain_range"/rec_2_test_$i.txt
+							#paste $store/ugv3/mynteye_depth/points_map.txt		> 	$scene/"expl_step_$expl_step"/"max_range_$max_range"/"ext_range_$ext_range"/"gain_range_$gain_range"/pts_3_test_$i.txt
+							#paste $store/ugv3/mynteye_depth/points_map_rec.txt	>	$scene/"expl_step_$expl_step"/"max_range_$max_range"/"ext_range_$ext_range"/"gain_range_$gain_range"/rec_3_test_$i.txt
+
+							echo "teste_$j finished"
+							echo "==============================================================="
+
+							source $store/explored.txt
+							echo "  $j  | $scene |    $expl_step    |    $max_range    |   0.$ext_range  |    $gain_range    |   $i  | $time_sim  | $sim_start | $end_time  | $OCC  |  $fail  |" >>$path/sim_status.txt
+
+							j=$((j + 1))
+						fi
+
+					done
+					rm -rf $param_dir/sim_settings.yaml
+				done
+			done
+		done
+	done
+done
+
+echo "ALL SIMULATIONS CONCLUDED"

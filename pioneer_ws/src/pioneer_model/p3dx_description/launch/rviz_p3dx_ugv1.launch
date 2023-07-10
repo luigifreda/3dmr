@@ -1,0 +1,33 @@
+<launch>
+
+
+  <arg name="model" default="$(find p3dx_description)/urdf/pioneer3dx.xml"/>
+  <arg name="gui" default="False" />
+  <arg name="robot_name" default="ugv1" />
+
+  <!-- =========================================================================   -->
+
+  <!--param name="robot_description" textfile="$(arg model)" />
+  <param name="use_gui" value="$(arg gui)"/>
+  <param name="tf_prefix" value="$(arg robot_name)"/>
+
+  <node name="joint_state_publisher_$(arg robot_name)" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <node name="robot_state_publisher_$(arg robot_name)" pkg="robot_state_publisher" type="robot_state_publisher" /-->
+
+  <!-- =========================================================================   -->
+  <node name="robot_state_publisher_$(arg robot_name)" pkg="robot_state_publisher" type="robot_state_publisher">
+    <param name="robot_description" textfile="$(arg model)" />
+    <param name="use_gui" value="$(arg gui)"/>
+    <param name="tf_prefix" value="$(arg robot_name)"/>
+  </node>
+
+  <node name="joint_state_publisher_$(arg robot_name)" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="robot_description" textfile="$(arg model)" />
+    <param name="use_gui" value="$(arg gui)"/>
+    <param name="tf_prefix" value="$(arg robot_name)"/>
+  </node>
+
+
+
+  <!--<node name="rviz" pkg="rviz" type="rviz" args="-d $(find urdf_tutorial)/urdf.rviz" />  open standard rviz window -->
+</launch>

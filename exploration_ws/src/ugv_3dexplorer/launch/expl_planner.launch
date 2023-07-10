@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <arg name="robot_name" default="ugv1" />	
+    <arg name="simulator" value="" />	
+    
+    <arg name="number_of_robots" default="2"/>                     <!-- multi -->    
+    
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+    
+    <arg name="use_marker_controller" default="true" /> <!-- boolean: true, false -->
+    
+    <arg name="param_file" default="$(find ugv_3dexplorer)/launch/exploration.yaml" />
+    
+    <arg name="other_robot_dynamic_point_cloud_base_topic" default="dynamic_point_cloud_tf_remapped" />    
+    
+	<!--arg name="use_pcl_without_bbox" default="true" /-->
+	<!--remap from="dynamic_point_cloud" to="dynamic_point_cloud_no_bbox" if="$(arg use_pcl_without_bbox)" /-->
+        
+    <node name="ugv_3dexplorer" pkg="expl_planner" type="expl_planner_node" respawn="$(arg respawn_value)"  output="screen">  
+        
+        <rosparam command="load" file="$(arg param_file)" />
+        
+        <param name="robot_name" value="$(arg robot_name)" /> 
+        <param name="number_of_robots" value="$(arg number_of_robots)" />    
+        
+        <param name="other_robot_dynamic_point_cloud_base_topic" value="$(arg other_robot_dynamic_point_cloud_base_topic)" />                       
+                
+        <param name = "use_marker_controller" value = "$(arg use_marker_controller)"/>
+        <!--param name = "int_marker_server_name" value = "$(arg simulator)/$(arg robot_name)/expl_marker_controller"/-->
+        <param name = "int_marker_name" value = "expl_marker_$(arg robot_name)"/>
+        
+        <remap from = "/expl_planner/exploration_pointcloud" to="/dynamic_point_cloud"/>   <!-- this is the input pointcloud of the nbv planner -->        
+        
+    </node> 
+    
+</launch>

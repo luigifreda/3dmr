@@ -1,0 +1,7 @@
+#
+# simInt simRemoveModel(simInt objectHandle)
+#
+
+int32 handle
+---
+int32 result

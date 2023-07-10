@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<launch>
+
+  <!-- transform (world to map) publisher node-->
+  <node name="tf_publisher_voxblox1" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0  0 0 0 1 world map"/>
+
+  <!-- transform (map to odom) publisher node-->
+  <node name="tf_publisher_voxblox2" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0  0 0 0 1 map odom"/>
+  
+</launch>

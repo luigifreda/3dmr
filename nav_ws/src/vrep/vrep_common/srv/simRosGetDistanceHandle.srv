@@ -1,0 +1,7 @@
+#
+# simInt simGetDistanceHandle(const simChar* distanceObjectName)
+#
+
+string distanceName
+---
+int32 handle

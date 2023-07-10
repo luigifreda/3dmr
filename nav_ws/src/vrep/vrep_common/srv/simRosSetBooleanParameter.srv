@@ -1,0 +1,8 @@
+#
+# simInt simSetBooleanParameter(simInt parameter,simBool boolState)
+#
+
+int32 parameter
+uint8 parameterValue
+---
+int32 result

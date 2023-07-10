@@ -1,0 +1,178 @@
+#!/bin/bash
+# Author: Luigi Freda 
+
+
+echo "usage: ./${0##*/} <world-name> <num-robots> <enable-muti-robot-traversability> <max-sim-time>"
+
+# N.B.: 
+# 1) this script is designed just for testing the exploration nodes; no SLAM nodes are called; SLAM is assumed to be faked by a proper V-REP environment
+# 2) you can kill all the spawned terminals together by right clicking on the X icon on the left bar and selecting "Quit"
+
+
+#TODO: import all the other options which are present in the script sim_launcher_patrolling
+
+
+export LAUNCH_VREP=1 # 1 automatic launch of VREP, 0 no automatic launch
+export LAUNCH_VREP_MODE=1 # 0 launch VREP in normal mode (you have to press the button play to start)
+	                  # 1 launch VREP in headless mode (hidden) and automatically start it
+	                  # 2 launch VREP in normal mode and automatically start it (you will not be able to pause!)
+	               
+export LAUNCH_EXPLORATION_AUTO=1 # for starting automatically the exploration mission (instead of starting by using the GUI)	               
+
+# the following worlds are available in the folder "nav_ws/src/vrep/vrep_ugv_simulation/data"
+declare -A worlds
+worlds=( 
+	["corridor_test1"]="1" # ["world_name"]="num_robots"
+        ["rooms2"]="2"     
+        ["corridor2"]="2"  
+        ["corridor_loop2"]="2"
+        ["crossroad2"]="2"
+        ["crossroad3"]="3"
+        ["crossroad_rooms3"]="3"
+        ["3Dcrossroad_rooms3"]="3"
+        ["3Dcrossroad_rooms4"]="4"
+        ["3Dring1"]="1"
+        ["3Dring2"]="2"
+       )
+
+# select the world for the exploration simulation: specify here the world name you want
+WORLD_NAME="rooms2" 
+
+export NUM_ROBOTS="${worlds[$WORLD_NAME]}"
+#NUM_ROBOTS=1 # you could also override NUM_ROBOTS for debugging or other reasons 
+
+export ENABLE_MULTI_ROBOT_COORDINATION="true" # true or false  enable/disable multi-robot coordination on path-planning level
+
+export ENABLE_EXPLORATION=1  # enable/disable exploration agent 
+
+export XTERM_OPTIONS="-hold -iconic" # the "iconic" option allows to automatically minimize all the launched xterms
+
+########################################################################################################
+
+# check environment variables 
+
+if [[ -z "${MR3D_HOME}" ]]; then
+    echo "ERROR: missing env var MR3D_HOME"
+    echo "please, source source_all.bash in the main 3DMR folder"
+    exit 
+else
+    source $MR3D_HOME/source_all.bash
+fi
+
+########################################################################################################
+
+if [[ -z "${ENABLE_EXPLORATION_ENV}" ]]; then
+  #using default value
+  true
+else
+  ENABLE_EXPLORATION="${ENABLE_EXPLORATION_ENV}"
+  echo "set from env var - ENABLE_EXPLORATION: $ENABLE_EXPLORATION"
+fi
+
+if [[ -z "${EXPL_AUTO_LAUNCH_ENV}" ]]; then
+  #using default value
+  true
+else
+  LAUNCH_EXPLORATION_AUTO="${EXPL_AUTO_LAUNCH_ENV}"
+  echo "set from env var - LAUNCH_EXPLORATION_AUTO: $LAUNCH_EXPLORATION_AUTO"
+fi
+
+if [[ -z "${LAUNCH_VREP_MODE_ENV}" ]]; then
+  #using default value
+  true
+else
+  LAUNCH_VREP_MODE="${LAUNCH_VREP_MODE_ENV}"
+  echo "set from env var - LAUNCH_VREP_MODE: $LAUNCH_VREP_MODE"  
+fi
+
+
+# check if we want to set the world from input and override
+export WORLD_NAME_FROM_INPUT=$1
+if [[ -n "$WORLD_NAME_FROM_INPUT" ]]; then 
+    echo "setting world from input"
+    WORLD_NAME=$WORLD_NAME_FROM_INPUT 
+    NUM_ROBOTS="${worlds[$WORLD_NAME]}"
+	if [[ "$NUM_ROBOTS" -eq "" ]]; then 
+		NUM_ROBOTS=4
+	fi    
+fi
+echo "WORLD_NAME: $WORLD_NAME"
+
+
+# check if we set number of robots
+export NUM_ROBOTS_INPUT=$2
+if [[ -n "$NUM_ROBOTS_INPUT" ]]; then
+    echo "set NUM_ROBOTS_INPUT: $NUM_ROBOTS_INPUT"
+    NUM_ROBOTS=$NUM_ROBOTS_INPUT
+fi
+echo "NUM_ROBOTS: $NUM_ROBOTS"
+
+# check if we want to enable/disable multi-robot from input 
+export ENABLE_MULTI_ROBOT_COORDINATION_INPUT=$3
+if [[ -n "$ENABLE_MULTI_ROBOT_COORDINATION_INPUT" ]]; then
+    echo "setting ENABLE_MULTI_ROBOT_COORDINATION_INPUT: $ENABLE_MULTI_ROBOT_COORDINATION_INPUT"
+    ENABLE_MULTI_ROBOT_COORDINATION=$ENABLE_MULTI_ROBOT_COORDINATION_INPUT   
+fi
+echo "ENABLE_MULTI_ROBOT_COORDINATION: $ENABLE_MULTI_ROBOT_COORDINATION"
+
+
+# check if we set max simulation time
+export MAX_SIMULATION_TIME=$4
+if [[ -n "$MAX_SIMULATION_TIME" ]]; then 
+    echo "set MAX_SIMULATION_TIME: $MAX_SIMULATION_TIME"
+fi
+
+########################################################################################################
+
+export EXPLORATION3D_FOLDER=$(rospack find ugv_3dexplorer)
+LOGS_FOLDER=$EXPLORATION3D_FOLDER/logs
+
+if [ ! -d $LOGS_FOLDER ] 
+then
+	mkdir -p $LOGS_FOLDER 
+fi
+
+########################################################################################################
+#- VREP
+
+if [ $LAUNCH_VREP -eq 1 ]; then
+    echo "launching vrep"
+    export WORLD_NAME_ABS=$(rospack find ugv_3dexplorer)/maps/$WORLD_NAME".ttt"
+    echo opening world $WORLD_NAME_ABS
+    open_term VREP "echo vrep; roslaunch vrep_ugv_simulation vrep_ugv_simulation.launch scene:=$WORLD_NAME_ABS headless:=$LAUNCH_VREP_MODE; bash" &
+    sleep 8
+fi
+
+########################################################################################################
+#- RVIZ
+
+open_term RVIZ "echo rviz; roslaunch path_planner rviz_sim_path_planning.launch; bash" &
+
+sleep 1
+
+########################################################################################################
+#- EXPLORATION PLANNERS
+
+for i in `seq 1 $NUM_ROBOTS`; do
+	rosrun ugv_3dexplorer sim_launcher_exploration_ugv $i $ENABLE_MULTI_ROBOT_COORDINATION $ENABLE_EXPLORATION
+done  
+
+######################################################################################################## 
+
+if [ $LAUNCH_EXPLORATION_AUTO -eq 1 ] 
+then
+    echo "starting exploration"
+    rostopic pub /expl_pause_topic std_msgs/Bool "data: false" &
+fi
+
+if [[ -n "$MAX_SIMULATION_TIME" ]] 
+then
+    sleep $MAX_SIMULATION_TIME
+    echo "killing vrep simulation"
+    ./kill_vrep_sim
+fi
+
+######################################################################################################## 
+
+echo DONE 
+

@@ -1,0 +1,16 @@
+#
+# 
+#
+
+string functionNameAtObjectName
+int32 scriptHandleOrType
+int32[] inputInts
+float32[] inputFloats
+string[] inputStrings
+string inputBuffer
+---
+int32 result
+int32[] outputInts
+float32[] outputFloats
+string[] outputStrings
+string outputBuffer

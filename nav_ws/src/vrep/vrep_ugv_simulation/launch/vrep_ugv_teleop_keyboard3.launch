@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+  <node name="vrep_ugv_teleop_key" pkg="vrep_ugv_simulation" type="vrep_ugv_teleop_key">
+  	<param name = "robot_name" value = "ugv1"/>
+  </node>
+
+  <node name="vrep_ugv_teleop_key2" pkg="vrep_ugv_simulation" type="vrep_ugv_teleop_key">
+  	<param name = "robot_name" value = "ugv2"/>
+  </node>
+
+  <node name="vrep_ugv_teleop_key3" pkg="vrep_ugv_simulation" type="vrep_ugv_teleop_key">
+  	<param name = "robot_name" value = "ugv3"/>
+  </node>
+
+</launch>

@@ -1,0 +1,58 @@
+laser_angle_offset: deg(4.0)  # eth 3.5, roma 4.0
+
+
+# Name of the robot for High-Level Database purposes
+actor_name: 'Romeo'
+
+# positions of the "fixed" parts of the robot that can be configured (top box, arm attach point, ...)
+parts_config:
+  has_top_box: True
+  # Distance from robot's back to top box' front panel. Default is the front-most position.
+  top_box_j_x: 0.443 # top box is only configurable in the x direction
+
+  has_omnicam: True
+
+  has_jaco_arm: False # True#False
+  jaco_uses_wpi: False
+  # Origin is the bottom-most (z) and central (x-y) part of the cylinder with connectors.
+  jaco_x_offset: 0.500
+  jaco_y_offset: 0.1765
+  holds_stick: False
+  stick_length: 0.25
+
+  has_flipper_touch_sensors: False
+
+  has_axis_camera: False
+  axis_x_offset: 0.059
+  axis_y_offset: 0.08
+
+  # PTU Xtion Thermo Sensor
+  has_ptuxthermo: False
+  ptuxthermo_x_offset: 0.20
+  ptuxthermo_y_offset: 0.18
+
+  has_realsense: False
+  realsense_tilt: 0.5
+  realsense_shift_y: 0.05
+
+viz:
+  camera1394_driver:
+    guid: ''
+  lady_saw:
+    camera_name_format: '_1232x1616_c%i'
+
+omnicam_sensors_calib:
+  transforms:
+  - [0.042087, -0.001706, -0.000359, -0.500706, 0.499767, -0.499686, 0.499840, 'omnicam', 'camera_0']
+  - [0.011469, -0.040128, -0.000086, -0.110544, 0.698795, -0.697954, 0.111021, 'omnicam', 'camera_1']
+  - [-0.034854, -0.022887, 0.000521, -0.322930, -0.629737, 0.629997, 0.319768, 'omnicam', 'camera_2']
+  - [-0.033204, 0.025729, 0.000217, -0.631192, -0.319196, 0.322546, 0.629027, 'omnicam', 'camera_3']
+  - [0.014502, 0.038991, -0.000301, -0.702075, 0.111793, -0.109872, 0.694637, 'omnicam', 'camera_4']
+  - [0.000402, -0.000922, 0.062128, 0.001613, -0.001059, -0.707499, 0.706711, 'omnicam', 'camera_5']
+
+# ubnt bullet hostname for RSSI monitoring
+bullet_hostname: roma-rover-bullet-5g
+
+# inso calibration parameter - rotation matrix aligning tracks and body frame
+inso_TracksIMUAlignment: '[  0.9995065,  0.0000000, -0.0314108;  0.0000000,  1.0000000,  0.0000000;  0.0314108,  0.0000000,  0.9995065 ]'
+   

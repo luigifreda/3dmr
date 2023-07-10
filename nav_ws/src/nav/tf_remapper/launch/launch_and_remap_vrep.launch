@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+
+<!--
+links:
+http://answers.ros.org/question/216582/how-to-use-tf_remap/
+http://ros-users.122217.n3.nabble.com/wiki-entry-for-tf-remap-td1840280.html
+http://answers.ros.org/question/11875/set-tf_remap-private-parameters-from-console/ 
+http://wiki.ros.org/geometry/CoordinateFrameConventions
+-->
+
+<launch>
+      
+    <remap from="tf" to="tf_old"/>
+              
+    <!-- here you list all the robot launch files we want to use -->              
+              
+    <include file="$(find vrep_ugv_simulation)/launch/vrep_ugv_simulation.launch">
+    </include>
+
+</launch>

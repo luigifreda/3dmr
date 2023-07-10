@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+	  <arg name="robot_name1" default="ugv1" />
+      <arg name="robot_name2" default="ugv2" />
+      <arg name="robot_name3" default="ugv3" />
+      <arg name="robot_name4" default="ugv4" />
+      <arg name="robot_name5" default="ugv5" />
+      
+	  <arg name="simulator" default="/vrep" />
+	  
+	  <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+      <arg name="use_laser_assembler" default="true" /> <!-- boolean: true, false -->
+      <arg name="octomap_cloud_in" default="scan_point_cloud_color" unless="$(arg use_laser_assembler)"/>
+      <arg name="octomap_cloud_in" default="dynamic_point_cloud" if="$(arg use_laser_assembler)"/>
+      
+      
+       <!-- pointcloud2 mux -->
+      <include file="$(find octomap_mux)/launch/pointcloud2_mux.launch" >
+          <arg name="topic_in1" value="$(arg simulator)/$(arg robot_name1)/$(arg octomap_cloud_in)" />
+          <arg name="topic_in2" value="$(arg simulator)/$(arg robot_name2)/$(arg octomap_cloud_in)" />
+          <arg name="topic_in3" value="$(arg simulator)/$(arg robot_name3)/$(arg octomap_cloud_in)" />
+          <arg name="topic_in4" value="$(arg simulator)/$(arg robot_name4)/$(arg octomap_cloud_in)" />
+          <arg name="topic_in5" value="$(arg simulator)/$(arg robot_name5)/$(arg octomap_cloud_in)" />
+          
+          <arg name="topic_out" value="/volumetric_mapping/input_pcl" />  <!-- to volumetric mapping node -->
+      </include>
+      
+      
+      <!-- octomap_manager from volumetric_mapping package -->
+      <include file="$(find path_planner)/launch/sim_volumetric_mapping.launch" >
+      	<arg name="simulator" value="$(arg simulator)" />
+        <arg name="respawn_value" value="$(arg respawn_value)" />
+      </include>
+      
+            
+</launch>

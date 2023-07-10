@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    
+        <node pkg="vrep_ugv_simulation" type="vrep_ugv_teleop_joy" name="joy_teleop" />
+        
+        <include file="$(find nifti_teleop)/launch/nifti_ugv_teleop.launch">
+            <!-- arg name="absolutize_cmd_vel" value="true" /-->
+        </include>
+</launch>

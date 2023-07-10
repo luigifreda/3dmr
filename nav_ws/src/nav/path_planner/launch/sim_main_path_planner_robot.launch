@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+	
+	  <arg name="robot_name" default="robot" />
+	  <arg name="rviz" default="false" />
+	  <arg name="enable_octomap" default="true" />
+	  <arg name="enable_laser_proximity_checker" default="true" />
+	  <arg name="enable_trajectory_control" default="true" />
+
+	  <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+	  
+	  <arg name="use_queue_path_planner" default="false" /> <!-- select which planner do you want; 
+														     the domain is boolean: true  -> queue_path_planner
+																					false -> path_planner
+														      
+														     -->
+	
+      <arg name="enable_multi"     default="false"/>  <!-- enable/disable multi-robot coordination -->	
+      <arg name="number_of_robots" default="2"/> 
+      <arg name="lambda_trav"      default="1.0"/>       
+      
+    									     
+	  <!-- launch mapping -->
+	  <!-- <include file="$(find path_planner)/launch/sim_mapping_$(arg robot_name).launch">
+		  <arg name="respawn_value" value="$(arg respawn_value)" />
+		  <arg name="enable_octomap" value="$(arg enable_octomap)" />
+	  </include>	 -->
+
+
+      <group if="$(arg enable_octomap)">
+	   <!-- 
+		#- Mapping (Octomap) + Normal Estimation with small normals radius=0.2 (since octomap has higher resolutions)
+        open_term "$ROBOT_NAME"mapping  "echo $ROBOT_NAME mapping; roslaunch path_planner sim_volumetric_mapping_robot.launch robot_name:=$ROBOT_NAME large_radius_for_normals:=false; bash" &
+	   -->
+	    <include file="$(find path_planner)/launch/sim_volumetric_mapping_$(arg robot_name).launch">
+	        <arg name="large_radius_for_normals" value="false" />
+		</include>
+	  </group>
+	  <group unless="$(arg enable_octomap)">
+	   <!-- 
+		 #- Normal Estimation with larger normal radius=0.5 (since the map coming from lio sam has lower resolution)
+         open_term "$ROBOT_NAME"mapping  "echo $ROBOT_NAME mapping; roslaunch path_planner sim_compute_normals_robot.launch cloud_in:="/lio_sam/mapping/map_local" large_radius_for_normals:=true; bash" &
+	   -->
+	    <include file="$(find path_planner)/launch/sim_compute_normals_robot_$(arg robot_name).launch">
+			<arg name="cloud_in" value="/lio_sam/mapping/map_local" />  <!-- not used -->
+	        <arg name="large_radius_for_normals" value="true" />
+		</include>
+	  </group>
+
+
+	  <!-- launch traversability -->
+	  <include file="$(find path_planner)/launch/sim_traversability_$(arg robot_name).launch">
+		  <arg name="respawn_value" value="$(arg respawn_value)" />
+          <arg name="robot_name" value="$(arg robot_name)" />
+          <arg name="enable_multi_robot_avoidance"  value="$(arg enable_multi)" />
+          <arg name="number_of_robots" value="$(arg number_of_robots)" /> 
+	  </include>	
+	  	  
+
+	   <!-- BLOCK FOR SELECTING THE PATH PLANNER TYPE -->
+		<group unless="$(arg use_queue_path_planner)">  <!-- use path planner manager (interface by using the marker controller) -->
+		  <include file="$(find path_planner)/launch/sim_path_planner_manager_$(arg robot_name).launch">
+			  <arg name="respawn_value" value="$(arg respawn_value)" />
+			  <arg name="use_marker_controller" value="true" />
+			  <arg name="lambda_trav" value="$(arg lambda_trav)"/>  
+		  </include>	
+		</group>
+		<group if="$(arg use_queue_path_planner)"> <!-- use queue path planner (global) + path planner manager (local) -->
+		  <include file="$(find path_planner)/launch/sim_queue_path_planner_$(arg robot_name).launch">
+			  <arg name="respawn_value" value="$(arg respawn_value)" />
+			  <arg name="lambda_trav" value="$(arg lambda_trav)"/>  			  
+		  </include>	
+		  <include file="$(find path_planner)/launch/sim_path_planner_manager_$(arg robot_name).launch">
+			<arg name="respawn_value" value="$(arg respawn_value)" />
+			<arg name="use_marker_controller" value="false" /> <!-- do not use single-wp marker along with queue path planner -->
+			<arg name="lambda_trav" value="$(arg lambda_trav)"/>  			
+		</include>	
+		</group>
+	  
+      <!-- launch the trajectory control -->
+	  <group if="$(arg enable_trajectory_control)">
+		<include file="$(find trajectory_control)/launch/sim_trajectory_control_$(arg robot_name).launch">
+			<arg name="respawn_value" value="$(arg respawn_value)" />
+			<arg name="robot_name" value="$(arg robot_name)" />
+		</include>	
+	  </group>
+
+	  <!-- launch enable_laser_proximity_checker -->
+      <group if="$(arg enable_laser_proximity_checker)">
+	    <include file="$(find laser_proximity_checker)/launch/sim_laser_proximity_checker_$(arg robot_name).launch"/>
+	  </group>
+
+	  <!-- launch rviz -->
+      <group if="$(arg rviz)">
+	    <include file="$(find path_planner)/launch/rviz_sim_path_planning_$(arg robot_name).launch"/>
+	  </group>
+
+</launch>

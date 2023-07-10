@@ -1,0 +1,37 @@
+<launch>
+	<arg name="dev" default="/dev/input/js0" />
+    <arg name="absolutize_cmd_vel" default="false" />
+
+    <!-- This file should not be launched in a namespace. If you do it, it still expects the /*/cmd_vel topics to be absolute and you can't change that. Do NOT remap them. Instead, remap you namespaced joy to /*/joy. -->
+
+	<node pkg="topic_tools" type="mux" name="mux_cmd_vel"
+		args="cmd_vel_desired_speed /nav/cmd_vel /teleop_ocu/cmd_vel /teleop_joy/cmd_vel /local_joy/cmd_vel" >
+		<remap from="mux/select" to="private/mux_cmd_vel/select" />
+		<remap from="mux/add" to="private/mux_cmd_vel/add" />
+		<remap from="mux/delete" to="private/mux_cmd_vel/delete" />
+		<remap from="mux/list" to="private/mux_cmd_vel/list" />
+		<remap from="cmd_vel_select" to="private/mux_cmd_vel/deprecated" />
+		<remap from="mux/selected" to="mux_cmd_vel/selected" />
+        <remap from="/nav/cmd_vel" to="nav/cmd_vel" />
+	</node>
+
+	<node pkg="speed_limiter" type="speed_limiter.py" name="speed_limiter">
+		<remap from="cmd_vel_in" to="cmd_vel_desired_speed" />
+		<remap from="cmd_vel_out" to="cmd_vel"/>
+	</node>
+
+	<node pkg="nifti_teleop" type="nifti_mux_ctrl.py" name="nifti_mux_control"/>
+
+	<include file="$(find nifti_teleop)/launch/nifti_joy.launch">
+		<arg name="dev" value="$(arg dev)" />
+		<arg name="priority_name" value="local_joy" />
+        <arg name="absolutize_cmd_vel" value="$(arg absolutize_cmd_vel)" />
+
+		<!-- The local joy is transparently translated to act as the Logitech controller. -->
+		<arg name="transparent_translation" value="true"/>
+	</include>
+
+	<node pkg="nifti_teleop" type="nth_action.py"
+		name="nifti_teleop_helper" />
+
+</launch>

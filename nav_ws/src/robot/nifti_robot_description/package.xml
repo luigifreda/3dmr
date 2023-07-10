@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>nifti_robot_description</name>
+  <version>1.0.0</version>
+  <description>The package containing the NIFTI robot 3D model data which can be loaded in Rviz.</description>
+
+  <maintainer email="peckama2@ciirc.cvut.cz">Martin Pecka</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>rosgraph</build_depend>
+  <build_depend>rospack</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>xacro</build_depend>
+
+  <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>rosgraph</run_depend>
+  <run_depend>rospack</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>xacro</run_depend>
+</package>

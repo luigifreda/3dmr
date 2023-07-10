@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+	  <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+	  <arg name="topic_in1" default="/dynamic_point_cloud" />
+	  <arg name="topic_in2" default="/point_map" />
+      <arg name="topic_in3" default="/topic_in3" />
+      <arg name="topic_in4" default="/topic_in4" />
+      <arg name="topic_in5" default="/topic_in5" />
+      
+      <arg name="topic_out" default="/mux_point_cloud" />
+      
+	  <node name="pointcloud2_mux" pkg="octomap_mux" type="octomap_mux_node" respawn="$(arg respawn_value)" output="screen">
+	 
+        <!-- Subscribed -->
+		<remap from = "/dynamic_point_cloud" to = "$(arg topic_in1)"/>
+		<remap from = "/point_map"           to = "$(arg topic_in2)"/>
+        <remap from = "/cloud3"              to = "$(arg topic_in3)"/>
+        <remap from = "/cloud4"              to = "$(arg topic_in4)"/>
+        <remap from = "/cloud5"              to = "$(arg topic_in5)"/>
+        
+        <!-- Advertised -->
+        <remap from = "/mux_point_cloud" to = "$(arg topic_out)"/>
+		
+	  </node> 
+
+</launch>

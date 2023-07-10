@@ -1,0 +1,15 @@
+<launch>
+	<node pkg="joy" type="joy_node" name="$(anon joy_node)" >
+		<param name="dev" value="/dev/input/by-id/usb-Logitech_Logitech_Cordless_RumblePad_2-joystick" />
+		<!--<param name="dev" value="/dev/input/by-id/usb-©Microsoft_Xbox_360_Wireless_Receiver_for_Windows_E047D9E0-joystick" />-->
+		<param name="autorepeat_rate" value="10.0" />
+		<param name="deadzone" type="double" value="0.05" />
+	    <param name="coalesce_interval" type="double" value="0.033" />
+		<remap from="joy" to="teleop_joy/joy" />
+	</node>
+	<node pkg="nifti_teleop" type="nifti_teleop_joy.py"
+		name="$(anon remote_teleop_joy)" output="screen" >
+		<param name="cmd_vel_topic" value="teleop_joy/cmd_vel" />
+		<remap from="joy" to="teleop_joy/tank_joy" />
+	</node>
+</launch>

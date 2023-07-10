@@ -1,0 +1,6 @@
+#byte ID_FLIPPER_FRONT_LEFT=3
+#byte ID_FLIPPER_FRONT_RIGHT=4
+#byte ID_FLIPPER_REAR_LEFT=5
+#byte ID_FLIPPER_REAR_RIGHT=6
+byte object_id
+float64 angle

@@ -1,0 +1,4 @@
+<launch>
+	<node name="rosbag_record" pkg="rosbag" type="record" output="screen" args="/thermo_camera/camera_info /thermo_camera/detections/compressed /viz/pano/image/compressed /viz/pano/image/compressed/parameter_descriptions /viz/pano/image/compressed/parameter_updates /viz/ptz/camera_info /viz/ptz/config /viz/ptz/image/compressed /viz/ptz/image/compressed/parameter_descriptions /viz/ptz/image/compressed/parameter_updates -O ~/Y3_End_User_Eval/RENAME_ME.bag">		
+	</node>
+</launch>

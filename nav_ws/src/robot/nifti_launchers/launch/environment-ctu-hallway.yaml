@@ -1,0 +1,7 @@
+# only values different from default-environment.yaml need to be defined here; the default config is always loaded
+
+# In front of room KN:E-121 heading towards the far end of the hallway
+initial_lat: deg(50.0767250)
+initial_lon: deg(14.4181303)
+initial_altitude: 210.0
+initial_heading: deg(265.0)

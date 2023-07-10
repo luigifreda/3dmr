@@ -1,0 +1,129 @@
+/**
+\mainpage
+\htmlinclude manifest.html
+
+\b nifti_teleop is the package of teleoperation of the NIFTi robot.
+
+The main node, \b nifti_teleop_joy, allows the user to control the robot with a
+joystick. This node just instantiates the nifti_teleop_joy::NiftiTeleopJoy
+class.
+
+This package also provides the \b nifti_mux_control
+(nifti_mux_ctrl::NiftiMuxCtrl) and \b priority_wrapper
+(priority_wrapper::PriorityWrapper) nodes to handle the priorities for the
+different \c /cmd_vel publishers.
+
+Additionally, \b nifti_teleop_helper eases the process of taking a single 3D
+scan (see nth_action::ScanningService) and controling flipper configuration
+(see nth_action::FlipperPosture).
+
+The launch file to be launched is \c nifti_ugv_teleop.launch on the robot or \c
+nifti_joy.launch on any remote computer with a joystick.
+
+\section controls Controls
+
+The \b nifti_teleop_joy.py node allows to pilot the robot with a joystick. All
+commands require one of the \b deadman buttons to be pressed to be taken into
+account. All buttons and axes can be changed via parameters (for different
+joysticks typically, see below).
+
+- deadman button: '2' or 'A' (secondary: button of the left thumbstick)
+- driving: left thumbstick: up/down for linear velocity and left/right for angular velocity;
+- driving faster: pressing '1' or 'X' while driving;
+- moving flippers: up and down with the left cross for the selected flippers:
+  - front left: '5' or 'LB',
+  - front right: '6' or 'RB',
+  - rear left: '7' or 'LT',
+  - rear right: '8' or 'BT';
+- changing scanning speed: left/right on the left cross (if you decrease again after stopping it will come back to the center);
+- re-enabling motor controller: '10' or 'Start' (useful when a flipper is disabled typically);
+- toggling the brake of the differential: '8' or 'Back';
+- increase/decrease maximum forward speed by pressing up/down on the left cross (without flipper buttons); be aware that initially, the max is the "run" speed, so you have to decrease speed several times until it has some effect on the normal traveling speed
+
+You can also use the right thumbstick to move the flippers into predefined
+positions by moving it then pressing its button:
+- up: 'driving position': rear flippers vertical and front flippers folded for
+  maximum field of view;
+- right: 'forward obstacle': rear flippers flat and front flippers 45 degrees up
+  to climb an obstacle;
+- left: 'backward obstacle': front flippers flat and rear flippers 45 degrees up
+  to climb down from an obstacle or to climb backwards;
+- down: 'convex edge': front and back flippers 40 degrees into the ground to
+  smoothly overcome an edge.
+
+
+
+\section parameters Parameters
+
+The parameters of the \b nifti_teleop_joy node can be seen in the nifti_teleop_joy::NiftiTeleopJoy class. They can be broken down in 3 groups.
+
+\subsection motion_params Motion parameters
+
+The parameters to define the motion limits:
+- \a max_linear (\c 0.3 m/s): maximum linear velocity of the standard motion,
+- \a max_angular (\c 0.6 rad/s): maximum angular velocity of the standard motion,
+- \a max_linear_run (\c 0.6 m/s): maximum linear velocity with the run buttun,
+- \a max_angular_run (\c 1.24 rad/s): maximum angular velocity with the run
+  button,
+- \a max_scanning_speed (\c 1.2 rad/s): maximum angular velocity of the laser,
+- \a tracks_distance (\c 0.397 m): distance between tracks (used to not ask for
+  too high velocities),
+- \a steering_efficiency (\c 0.41): steering efficiency parameter of the
+  kinematic model (used to not ask for too high velocities),
+- \a ~scanning_speed_increment (\c 0.2 rad/s): increment in scanning speed
+  control,
+- \a ~flipper_increment (\c 20*pi/180 rad): increment in the flippers motion,
+- \a ~scanning_once_speed (\c 1.2 rad/s): speed for a single 3D scan.
+
+\subsection joystick_params Joystick parameters
+
+These parameters define which button or axis for each command mode (take care
+that the numbers start from 0 here and from 1 in the section above):
+- \a ~axis_linear (\c 1): axis of the linear velocity command,
+- \a ~axis_angular (\c 0): axis of the angular velocity command,
+- \a ~flipper_axis (\c 5): axis of the flipper command,
+- \a ~scanning_speed_axis (\c 4): axis of the scanning speed command,
+- \a ~right_ts_lr_axis (\c 2): left-right axis of right thumbstick,
+- \a ~right_ts_ud_axis (\c 3): up-down axis of right thumbstick,
+- \a ~deadman_buttons (\c [1, 10]): deadman buttons,
+- \a ~run_button (\c 0): to move faster,
+- \a ~enable_button (\c 9): enables all motor controllers,
+- \a ~differential_brake_button (\c 8): toggles the differential brake,
+- \a ~flipper_reset_button (\c 3): moves flipper in flat position,
+- \a ~front_left_flipper_button (\c 4): select the front left flipper to move,
+- \a ~front_right_flipper_button (\c 5): select the front right flipper to move,
+- \a ~rear_left_flipper_button (\c 6): select the rear left flipper to move,
+- \a ~rear_right_flipper_button (\c 7): select the rear right flipper to move,
+- \a ~scanning_once_button (\c 2): button to launch a single scan,
+- \a ~right_ts_button (\c 11): button of right thumbstick for flipper command.
+
+\subsection misc_params Misc parameters
+
+- \a ~cmd_vel_topic (\c /teleop_joy/cmd_vel) the topic to publish velocity
+  commands.
+
+\section mux Priority control
+
+The handling of priorities is done by the \b nifti_mux_control
+(nifti_mux_ctrl::NiftiMuxCtrl) node that commands a standard \b mux node.
+In order to publish velocity commands, one must end a request to that node
+(on the \c /mux_cmd_vel/acquire service) and can then publish on its own
+defined topic. When a node is done sending commands, it must release the
+control (so that lower-priority processes can control the robot) using a second
+service (\c /mux_cmd_vel/release).
+
+The topics are, with decreasing priority:
+- /local_joy/cmd_vel	(for the joystick on board the robot)
+- /teleop_joy/cmd_vel	(for all other joysticks)
+- /teleop_ocu/cmd_vel	(for the OCU)
+- /nav/cmd_vel	(for autonomous navigation)
+
+For external packages, the \b priority_wrapper
+(priority_wrapper::PriorityWrapper) node can be used to do this acquisition and
+release automatically. The drawback in that case is that the node sending the
+commands is not aware of whether or not his commands are passed.
+
+In order to know which is the topic currently having access to the robot, one
+can listent to the \c /mux_cmd_vel/selected topic.
+
+*/

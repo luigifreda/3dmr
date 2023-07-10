@@ -1,0 +1,7 @@
+#
+# simInt simGetBooleanParameter(simInt parameter)
+#
+
+int32 parameter
+---
+int32 parameterValue

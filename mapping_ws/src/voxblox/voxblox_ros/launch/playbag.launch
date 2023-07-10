@@ -1,0 +1,6 @@
+<launch>
+  <arg name="bag_file" default="/home/luigi/Work/rgbd_datasets/cow_and_lady/data.bag"/>
+
+  <node name="player" pkg="rosbag" type="play" output="screen" args="-r 1.0 --clock $(arg bag_file)"/>
+
+</launch>

@@ -1,0 +1,8 @@
+#request position
+sensor_msgs/PointCloud2 surveypoints
+bool max_point_requested
+---
+#response rssi values
+sensor_msgs/PointCloud2 rssi
+geometry_msgs/Point max_point 
+

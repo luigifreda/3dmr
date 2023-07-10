@@ -1,0 +1,8 @@
+#goal definition
+bool inp
+---
+#result definition
+bool outp
+---
+#feedback
+bool outp

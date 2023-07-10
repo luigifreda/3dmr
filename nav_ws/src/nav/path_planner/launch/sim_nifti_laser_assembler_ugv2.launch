@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <arg name="robot_name" default="ugv2" />
+    <arg name="simulator" default="/vrep" />
+    
+    <arg name="world_frame" default="/odom_$(arg robot_name)"/>
+    
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+    <!-- This launch file needs robot.yaml to be loaded by nifti_robot_description/load_robot_model.launch. This is done e.g. from robot_node.launch or play_ugv_min.launch. -->
+
+      <include file="$(find path_planner)/launch/sim_nifti_laser_assembler_ugv1.launch" >
+          <arg name="simulator" value="$(arg simulator)" />
+          <arg name="respawn_value" value="$(arg respawn_value)" />
+          <arg name="robot_name" value="$(arg robot_name)" />
+          <arg name="world_frame" value="$(arg world_frame)" />
+      </include>
+
+</launch>

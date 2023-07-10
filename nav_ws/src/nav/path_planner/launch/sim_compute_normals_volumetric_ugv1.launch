@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <arg name="robot_name" default="ugv1" />
+    <arg name="simulator" default="/vrep" />
+
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+    <!-- normals computation -->
+    <node name="compute_normals_$(arg robot_name)" pkg="path_planner" type="compute_normals" respawn="$(arg respawn_value)" output="screen">
+        
+        <rosparam file="$(find  path_planner)/launch/path_planner_octomap.yaml" /> 
+
+        <param name = "robot_frame_name" value = "$(arg robot_name)/base_link"/>
+        <param name = "laser_frame_name" value = "$(arg robot_name)/laser"/>
+
+        <!--remap from = "cloud_in" to = "/dynjoinpcl_nn"/-->
+        <!--remap from = "cloud_out" to = "/dynjoinpcl"/-->
+
+        <!-- Input -->
+        <!--remap from = "cloud_in" to = "$(arg simulator)/$(arg robot_name)/local_map"/-->
+        <remap from = "cloud_in" to = "/volumetric_mapping/octomap_pcl"/>
+
+        <!-- Output -->
+        <remap from = "cloud_out" to = "$(arg simulator)/$(arg robot_name)/local_map_normals"/>
+        <remap from = "/normals_marker" to = "$(arg simulator)/$(arg robot_name)/normal_markers"/>
+
+    </node> 
+
+</launch>

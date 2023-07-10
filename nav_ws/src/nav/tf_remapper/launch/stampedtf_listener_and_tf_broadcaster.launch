@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    
+    <!-- each of these nodes runs on robot for avoiding message looping, it receives a single robot current pose from a prefixed topic "ugv"i/stamped_transform" and broadcasts this to the local "/tf" -->
+    
+    <arg name="prefix1" default="ugv1"/>
+    <arg name="prefix2" default="ugv2"/>
+    <arg name="prefix3" default="ugv3"/>
+      
+    <node pkg="tf_remapper" type="stampedtf_listener_and_tf_broadcaster" name="stampedtf_listener_and_tf_broadcaster_$(arg prefix1)" output="screen">
+        
+        <param name = "map_frame" value = "map"/>
+        <param name = "robot_name" value = "$(arg prefix1)"/>
+        
+        <!-- Input -->
+        <remap from = "/input_topic" to = "/$(arg prefix1)/stamped_transform"/> 
+    </node>
+    
+    
+    <node pkg="tf_remapper" type="stampedtf_listener_and_tf_broadcaster" name="stampedtf_listener_and_tf_broadcaster_$(arg prefix2)" output="screen">
+        
+        <param name = "map_frame" value = "map"/>
+        <param name = "robot_name" value = "$(arg prefix2)"/>
+        
+        <!-- Input -->
+        <remap from = "/input_topic" to = "/$(arg prefix2)/stamped_transform"/> 
+    </node>
+    
+    
+    <node pkg="tf_remapper" type="stampedtf_listener_and_tf_broadcaster" name="stampedtf_listener_and_tf_broadcaster_$(arg prefix3)" output="screen">
+        
+        <param name = "map_frame" value = "map"/>
+        <param name = "robot_name" value = "$(arg prefix3)"/>
+        
+        <!-- Input -->
+        <remap from = "/input_topic" to = "/$(arg prefix3)/stamped_transform"/> 
+    </node>
+
+</launch>

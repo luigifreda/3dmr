@@ -1,0 +1,9 @@
+#
+# simxInt simxGetVisionSensorImage(simxInt sensorHandle,simxInt* resolution,simxChar** image,simxChar options,simxInt operationMode)
+#
+
+int32 handle
+uint8 options
+---
+int32 result
+sensor_msgs/Image image

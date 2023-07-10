@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+
+    <arg name="robot_name" default="robot" />
+    <arg name="simulator" value="" />
+
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+
+    <arg name="cloud_in" default="dynamic_point_cloud" />
+    <arg name="cloud_out" default="filtered_pointcloud" />
+
+    <arg name="param_file" default="$(find scan_space_time_filter)/launch/scan_filter.yaml" />
+
+    <node name="scan_filter_$(arg robot_name)" pkg="scan_space_time_filter" type="scan_filter_node" respawn="$(arg respawn_value)" output="screen">
+
+        <rosparam command="load" file="$(arg param_file)" />
+
+        <param name="simulator" value="$(arg simulator)" />
+
+        <param name="robot_name" value="$(arg robot_name)" />
+
+        <remap from="dynamic_point_cloud" to="$(arg cloud_in)" /> <!-- input -->
+
+        <remap from="filtered_pointcloud" to="$(arg cloud_out)" /> <!-- output -->
+
+    </node>
+
+</launch>

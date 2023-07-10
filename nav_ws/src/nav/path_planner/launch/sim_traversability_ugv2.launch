@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    
+    <arg name="simulator" default="/vrep" />
+    <arg name="robot_name" default="ugv2" />  <!-- this also defines the robot id, the last digit after "ugv" -->        
+    
+    <arg name="robot_radius" default="0.5" /> <!-- default TRADR robot radius -->   
+
+    <arg name="pointcloud_in" default="$(arg simulator)/$(arg robot_name)/local_map_normals"/> 
+
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+        
+    <arg name="enable_multi_robot_avoidance" default="true" />  <!-- multi -->
+    <arg name="number_of_robots" default="2"/>                   <!-- multi -->
+      
+    <include file="$(find path_planner)/launch/sim_traversability_ugv1.launch" >
+        <arg name="simulator" value="$(arg simulator)" />    
+        <arg name="robot_name" value="$(arg robot_name)" />  
+        <arg name="robot_radius" value="$(arg robot_radius)"/>             
+        <arg name="pointcloud_in" value="$(arg pointcloud_in)" />           
+        <arg name="respawn_value" value="$(arg respawn_value)" />
+        <arg name="enable_multi_robot_avoidance" value="$(arg enable_multi_robot_avoidance)" />
+        <arg name="number_of_robots" value="$(arg number_of_robots)"/>            
+    </include>
+
+</launch>

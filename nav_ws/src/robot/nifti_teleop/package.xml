@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+  <name>nifti_teleop</name>
+  <version>1.0.0</version>
+  <description>The nifti_teleop package</description>
+
+  <maintainer email="renaud.dube@mavt.ethz.ch">Renaud Dubé</maintainer>
+  <maintainer email="abel.gawel@mavt.ethz.ch">Abel Gawel</maintainer>
+
+  <license>BSD</license>
+
+  <author email="francis.colas@mavt.ethz.ch">Francis Colas</author>
+  <author email="renaud.dube@mavt.ethz.ch">Renaud Dubé</author>
+  <author email="abel.gawel@mavt.ethz.ch">Abel Gawel</author>
+  <author email="martin.pecka@cvut.cz">Martin Pecka</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>actionlib</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+
+  <run_depend>actionlib</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>joy</run_depend>
+  <run_depend>nifti_robot_driver_msgs</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>stamped_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>topic_tools</run_depend>
+</package>

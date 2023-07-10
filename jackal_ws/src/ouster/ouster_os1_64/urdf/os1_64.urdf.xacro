@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<!-- Modified from the work of Wil Selby 
+(https://github.com/wilselby/ouster_example/blob/master/ouster_description/urdf/OS1-64.urdf.xacro) -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="os1_64">
+  <xacro:property name="PI" value="3.1415926535897931"/>
+
+  <xacro:macro name="os1_64" params="*origin parent:=base name:=ouster reduced:=true 
+   topic_prefix:=/os1_cloud_node frame_prefix organize_cloud:=false
+   hz:=10 samples:=1024 num_rings:=64 min_range:=0.25 max_range:=120 filter_radius:=0.25
+   noise:=0.008 min_angle_v:=-22.5 max_angle_v:=22.5 gpu:=false">
+
+    <!-- Conditional properties -->
+    <xacro:if value="${reduced}">
+      <xacro:property name="file_visual" value="os1_64_reduced"/>
+    </xacro:if>
+    <xacro:unless value="${reduced}">
+      <xacro:property name="file_visual" value="os1_64"/>
+    </xacro:unless>
+
+    <xacro:if value="${gpu}">
+      <xacro:property name="gpu_str" value="gpu_"/>
+    </xacro:if>
+    <xacro:unless value="${gpu}">
+      <xacro:property name="gpu_str" value=""/>
+    </xacro:unless>
+
+
+    <joint name="${frame_prefix}${name}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}_link"/>
+      <child link="${frame_prefix}${name}_sensor"/>
+    </joint>
+
+    <link name="${frame_prefix}${name}_sensor">
+      <inertial>
+        <mass value="0.425"/>
+        <origin xyz="0 0 0.03675" rpy="0 0 0" />
+        <inertia ixx="0.000308429" ixy="0" ixz="0"
+                 iyy="0.000308429" iyz="0" izz="0.00034589"/>
+      </inertial>
+      <collision name="lidar_collision">
+        <origin xyz="0 0 0.03675" rpy="0 0 0" />
+        <geometry>
+          <cylinder radius="0.04350" length="0.07350"/>
+        </geometry>
+      </collision>
+      <visual name="lidar_visual">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://ouster_os1_64/meshes/${file_visual}.stl" />
+        </geometry>
+        <material name="lidar_white">
+          <color rgba="1.0 1.0 1.0 1"/>
+        </material>           
+      </visual>
+    </link>
+
+    <link name="${frame_prefix}${name}_lidar">
+      <pose>0 0 0 0 0 ${PI}</pose>
+    </link>
+    <joint name="${frame_prefix}${name}_lidar_joint" type="fixed">
+      <parent link="${frame_prefix}${name}_sensor"/>
+      <child link="${frame_prefix}${name}_lidar"/>
+    </joint>
+
+    <gazebo reference="${frame_prefix}${name}_lidar">
+      <sensor type="${gpu_str}ray" name="${name}_lidar">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <update_rate>${hz}</update_rate>
+        <ray>
+          <scan>
+            <vertical>
+              <samples>${num_rings}</samples>   <!-- 16, 32, 64 number of vertical rings -->
+              <resolution>1</resolution>
+              <min_angle>${min_angle_v*PI/180.0}</min_angle>
+              <max_angle>${max_angle_v*PI/180.0}</max_angle>
+            </vertical>
+            <horizontal>
+              <samples>${samples}</samples>
+              <resolution>1</resolution>
+              <min_angle>-${PI}</min_angle>
+              <max_angle>${PI}</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>${min_range}</min>
+            <max>${max_range}</max>
+            <resolution>0.03</resolution>
+          </range>
+          <noise>
+            <type>none</type>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_ouster_${gpu_str}laser.so">
+          <topicName>${topic_prefix}/points</topicName>
+          <frameName>${name}_lidar</frameName>   <!-- NOTE: here, we don't use frame_prefix since a new node will be generated with the namespace added as prefix on the frame names -->
+          <min_range>${min_range}</min_range>
+          <max_range>${max_range}</max_range>
+          <filter_radius>${filter_radius}</filter_radius>           
+          <gaussianNoise>${noise}</gaussianNoise>
+          <organize_cloud>${organize_cloud}</organize_cloud>          
+        </plugin>
+      </sensor>
+    </gazebo>
+
+    <link name="${frame_prefix}${name}_imu"/>
+    <joint name="${frame_prefix}${name}_imu_joint" type="fixed">
+      <parent link="${frame_prefix}${name}_sensor"/>
+      <child link="${frame_prefix}${name}_imu"/>
+    </joint>
+
+    <gazebo reference="${frame_prefix}${name}_imu">
+      <sensor type="imu" name="${name}_imu_sensor">
+        <pose>0 0 0 0 0 0</pose>
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <visualize>true</visualize>
+        <topic>${topic_prefix}/imu</topic>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+</robot>

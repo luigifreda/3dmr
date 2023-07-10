@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# N.B.:
+# 1) this script is designed just for testing the expl planning nodes; no SLAM nodes are called; SLAM is assumed to be faked by a proper V-REP environment
+# 2) you can kill all the spawned terminals together by right clicking on the X icon on the left bar and selecting "Quit"
+
+echo "usage: ./${0##*/} <robot-id> <enable-multi-robot-traversability> <enable-exploration-agent> <battery-of-tests>"
+
+ROBOT_ID=$1
+ROBOT_NAME="ugv$ROBOT_ID"
+#ROBOT_ID_1=$(($ROBOT_ID-1)) # robot id zero based
+
+if [[ -n "$ROBOT_ID" ]]; then
+    echo "STARTING EXPLORATION ROBOT $ROBOT_NAME"
+else
+    echo "give me a name please"
+    exit 1
+fi
+
+export EXPLORATION3D_FOLDER=$(rospack find pioneer_3dexplorer)
+export LOGS_FOLDER=$EXPLORATION3D_FOLDER/logs
+
+SUFFIX=$ROBOT_ID"_"$TIME_NOW
+export FILE_LOG_PATH_PLANNING=$LOGS_FOLDER"/log_path_planning$SUFFIX.log"
+export FILE_LOG_EXPLORATION_AGENT=$LOGS_FOLDER"/log_exploration_agent$SUFFIX.log"
+echo "exploration log:" $FILE_LOG_EXPLORATION_AGENT
+
+########################################################################################################
+
+ENABLE_EXPL_AGENT=1 # 1/0 enable/disable exploration agent
+
+ENABLE_LOGGING_EXPL_AGENT=0 # 1/0 enable/disable logging of exploration agent into files
+
+ENABLE_MULTI_ROBOT_COORDINATION="true" # true or false
+
+ENABLE_BATTERY=$4
+if [ -z $ENABLE_BATTERY ] || [ $ENABLE_BATTERY = false ]; then
+    ENABLE_BATTERY="false"
+fi
+
+########################################################################################################
+
+# check environment variables
+
+if [[ -z "${MR3D_HOME}" ]]; then
+    echo "ERROR: missing env var MR3D_HOME"
+    echo "please, source source_all.bash in the main 3DMR folder"
+    exit
+else
+    source $MR3D_HOME/source_all.bash
+fi
+
+########################################################################################################
+
+# check if we want to enable/disable multi-robot coordination from input
+export ENABLE_MULTI_ROBOT_COORDINATION_INPUT=$2
+if [[ -n "$ENABLE_MULTI_ROBOT_COORDINATION_INPUT" ]]; then
+    echo "setting ENABLE_MULTI_ROBOT_COORDINATION_INPUT: $ENABLE_MULTI_ROBOT_COORDINATION_INPUT"
+    ENABLE_MULTI_ROBOT_COORDINATION=$ENABLE_MULTI_ROBOT_COORDINATION_INPUT
+fi
+echo "ENABLE_MULTI_ROBOT_COORDINATION: $ENABLE_MULTI_ROBOT_COORDINATION"
+
+# check if we want to enable/disable multi-robot coordination from input
+export ENABLE_EXPL_AGENT_INPUT=$3
+if [[ -n "$ENABLE_EXPL_AGENT_INPUT" ]]; then
+    echo "setting ENABLE_EXPL_AGENT_INPUT: $ENABLE_EXPL_AGENT_INPUT"
+    ENABLE_EXPL_AGENT=$ENABLE_EXPL_AGENT_INPUT
+fi
+echo "ENABLE_EXPL_AGENT: $ENABLE_EXPL_AGENT"
+
+
+########################################################################################################
+
+#PATH_PLANNER_DIR=$(rospack find path_planner)
+#$PATH_PLANNER_DIR/scripts/sim_launcher_ugv $ROBOT_ID
+
+#open_term "ugv$ROBOT_ID_path_planner_term" "echo path planner ugv$ROBOT_ID; rosrun path_planner sim_launcher_ugv $ROBOT_ID $ENABLE_MULTI_ROBOT_COORDINATION; bash " &
+rosrun pioneer_3dnav sim_launcher_ugv $ROBOT_ID $ENABLE_MULTI_ROBOT_COORDINATION
+sleep 10
+
+########################################################################################################
+
+if [ $ENABLE_EXPL_AGENT -eq 1 ]; then
+    if [ $ENABLE_LOGGING_EXPL_AGENT -eq 1 ]; then
+        echo "pioneer_3dexplorer ugv$ROBOT_ID"
+        open_term "ugv$ROBOT_ID"pioneer_3dexplorer "echo pioneer_3dexplorer ugv$ROBOT_ID; roslaunch --wait --log pioneer_3dexplorer sim_expl_planner_ugv2.launch robot_name:=$ROBOT_NAME battery:=$ENABLE_BATTERY &> $FILE_LOG_EXPLORATION_AGENT; bash" &
+    else
+        echo "pioneer_3dexplorer ugv$ROBOT_ID"
+        #open_term "ugv$ROBOT_ID"pioneer_3dexplorer "echo pioneer_3dexplorer ugv$ROBOT_ID; roslaunch --wait --log pioneer_3dexplorer sim_expl_planner_ugv2.launch robot_name:=$ROBOT_NAME battery:=$ENABLE_BATTERY; bash" &
+        open_term "ugv$ROBOT_ID"pioneer_3dexplorer "echo pioneer_3dexplorer ugv$ROBOT_ID; roslaunch --wait pioneer_3dexplorer sim_expl_planner_ugv2.launch robot_name:=$ROBOT_NAME battery:=$ENABLE_BATTERY; bash" &
+    fi
+fi
+

@@ -1,0 +1,8 @@
+#
+# simInt simClearIntegerSignal(const simChar* signalName)
+#
+
+string signalName
+---
+int32 result
+

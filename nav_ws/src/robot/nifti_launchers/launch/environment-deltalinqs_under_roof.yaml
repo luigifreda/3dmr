@@ -1,0 +1,7 @@
+# only values different from default-environment.yaml need to be defined here; the default config is always loaded
+
+# Deltalinqs under the roof
+initial_lat: deg(51.89856249)
+initial_lon: deg(4.41477607)
+initial_altitude: 125.0
+initial_heading: deg(187)

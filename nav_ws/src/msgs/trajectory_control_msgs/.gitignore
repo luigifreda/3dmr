@@ -1,0 +1,14 @@
+bin
+build
+cfg/*.cfgc
+cfg/cpp
+lib
+msg/TrajectoryControlActionFeedback.msg
+msg/TrajectoryControlActionGoal.msg
+msg/TrajectoryControlAction.msg
+msg/TrajectoryControlActionResult.msg
+msg/TrajectoryControlFeedback.msg
+msg/TrajectoryControlGoal.msg
+msg/TrajectoryControlResult.msg
+msg_gen
+src

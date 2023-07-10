@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+  <arg name="mav_name" default="firefly" />
+  <arg name="enable_logging" default="false" />
+  <arg name="enable_ground_truth" default="true" />
+  <arg name="log_file" default="$(arg mav_name)" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find interface_nbvp_rotors)/worlds/flat.world" />
+    <arg name="paused" value="true"/>
+    <arg name="gui" value="true"/>
+  </include>
+  
+  <node pkg="tf" type="static_transform_publisher" name="tf_nav1" args="0 0 0 0 0 0 world navigation 100" />
+  
+  <include file="$(find interface_nbvp_rotors)/launch/mav_inspector.launch">
+    <arg name="mav_name" value="$(arg mav_name)" />
+    <arg name="waypoint_x" value="0.0" />
+    <arg name="waypoint_y" value="0.0" />
+    <arg name="waypoint_z" value="1.0" />
+    <arg name="param_file" value="$(find interface_nbvp_rotors)/resource/area_exploration.yaml" />
+    <arg name="enable_logging" value="$(arg enable_logging)" />
+    <arg name="enable_ground_truth" value="$(arg enable_ground_truth)" />
+    <arg name="log_file" value="$(arg log_file)" />
+    <arg name="tf_frame" value="navigation" />
+    <arg name="pcl_topic" value="/$(arg mav_name)/vi_sensor/camera_depth/depth/points" />
+    <arg name="stl_file_path" value="$(find interface_nbvp_rotors)/mesh/meshFlat.stl" />
+    <arg name="mesh_resolution" value="0.5" />
+    <arg name="resolution" value="0.4" />
+    <arg name="visualize_max_z" value="2.5" />
+    <arg name="sensor_max_range" value="5.0" />
+  </include>
+  
+</launch>

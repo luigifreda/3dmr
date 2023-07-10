@@ -1,0 +1,14 @@
+<launch>
+
+  <arg name="simulator" default="/vrep" />
+  <arg name="robot_name" default="ugv1" />  <!-- this also defines the robot id, the last digit after "ugv" -->        
+    
+  <node pkg="grid_map_visualization" type="grid_map_visualization" name="elevation_map_fused_visualization_$(arg robot_name)" output="screen">
+   	<param name="grid_map_topic" value="/elevation_mapping_$(arg robot_name)/elevation_map" />
+    <rosparam command="load" file="$(find elevation_mapping_ugvs)/config/visualization/fused.yaml" />
+  </node>
+  <node pkg="grid_map_visualization" type="grid_map_visualization" name="elevation_map_raw_visualization_$(arg robot_name)" output="screen">
+    <param name="grid_map_topic" value="/elevation_mapping_$(arg robot_name)/elevation_map_raw" />
+    <rosparam command="load" file="$(find elevation_mapping_ugvs)/config/visualization/raw.yaml" />
+  </node>
+</launch>

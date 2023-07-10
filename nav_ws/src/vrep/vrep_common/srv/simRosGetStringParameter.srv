@@ -1,0 +1,8 @@
+#
+# simChar* simGetStringParameter(simInt parameter)
+#
+
+int32 parameter
+---
+int32 result
+string parameterValue

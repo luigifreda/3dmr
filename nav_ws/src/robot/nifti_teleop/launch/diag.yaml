@@ -1,0 +1,6 @@
+analyzers:
+  nifti_robot_node:
+    type: GenericAnalyzer
+    path: Robot
+    find_and_remove_prefix: 'nifti_robot_node'
+    num_items: 8

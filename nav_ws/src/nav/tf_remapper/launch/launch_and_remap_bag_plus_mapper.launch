@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+
+<!--
+links:
+http://answers.ros.org/question/216582/how-to-use-tf_remap/
+http://ros-users.122217.n3.nabble.com/wiki-entry-for-tf-remap-td1840280.html
+http://answers.ros.org/question/11875/set-tf_remap-private-parameters-from-console/ 
+http://wiki.ros.org/geometry/CoordinateFrameConventions
+-->
+
+<launch>
+      
+      
+    <arg name="file" default="/home/luigi/Work/tradr_datasets/tjex_2016/ugv_2016-07-08-10-08-52.bag" /> <!-- put your bag file here -->  
+      
+    <remap from="tf" to="tf_old"/>
+              
+    <!-- here you list all the robot launch files we want to use -->              
+
+    <param name="use_sim_time" value="true" />
+    
+    <node pkg="rosbag" type="play" name="bag_player" args="--clock $(arg file)">
+    </node>  
+    
+    <include file="$(find nifti_robot_description)/launch/load_robot_model.launch" />   
+        
+    <include file="$(find nifti_laser_filtering)/launch/nifti_laser_filtering.launch"/>
+    <include file="$(find point_cloud_color)/launch/nifti_scan_to_point_cloud.launch"/>
+        
+	<include file="$(find nifti_mapping_launchers)/launch/nifti_laser_assembler.launch"/>
+    
+        
+    <!-- ROS parameters -->
+    <rosparam command="load" file="$(find laser_mapper)/launch/nifti_sick/ros_parameters_outdoor.yaml"/>
+    
+    <include file="$(find laser_mapper)/launch/laser_mapper.launch">
+        <arg name="icp_configuration_file" value="$(find laser_mapper)/launch/nifti_sick/icp.yaml"/>
+        <arg name="icp_input_filters_file" value="$(find laser_mapper)/launch/nifti_sick/input_filters.yaml"/>
+    </include>  
+   
+   
+   	<!--include file="$(find nifti_mapping_launchers)/launch/mapAndNav.launch"/--> 
+    
+</launch>

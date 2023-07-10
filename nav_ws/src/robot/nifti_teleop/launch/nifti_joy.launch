@@ -1,0 +1,38 @@
+<launch>
+	<arg name="dev" default="/dev/input/js0" />
+	<arg name="priority_name" default="teleop_joy" />
+	<arg name="transparent_translation" default="false" />
+    <arg name="coalesce_interval" default="0.033" />
+    <arg name="deadzone" default="0.1" />
+    <arg name="run_teleop" default="true" />
+    <arg name="absolutize_cmd_vel" default="false" />
+
+	<arg name="raw_suffix" value="_raw" if="$(arg transparent_translation)" />
+	<arg name="translated_suffix" value="" if="$(arg transparent_translation)" />
+
+	<arg name="raw_suffix" value="" unless="$(arg transparent_translation)" />
+	<arg name="translated_suffix" value="_translated" unless="$(arg transparent_translation)" />
+
+	<group>
+		<remap from="joy" to="$(arg priority_name)/joy$(arg raw_suffix)"/>
+		<remap from="joy_translated" to="$(arg priority_name)/joy$(arg translated_suffix)" />
+
+		<node pkg="joy" type="joy_node" name="$(anon joy_node)" >
+			<param name="dev" value="$(arg dev)" />
+			<param name="autorepeat_rate" value="10.0" />
+            <param name="deadzone" type="double" value="$(arg deadzone)" />
+            <param name="coalesce_interval" type="double" value="$(arg coalesce_interval)" />
+		</node>
+		<node pkg="nifti_teleop" type="joy_translator.py" name="$(anon joy_translator)">
+			<param name="dev" value="$(arg dev)"/>
+		</node>
+	</group>
+
+	<node pkg="nifti_teleop" type="nifti_teleop_joy.py"
+		name="$(anon remote_teleop_joy)" output="screen" if="$(arg run_teleop)">
+		<param name="cmd_vel_topic" value="$(arg priority_name)/cmd_vel" />
+		<remap from="joy" to="$(arg priority_name)/joy$(arg translated_suffix)" />
+	</node>
+    <!-- */cmd_vel always needs to be available on the global absolute topic -->
+    <node pkg="topic_tools" type="relay" args="$(arg priority_name)/cmd_vel /$(arg priority_name)/cmd_vel" name="$(anon absolute_cmd_vel)" if="$(arg absolutize_cmd_vel)" />
+</launch>

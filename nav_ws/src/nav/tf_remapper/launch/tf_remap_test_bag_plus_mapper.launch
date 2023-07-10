@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+
+<!--
+links:
+http://answers.ros.org/question/216582/how-to-use-tf_remap/
+http://ros-users.122217.n3.nabble.com/wiki-entry-for-tf-remap-td1840280.html
+http://answers.ros.org/question/11875/set-tf_remap-private-parameters-from-console/ 
+http://wiki.ros.org/geometry/CoordinateFrameConventions
+-->
+
+<launch>
+      
+    <arg name="file" default="/home/luigi/Work/tradr_datasets/tjex_2016/ugv_2016-07-08-10-08-52.bag" /> <!-- put your bag file here --> 
+      
+     <!--remap from="tf" to="tf_old"/--> <!-- if you put this here there will be two tf trees: one with the new frames and one with the old frames -->
+      
+    <!-- here we have to list all the frames we want to rename -->
+    <arg name="mappings" default="
+            [
+             {old: map, new: map1}, {old: /map, new: map1}
+            ]
+    "/> 
+    
+
+   <!-- ===================================================================================================== -->
+   <!-- frames inside topics are not renamed; here you can reconnect old-frames with new frames but this cannot be used with multiple robots -->    
+   
+   <node pkg="tf" type="static_transform_publisher" name="tf_static_map_map1_broadcaster" args="1 1 0 0 0 0 1 map map1  100"/>
+   
+   <!-- ===================================================================================================== -->
+      
+    <node pkg="tf" type="tf_remap" name="tf_remapper" output="screen">
+        <rosparam param="mappings" subst_value="true">$(arg mappings)</rosparam>
+    </node>
+      
+            
+    <!-- this will create a file frames.pdf in your home folder ".ros" -->
+    <node pkg="tf" type="view_frames" name="frames_viewer" output="screen" respawn="true">
+     <!--remap from="tf" to="tf_old"/--> <!-- this is not needed here since we want the new remapped tf -->
+    </node>
+    
+    <!--node pkg="rqt_tf_tree" type="rqt_tf_tree" name="tf_tree_viewer" output="screen" respawn="true"/-->
+    
+    <!-- here we include the main launch files which spawn our robot nodes and add <remap from="tf" to="tf_old"/> at the top of the file
+    -->
+    <include file="$(find tf_remapper)/launch/launch_and_remap_bag_plus_mapper.launch">
+        <arg name="file" value="$(arg file)" />
+    </include>
+
+                  
+</launch>

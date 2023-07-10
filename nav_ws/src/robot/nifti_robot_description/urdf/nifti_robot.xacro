@@ -1,0 +1,875 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="NIFTi">
+
+    <!-- ARGUMENTS FOR DETERMINING REMOVABLE ROBOT PARTS PRESENCE AND POSITION ON THE BODY. -->
+    <!-- Positions of parts attachable to the top aluminium panel are given in a coordinate system whose
+        zero point is in the rear right corner of the top panel (rear_right_box). This way, all parts'
+        coordinates should only be positive numbers and are easily measured. To find out the zero points
+        of the parts, refer either to comments here or to the 3D models of the parts.
+
+        All these configuration values should be set in robot.yaml -> parts_config section.
+
+        To regenerate the robot model used by ROS, just call "catkin_make nifti_robot_description_media_files_sdf".
+
+	The build will fail if the respective TRADR packages are not available in the workspace.
+        We intentionally don't build_depend on the in package.xml to allow people building the system without having these
+        package if they don't need the respective robot parts.
+    -->
+    <xacro:arg name="has_top_box" default="1" />
+        <!-- Distance from robot's back to top box' front panel. Default is the front-most position. -->
+        <xacro:arg name="top_box_j_x" default="0.4977" />
+
+    <xacro:arg name="has_omnicam" default="1" />
+
+    <xacro:arg name="has_flippers" default="1" />
+
+    <xacro:arg name="simplified_collision" default="2" />
+
+    <xacro:arg name="has_jaco_arm" default="0" />
+	<xacro:arg name="jaco_uses_wpi" default="0" />
+	<xacro:arg name="jaco_uses_kinova_ros" default="0" />
+	<xacro:arg name="jaco_arm_is_v1" default="1" />
+        <!-- Origin is the bottom-most (z) and central (x-y) part of the cylinder with connectors. -->
+        <xacro:arg name="jaco_x_offset" default="0.449" />
+        <xacro:arg name="jaco_y_offset" default="0.1765" />
+
+        <xacro:arg name="holds_stick" default="0" />
+            <xacro:arg name="stick_length" default="0.2" />
+	    <xacro:arg name="stick_visible" default="1" />
+
+    <xacro:arg name="has_flipper_touch_sensors" default="0" />
+
+    <xacro:arg name="has_axis_camera" default="0" />
+        <xacro:arg name="axis_x_offset" default="0.059" />
+	<xacro:arg name="axis_y_offset" default="0.08" />
+
+    <xacro:arg name="has_realsense" default="0" />
+        <xacro:arg name="realsense_tilt" default="0.5" />
+	<xacro:arg name="realsense_shift_y" default="0.05" />
+
+    <!-- Parameters for the Xtion-Thermo cam sensor mounted on a ptu. -->
+    <xacro:arg name="has_ptuxthermo" default="0" />
+    <xacro:arg name="ptuxthermo_x_offset" default="0.449" />
+    <xacro:arg name="ptuxthermo_y_offset" default="0.1765" />
+
+    <!-- ARGUMENTS FOR GENERATING FIXED ROBOT MODEL -->
+    <xacro:arg name="robot_fixed" default="0" />
+    <xacro:arg name="left_track_angle" default="0.0" />
+    <xacro:arg name="right_track_angle" default="0.0" />
+    <xacro:arg name="front_left_flipper_angle" default="0.0" />
+    <xacro:arg name="front_right_flipper_angle" default="0.0" />
+    <xacro:arg name="rear_left_flipper_angle" default="0.0" />
+    <xacro:arg name="rear_right_flipper_angle" default="0.0" />
+    <xacro:arg name="laser_angle" default="0.0" />
+
+    <!-- ARGUMENTS FOR SAFE EXPLORATION -->
+    <xacro:arg name="base_link_cog_offset" default="0.0" />
+
+    <!-- MEASURED CONSTANTS -->
+
+    <xacro:property name="body_scale" value="1.0" />
+    <xacro:property name="body_mass" value="6.746" />
+
+    <xacro:property name="battery_scale" value="1.0" />
+    <xacro:property name="battery_mass" value="3.18" />
+
+    <xacro:property name="top_box_scale" value="1.0" />
+    <xacro:property name="top_box_mass" value="0.24" />
+
+    <xacro:property name="antenna_scale" value="1.0" />
+    <xacro:property name="antenna_mass" value="0.56" />
+
+    <xacro:property name="track_scale" value="1.0" />
+    <xacro:property name="track_mass" value="6.06" />
+    <!-- Since laser does a really bad job in filtering the front track parts out, we need to extend them a bit inwards. The outer outline of the tracks should still remain realistic. -->
+    <xacro:property name="track_inward_enlargement" value="0.015" />
+
+    <xacro:property name="flipper_scale" value="1.0" />
+    <xacro:property name="flipper_mass" value="0.75" />
+    <!-- Since laser does a really bad job in filtering the flippers out, we need to extend them a bit inwards. The outer outline of the flippers should still remain realistic. -->
+    <xacro:property name="flipper_inward_enlargement" value="0.017" />
+
+    <xacro:property name="laser_scale" value="1.0" />
+    <xacro:property name="laser_mass" value="1.1" />
+
+    <xacro:property name="omnicam_scale" value="1.0" />
+    <xacro:property name="omnicam_mass" value="2.414" />
+
+    <!-- SPECIAL LINKS -->
+
+    <!-- This is a virtual link that specifies the origin to which parts attachable to the top of the robot should be related. -->
+    <link name="rear_right_box" />
+    <joint name="rear_right_box_j" type="fixed">
+        <parent link="base_link"/>
+        <child link="rear_right_box"/>
+        <origin rpy="0 0 0" xyz="-0.379 -0.1265 0.185"/>
+    </joint>
+
+    <!-- INCLUDES -->
+    <!-- The included models should have collision elements specified for all physical links to be filtered out by laser filtering. -->
+
+    <!-- Include Jaco arm if enabled. -->
+    <xacro:if value="$(arg has_jaco_arm)">
+	<xacro:if value="$(arg jaco_uses_wpi)">
+        	<xacro:include filename="$(find jaco_description)/urdf/jaco_arm.urdf.xacro" />
+        	<xacro:jaco_arm parent="jaco_base_helper" xyz="0 0 0" rpy="0 0 0" />
+	</xacro:if>
+	<xacro:if value="$(arg jaco_uses_kinova_ros)"><!-- For Kinova-ROS -->
+		<xacro:property name="robot_root" value="jaco_base_helper" />
+		<xacro:if value="$(arg jaco_arm_is_v1)">
+			<xacro:include filename="$(find kinova_description)/urdf/j2n6s300.xacro"/>
+			<xacro:j2n6s300 base_parent="jaco_base_helper" simplified_collision="$(arg simplified_collision)"/>
+		</xacro:if>
+		<xacro:unless value="$(arg jaco_arm_is_v1)">
+		    	<xacro:include filename="$(find kinova_description)/urdf/j2n6s300.xacro"/>
+		    	<xacro:j2n6s300 base_parent="jaco_base_helper" simplified_collision="$(arg simplified_collision)"/>
+		</xacro:unless>
+	</xacro:if>
+	<xacro:unless value="$(arg jaco_uses_kinova_ros)">
+		<xacro:unless value="$(arg jaco_uses_wpi)">
+		        <xacro:include filename="$(find jaco_model)/urdf/jaco_arm.xacro" />
+	        	<xacro:jaco_arm parent="jaco_base_helper"/>
+		</xacro:unless>
+	</xacro:unless>
+        <link name="jaco_base_helper" /> <!-- this link only exists to allow for an offset between jaco_link_base and rear_right_box -->
+        <joint name="jaco_base_to_robot_base_link" type="fixed">
+             <parent link="rear_right_box" />
+             <child link="jaco_base_helper" />
+             <origin xyz="$(arg jaco_x_offset) $(arg jaco_y_offset) 0.015" rpy="0 0 1.5707963267" />
+        </joint>
+	<xacro:if value="$(arg holds_stick)">
+		<xacro:property name="stick_length" value="$(arg stick_length)" />
+		<link name="arm_stick">
+			<xacro:if value="$(arg stick_visible)">
+			<visual>
+				<origin xyz="0 0 ${stick_length/2.0}" rpy="0 0 0" />
+				<geometry>
+					<cylinder length="$(arg stick_length)" radius="0.01" />
+				</geometry>
+			</visual>
+			</xacro:if>
+			<collision>
+				<origin xyz="0 0 ${stick_length/2.0}" rpy="0 0 0" />
+				<geometry>
+					<cylinder length="$(arg stick_length)" radius="0.04" />
+				</geometry>
+			</collision>
+
+		</link>
+		<joint name="arm_stick_joint" type="fixed">
+			
+			<xacro:unless value="$(arg jaco_uses_wpi)">
+				<parent link="jaco_end_effector" />
+			</xacro:unless>
+
+			<xacro:if value="$(arg jaco_uses_wpi)">
+				<parent link="jaco_link_hand" />
+			</xacro:if>
+			<child link="arm_stick" />
+			<origin xyz="0 0 0" rpy="0 0 0" />
+		</joint>
+		<link name="arm_stick_holder">
+			<xacro:if value="$(arg stick_visible)">
+			<visual>
+				<geometry>
+					<sphere radius="0.08" />
+				</geometry>
+			</visual>
+			</xacro:if>
+			<collision>
+				<geometry>
+					<sphere radius="0.25" />
+				</geometry>
+			</collision>
+
+		</link>
+		<joint name="arm_stick_holder_joint" type="fixed">
+			<xacro:unless value="$(arg jaco_uses_wpi)">
+				<parent link="jaco_end_effector" />
+			</xacro:unless>
+
+			<xacro:if value="$(arg jaco_uses_wpi)">
+				<parent link="jaco_link_hand" />
+			</xacro:if>
+			
+			<child link="arm_stick_holder" />
+			<origin xyz="0 0 0" rpy="0 0 0" />
+		</joint>
+	</xacro:if>
+    </xacro:if>
+
+    <xacro:if value="$(arg has_flipper_touch_sensors)">
+        <xacro:include filename="$(find flipper_touch_driver)/urdf/flipper_touch_sensors.xacro" />
+    </xacro:if>
+
+    <!-- Include Axis camera if enabled -->
+    <xacro:if value="$(arg has_axis_camera)">
+        <xacro:include filename="$(find axis_camera_tradr)/urdf/axis_camera_with_holder.xacro" />
+        <joint name="rear_right_box_to_axis_holder" type="fixed">
+            <parent link="rear_right_box" />
+            <child link="axis_tradr_holder" />
+            <origin xyz="$(arg axis_x_offset) $(arg axis_y_offset) 0" rpy="0 0 -1.5708" />
+	</joint>
+    </xacro:if>
+	
+    <!-- Include PTU Xtion-Thermo Sensor if enabled -->
+    <xacro:if value="$(arg has_ptuxthermo)">
+        <xacro:include filename="$(find flir_ptu)/urdf/ptu_xthermo.urdf.xacro" />
+        <xacro:ptu_xthermo/>
+        <joint name="rear_right_box_to_ptu_holder_base" type="fixed">
+            <parent link="rear_right_box" />
+            <child link="ptu_holder_base_link" />
+            <origin xyz="$(arg ptuxthermo_x_offset) $(arg ptuxthermo_y_offset) 0" rpy="0 0 0" />
+        </joint>
+    </xacro:if>
+
+    <!-- Include Realsense if enabled -->
+    <xacro:if value="$(arg has_realsense)">
+        <xacro:include filename="$(find realsense_media)/urdf/realsense_r200_with_holder.xacro" />
+	<xacro:realsense_r200_with_holder camera_name="camera" tilt="$(arg realsense_tilt)" sensor_shift_y="$(arg realsense_shift_y)" />
+        <joint name="realsense_holder_part1_j" type="fixed">
+            <parent link="omnicam"/>
+    	    <child link="realsense_holder_part1"/>
+ 	    <origin xyz="0.05 0.04 0.075" rpy="0 0 0.628318530"/>
+        </joint>
+    </xacro:if>
+
+    <!-- MACRO SPECIFICATIONS -->
+
+    <xacro:macro name="inertia_meshlab" params="ixx ixy ixz iyy iyz izz scale mass">
+        <inertia
+            ixx="${ixx*scale*scale}" ixy="${ixy*scale*scale}" ixz="${ixz*scale*scale}"
+            iyy="${iyy*scale*scale}" iyz="${iyz*scale*scale}"
+            izz="${izz*scale*scale}"/>
+    </xacro:macro>
+
+    <xacro:macro name="default_inertial">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="1e-5" />
+            <inertia ixx="1e-3" ixy="1e-6" ixz="1e-6"
+                iyy="1e-3" iyz="1e-6"
+                izz="1e-3" />
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="fixed_joint" params="name parent child xyz rpy">
+        <joint name="${name}" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <origin xyz="${xyz}" rpy="${rpy}"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="empty_link" params="name">
+        <link name="${name}">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.05 0.05 0.05"/>
+                </geometry>
+                <material name="invisible_color">
+                    <color rgba="1 0 0 0.5"/>
+                </material>
+            </visual>
+            <xacro:default_inertial />
+        </link>
+    </xacro:macro>
+
+    <!-- NIFTI ROBOT LINKS AND JOINTS SPECIFICATION -->
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh scale="${body_scale} ${body_scale} ${body_scale}"
+                    filename="package://nifti_robot_description/meshes/body.dae"/>
+            </geometry>
+        </visual>
+        <xacro:if value="${$(arg simplified_collision)==0}">
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh scale="${body_scale} ${body_scale} ${body_scale}"
+                        filename="package://nifti_robot_description/meshes/body.dae"/>
+                </geometry>
+            </collision>
+        </xacro:if>
+        <xacro:if value="${$(arg simplified_collision)==1}">
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh scale="${body_scale} ${body_scale} ${body_scale}"
+                        filename="package://nifti_robot_description/meshes/collide/body.dae"/>
+                </geometry>
+            </collision>
+        </xacro:if>
+        <xacro:if value="${$(arg simplified_collision)==2}">
+            <collision>
+              <origin rpy="0 0 0" xyz="-0.1220 0 0.118"/>
+              <geometry>
+                <box size="0.50017 0.24093 0.1390" />
+              </geometry>
+            </collision>
+            <collision>
+              <origin rpy="0 0 0" xyz="0.157 0 0.118"/>
+              <geometry>
+                <box size="0.056 0.12093 0.1390" />
+              </geometry>
+            </collision>
+            <collision>
+              <origin rpy="0 0 0.785398" xyz="0.144 -0.076 0.118"/>
+              <geometry>
+                <box size="0.083 0.040 0.1390" />
+              </geometry>
+            </collision>
+            <collision>
+              <origin rpy="0 0 -0.785398" xyz="0.144 0.076 0.118"/>
+              <geometry>
+                <box size="0.083 0.040 0.1390" />
+              </geometry>
+            </collision>
+            <collision>
+              <origin rpy="0 0 0" xyz="0 0.135 0.09"/>
+              <geometry>
+                <box size="0.055 0.040 0.08" />
+              </geometry>
+            </collision>
+            <collision>
+              <origin rpy="0 0 0" xyz="0 0.155 0.013"/>
+              <geometry>
+                <box size="0.055 0.020 0.075" />
+              </geometry>
+            </collision>
+            <collision>
+              <origin rpy="0 0 0" xyz="0 -0.135 0.09"/>
+              <geometry>
+                <box size="0.055 0.040 0.08" />
+              </geometry>
+            </collision>
+            <collision>
+              <origin rpy="0 0 0" xyz="0 -0.155 0.013"/>
+              <geometry>
+                <box size="0.055 0.020 0.075" />
+              </geometry>
+            </collision>
+        </xacro:if>
+	<inertial>
+	    <xacro:property name="base_link_cog_offset" value="$(arg base_link_cog_offset)" />
+            <origin xyz="${-0.034+base_link_cog_offset} 0 0.142" rpy="0 0 0"/>
+            <mass value="${body_mass}"/>
+            <xacro:inertia_meshlab
+                ixx="6.9904e-003" ixy="1.2271e-004" ixz="-4.2725e-005"
+                iyy="2.1290e-002" iyz="-1.0522e-004"
+                izz="2.5519e-002"
+                scale="${body_scale}" mass="${body_mass}" />
+        </inertial>
+    </link>
+
+    <link name="battery">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh scale="${battery_scale} ${battery_scale} ${battery_scale}"
+                    filename="package://nifti_robot_description/meshes/battery.dae"/>
+            </geometry>
+        </visual>
+        <xacro:if value="${$(arg simplified_collision)==0}">
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh scale="${battery_scale} ${battery_scale} ${battery_scale}"
+                        filename="package://nifti_robot_description/meshes/battery.dae"/>
+                </geometry>
+            </collision>
+        </xacro:if>
+        <xacro:if value="${$(arg simplified_collision)==1}">
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh scale="${battery_scale} ${battery_scale} ${battery_scale}"
+                        filename="package://nifti_robot_description/meshes/collide/battery.dae"/>
+                </geometry>
+            </collision>
+        </xacro:if>
+        <xacro:if value="${$(arg simplified_collision)==2}">
+            <collision>
+              <origin rpy="0 0 0" xyz="0 0 0.0410"/>
+              <geometry>
+                <box size="0.1450 0.1350 0.0820" />
+              </geometry>
+            </collision>
+        </xacro:if>
+        <inertial>
+            <origin xyz="0 0 0.041" rpy="0 0 0"/>
+            <mass value="${battery_mass}"/>
+            <xacro:inertia_meshlab
+                ixx="0.0020793" ixy="0" ixz="0"
+                iyy="0.0023127" iyz="0"
+                izz="0.0032712"
+                scale="${battery_scale}" mass="${battery_mass}" />
+        </inertial>
+    </link>
+    <xacro:fixed_joint name="battery_j" parent="base_link" child="battery" xyz="-0.2836 -0.0221 0.0722" rpy="0 0 0" />
+
+    <xacro:if value="$(arg has_top_box)">
+        <link name="top_box">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh scale="${top_box_scale} ${top_box_scale} ${top_box_scale}"
+                        filename="package://nifti_robot_description/meshes/top_box.dae"/>
+                </geometry>
+            </visual>
+            <xacro:if value="${$(arg simplified_collision)==0}">
+                <collision>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <mesh scale="${top_box_scale} ${top_box_scale} ${top_box_scale}"
+                            filename="package://nifti_robot_description/meshes/top_box.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${$(arg simplified_collision)==1}">
+                <collision>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <mesh scale="${top_box_scale} ${top_box_scale} ${top_box_scale}"
+                            filename="package://nifti_robot_description/meshes/collide/top_box.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${$(arg simplified_collision)==2}">
+                <collision>
+                  <origin rpy="0 0 0" xyz="-0.0290 0 0.0315"/>
+                  <geometry>
+                    <box size="0.2000 0.1330 0.06252" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin rpy="0 0 0" xyz="-0.09824 0.04127 0.0690"/>
+                  <geometry>
+                    <box size="0.0440 0.0440 0.01303" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin rpy="0 0 0" xyz="-0.07383 -0.04222 0.07996"/>
+                  <geometry>
+                    <box size="0.03732 0.03523 0.03489" />
+                  </geometry>
+                </collision>
+            </xacro:if>
+            <inertial>
+                <origin xyz="0 0 0.041" rpy="0 0 0"/>
+                <mass value="${top_box_mass}"/>
+                <xacro:inertia_meshlab
+                    ixx="0.0026136" ixy="0" ixz="0"
+                    iyy="0.0049426" iyz="0"
+                    izz="0.0070334"
+                    scale="${top_box_scale}" mass="${top_box_mass}" />
+            </inertial>
+        </link>
+        <joint name="top_box_j" type="fixed">
+            <parent link="rear_right_box"/>
+            <child link="top_box"/>
+            <xacro:property name="top_box_j_x" value="$(arg top_box_j_x)" />
+            <!-- Origin of top box is 0.071 m from the front side. And top_box_j_x is distance from robot's back to top box' front. -->
+            <origin xyz="${top_box_j_x-0.071} 0.0708 0.0" rpy="0 0 0"/>
+        </joint>
+    </xacro:if>
+    <link name="antenna">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh scale="${antenna_scale} ${antenna_scale} ${antenna_scale}"
+                    filename="package://nifti_robot_description/meshes/antenna.dae"/>
+            </geometry>
+        </visual>
+        <xacro:if value="${$(arg simplified_collision)==0}">
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh scale="${antenna_scale} ${antenna_scale} ${antenna_scale}"
+                        filename="package://nifti_robot_description/meshes/antenna.dae"/>
+                </geometry>
+            </collision>
+        </xacro:if>
+        <xacro:if value="${$(arg simplified_collision)==1}">
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh scale="${antenna_scale} ${antenna_scale} ${antenna_scale}"
+                        filename="package://nifti_robot_description/meshes/collide/antenna.dae"/>
+                </geometry>
+            </collision>
+        </xacro:if>
+        <xacro:if value="${$(arg simplified_collision)==2}">
+            <collision>
+              <origin rpy="0 1.5707963267 0" xyz="-0.01864 0 0"/>
+              <geometry>
+                <cylinder length="0.03718" radius="0.008" />
+              </geometry>
+            </collision>
+            <collision>
+              <origin rpy="0 0 0" xyz="-0.030 0 0.19053"/>
+              <geometry>
+                <cylinder length="0.38107" radius="0.008" />
+              </geometry>
+            </collision>
+        </xacro:if>
+        <inertial>
+            <origin xyz="-0.022 0.0203 0.02917" rpy="0 0 0"/>
+            <mass value="${antenna_mass}"/>
+            <xacro:inertia_meshlab
+                ixx="4.8780e-003" ixy="-6.2341e-007" ixz="-7.4538e-007"
+                iyy="9.0164e-004" iyz="-1.4394e-004"
+                izz="4.2946e-003"
+                scale="${antenna_scale}" mass="${antenna_mass}" />
+        </inertial>
+    </link>
+    <xacro:fixed_joint name="antenna_j" parent="base_link" child="antenna" xyz="-0.3720 0.0789 0.1551" rpy="0 0 0" />
+
+    <xacro:macro name="track" params="prefix reflect">
+        <link name="${prefix}_track">
+            <visual>
+                <origin xyz="0 0 -0.0705" rpy="1.5707963267 0 ${reflect*1.5707963267}" />
+                <geometry>
+                    <mesh scale="${track_scale} ${track_scale} ${track_scale}"
+                        filename="package://nifti_robot_description/meshes/bogie.dae"/>
+                </geometry>
+            </visual>
+            <xacro:if value="${$(arg simplified_collision)==0}">
+                <collision>
+                    <origin xyz="0 0 -0.0705" rpy="1.5707963267 0 ${reflect*1.5707963267}" />
+                    <geometry>
+                        <mesh scale="${track_scale} ${track_scale} ${track_scale}"
+                            filename="package://nifti_robot_description/meshes/bogie.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${$(arg simplified_collision)==1}">
+                <collision>
+                    <origin xyz="0 0 -0.0705" rpy="1.5707963267 0 ${reflect*1.5707963267}" />
+                    <geometry>
+                        <mesh scale="${track_scale} ${track_scale} ${track_scale}"
+                            filename="package://nifti_robot_description/meshes/collide/bogie.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${$(arg simplified_collision)==2}">
+                <collision>
+                    <origin xyz="0 0 0.01855" rpy="1.5707963267 0 1.5707963267" />
+                    <geometry>
+                        <box size="0.09728 0.18094 0.50000"/>
+                    </geometry>
+                </collision>
+                <collision>
+                  <origin rpy="1.5707963267 0 0" xyz="0.25 ${-reflect*track_inward_enlargement} 0.01855"/>
+                  <geometry>
+                    <!-- enlarged because of laser filtering problems -->
+                    <cylinder radius="0.09047" length="${0.09728+track_inward_enlargement}"/>
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin rpy="1.5707963267 0 0" xyz="-0.25 0 0.01855"/>
+                  <geometry>
+                    <cylinder radius="0.09047" length="0.09728"/>
+                  </geometry>
+                </collision>
+            </xacro:if>
+            <inertial>
+                <origin xyz="0 0 0.0141" rpy="0 0 0"/>
+                <mass value="${track_mass}"/>
+                <xacro:inertia_meshlab
+                    ixx="0.002731" ixy="0" ixz="0"
+                    iyy="0.032554" iyz="0.000015"
+                    izz="0.031391"
+                    scale="${track_scale}" mass="${track_mass}" />
+            </inertial>
+        </link>
+        <joint name="${prefix}_track_j" type="revolute">
+            <parent link="base_link"/>
+            <child link="${prefix}_track"/>
+            <axis xyz="0 1 0"/>
+
+            <xacro:if value="${(reflect+1)/2}">
+                <xacro:track_joint_properties track_fixed="$(arg robot_fixed)" track_angle="$(arg left_track_angle)" />
+            </xacro:if>
+            <xacro:unless value="${(reflect+1)/2}">
+                <xacro:track_joint_properties track_fixed="$(arg robot_fixed)" track_angle="$(arg right_track_angle)" />
+            </xacro:unless>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="track_joint_properties" params="track_fixed track_angle">
+        <origin xyz="0 ${reflect*0.1985} 0" rpy="0 ${track_angle} 0" />
+
+        <xacro:unless value="${track_fixed}">
+            <limit lower="0" upper="0" effort="0" velocity="4" />
+            <!--<limit lower="-0.7" upper="0.7" effort="0" velocity="4" />-->
+        </xacro:unless>
+        <xacro:if value="${track_fixed}">
+            <limit lower="0" upper="0" effort="0" velocity="4" />
+        </xacro:if>
+    </xacro:macro>
+
+    <xacro:track prefix="left" reflect="1" />
+    <xacro:track prefix="right" reflect="-1" />
+
+    <xacro:macro name="flipper" params="prefix1 prefix2 reflect_x reflect_y joint_pitch do_inward_enlargement">
+        <link name="${prefix1}_${prefix2}_flipper">
+            <visual>
+                <origin xyz="0 0 0" rpy="3.32575 0 ${reflect_y*1.5707963267}" />
+                <geometry>
+                    <mesh scale="${flipper_scale} ${flipper_scale} ${flipper_scale}"
+                        filename="package://nifti_robot_description/meshes/flipper.dae"/>
+                </geometry>
+            </visual>
+            <xacro:if value="${$(arg simplified_collision)==0}">
+                <collision name="${prefix1}_${prefix2}_flipper_collision">
+                    <origin xyz="0 0 0" rpy="3.3 0 ${reflect_y*1.5707963267}" />
+                    <geometry name="${prefix1}_${prefix2}_flipper_collision_geometry">
+                        <mesh scale="${flipper_scale} ${flipper_scale} ${flipper_scale}"
+                            filename="package://nifti_robot_description/meshes/flipper.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${$(arg simplified_collision)==1}">
+                <collision name="${prefix1}_${prefix2}_flipper_collision">
+                    <origin xyz="0 0 0" rpy="3.3 0 ${reflect_y*1.5707963267}" />
+                    <geometry name="${prefix1}_${prefix2}_flipper_collision_geometry">
+                        <mesh scale="${flipper_scale} ${flipper_scale} ${flipper_scale}"
+                            filename="package://nifti_robot_description/meshes/collide/flipper.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${$(arg simplified_collision)==2}">
+                <collision>
+                  <origin rpy="1.5707963267 0 0" xyz="0 ${-reflect_y*flipper_inward_enlargement*do_inward_enlargement/2.0} 0"/>
+                  <geometry>
+                    <cylinder length="${0.04981+flipper_inward_enlargement*do_inward_enlargement}" radius="0.09047" />
+                  </geometry>
+                </collision>
+                <collision>
+                    <origin rpy="1.5707963267 0 0" xyz="${reflect_y*0.33} ${-reflect_y*flipper_inward_enlargement*do_inward_enlargement/2.0} 0.0"/>
+                  <geometry>
+                    <cylinder length="${0.04981+flipper_inward_enlargement*do_inward_enlargement}" radius="0.029" />
+                  </geometry>
+                </collision>
+                <collision>
+                    <origin rpy="0 0.184162095 ${(1-reflect_y)*1.5707963267}" xyz="${reflect_y*0.165} ${-reflect_y*flipper_inward_enlargement*do_inward_enlargement/2.0} 0.0325"/>
+                  <geometry>
+                    <box size="0.33 ${0.04981+flipper_inward_enlargement*do_inward_enlargement} 0.055" />
+                  </geometry>
+                </collision>
+                <collision>
+                    <origin rpy="0 -0.184162095 ${(1-reflect_y)*1.5707963267}" xyz="${reflect_y*0.165} ${-reflect_y*flipper_inward_enlargement*do_inward_enlargement/2.0} -0.0325"/>
+                  <geometry>
+                    <box size="0.33 ${0.04981+flipper_inward_enlargement*do_inward_enlargement} 0.055" />
+                  </geometry>
+                </collision>
+                <collision>
+                    <origin rpy="0 -0.02 ${(1-reflect_y)*1.5707963267}" xyz="${reflect_y*0.136} ${-reflect_y*flipper_inward_enlargement*do_inward_enlargement/2.0} 0.004"/>
+                  <geometry>
+                    <box size="0.20 ${0.04981+flipper_inward_enlargement*do_inward_enlargement} 0.07" />
+                  </geometry>
+                </collision>
+            </xacro:if>
+            <inertial>
+                <origin xyz="${reflect_y*0.08} 0 0.0" rpy="0 0 0"/>
+                <mass value="${flipper_mass}"/>
+                <xacro:inertia_meshlab
+                    ixx="1.7491e-003" ixy="2.8512e-007" ixz="1.8277e-003"
+                    iyy="1.2277e-002" iyz="-3.6288e-007"
+                    izz="1.0941e-002"
+                    scale="${flipper_scale}" mass="${flipper_mass}" />
+            </inertial>
+            <sensor name="${prefix1}_${prefix2}_flipper_contact" type="contact">
+                <contact>
+                    <collision>${prefix1}_${prefix2}_flipper_collision</collision>
+                    <collision>${prefix1}_${prefix2}_flipper_collision_large_wheel</collision>
+                    <collision>${prefix1}_${prefix2}_flipper_collision_small_wheel</collision>
+                    <collision>${prefix1}_${prefix2}_flipper_collision_top_bar</collision>
+                    <collision>${prefix1}_${prefix2}_flipper_collision_bottom_bar</collision>
+                    <collision>${prefix1}_${prefix2}_flipper_collision_middle_bar</collision>
+                </contact>
+            </sensor>
+        </link>
+        <xacro:if value="${(reflect_x+1)/2}">
+            <xacro:if value="${(reflect_y+1)/2}">
+                <xacro:flipper_joint flipper_fixed="$(arg robot_fixed)" flipper_angle="$(arg front_left_flipper_angle)" />
+            </xacro:if>
+            <xacro:unless value="${(reflect_y+1)/2}">
+                <xacro:flipper_joint flipper_fixed="$(arg robot_fixed)" flipper_angle="$(arg front_right_flipper_angle)" />
+            </xacro:unless>
+        </xacro:if>
+        <xacro:unless value="${(reflect_x+1)/2}">
+            <xacro:if value="${(reflect_y+1)/2}">
+                <xacro:flipper_joint flipper_fixed="$(arg robot_fixed)" flipper_angle="$(arg rear_left_flipper_angle)" />
+            </xacro:if>
+            <xacro:unless value="${(reflect_y+1)/2}">
+                <xacro:flipper_joint flipper_fixed="$(arg robot_fixed)" flipper_angle="$(arg rear_right_flipper_angle)" />
+            </xacro:unless>
+        </xacro:unless>
+    </xacro:macro>
+
+    <xacro:macro name="flipper_joint" params="flipper_fixed flipper_angle">
+        <xacro:if value="${flipper_fixed}">
+            <joint name="${prefix1}_${prefix2}_flipper_j" type="revolute">
+                <xacro:flipper_joint_inner flipper_fixed="${flipper_fixed}" flipper_angle="${flipper_angle}" />
+            </joint>
+        </xacro:if>
+        <xacro:unless value="${flipper_fixed}">
+            <joint name="${prefix1}_${prefix2}_flipper_j" type="continuous">
+                <xacro:flipper_joint_inner flipper_fixed="${flipper_fixed}" flipper_angle="${flipper_angle}" />
+            </joint>
+        </xacro:unless>
+    </xacro:macro>
+
+    <xacro:macro name="flipper_joint_inner" params="flipper_fixed flipper_angle">
+        <parent link="${prefix2}_track"/>
+        <child link="${prefix1}_${prefix2}_flipper"/>
+        <axis xyz="0 1 0"/>
+        <origin xyz="${reflect_x*0.25} ${reflect_y*0.0735} 0.0195" rpy="0 ${joint_pitch+flipper_angle} 0"/>
+
+        <xacro:if value="${flipper_fixed}">
+            <limit lower="0" upper="0" effort="0" velocity="4" />
+        </xacro:if>
+    </xacro:macro>
+
+    <xacro:if value="$(arg has_flippers)">
+        <xacro:flipper prefix1="front" prefix2="left" reflect_x="1" reflect_y="1" joint_pitch="0.1937" do_inward_enlargement="1" />
+        <xacro:flipper prefix1="front" prefix2="right" reflect_x="1" reflect_y="-1" joint_pitch="-2.9479" do_inward_enlargement="1" />
+        <xacro:flipper prefix1="rear" prefix2="left" reflect_x="-1" reflect_y="1" joint_pitch="2.9479" do_inward_enlargement="0" />
+        <xacro:flipper prefix1="rear" prefix2="right" reflect_x="-1" reflect_y="-1" joint_pitch="-0.1937" do_inward_enlargement="0" />
+
+        <link name="front_left_flipper_end_point"/>
+            <joint name="front_left_flipper_end_point_j" type="fixed">
+            <parent link="front_left_flipper"/>
+            <child link="front_left_flipper_end_point"/>
+            <origin xyz="0.3476 0 0" rpy="0 0.1937 0"/>
+        </joint>
+
+        <link name="front_right_flipper_end_point"/>
+        <joint name="front_right_flipper_end_point_j" type="fixed">
+            <parent link="front_right_flipper"/>
+            <child link="front_right_flipper_end_point"/>
+            <origin xyz="0.3476 0 0" rpy="0 0.1937 0"/>
+        </joint>
+    </xacro:if>
+
+    <link name="laser">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5707963267 0 -1.5707963267" />
+            <geometry>
+                <mesh scale="${laser_scale} ${laser_scale} ${laser_scale}"
+                    filename="package://nifti_robot_description/meshes/laser.dae"/>
+            </geometry>
+        </visual>
+        <xacro:if value="${$(arg simplified_collision)==0}">
+            <collision>
+                <origin xyz="0 0 0" rpy="1.5707963267 0 -1.5707963267" />
+                <geometry>
+                    <mesh scale="${laser_scale} ${laser_scale} ${laser_scale}"
+                        filename="package://nifti_robot_description/meshes/laser.dae"/>
+                </geometry>
+            </collision>
+        </xacro:if>
+        <xacro:if value="${$(arg simplified_collision)==1}">
+            <collision>
+                <origin xyz="0 0 0" rpy="1.5707963267 0 -1.5707963267" />
+                <geometry>
+                    <mesh scale="${laser_scale} ${laser_scale} ${laser_scale}"
+                        filename="package://nifti_robot_description/meshes/collide/laser.dae"/>
+                </geometry>
+            </collision>
+        </xacro:if>
+        <xacro:if value="${$(arg simplified_collision)==2}">
+            <collision>
+              <origin rpy="1.5707963267 0 -1.5707963267" xyz="0 0 -0.04"/>
+              <geometry>
+                <box size="0.1159 0.16826 0.1159"/>
+              </geometry>
+            </collision>
+        </xacro:if>
+        <inertial>
+            <origin xyz="0 0 -0.07" rpy="0 0 0"/>
+            <mass value="${laser_mass}"/>
+            <xacro:inertia_meshlab
+                ixx="3.1194e-003" ixy="-2.2210e-006" ixz="-1.1577e-006"
+                iyy="3.1389e-003" iyz="-1.1530e-005"
+                izz="1.7656e-003"
+                scale="${laser_scale}" mass="${laser_mass}" />
+        </inertial>
+    </link>
+    <joint name="laser_j" type="revolute">
+        <parent link="base_link"/>
+        <child link="laser"/>
+        <axis xyz="1 0 0"/>
+        <dynamics damping="10000000" />
+
+        <xacro:property name="laser_angle" value="$(arg laser_angle)" />
+        <origin xyz="0.2502 0.0 0.1407" rpy="${3.1415927+laser_angle} 0 0"/>
+
+        <xacro:if value="$(arg robot_fixed)">
+            <limit lower="0" upper="0" effort="0" velocity="4" />
+        </xacro:if>
+        <xacro:unless value="$(arg robot_fixed)">
+            <limit lower="-2.3561945" upper="2.3561945" effort="0" velocity="4" />
+        </xacro:unless>
+    </joint>
+
+    <!-- virtual link to specify IMU position -->
+    <xacro:empty_link name="imu" />
+    <xacro:fixed_joint name="imu_j" parent="base_link" child="imu" xyz="0 0 0.1500" rpy="3.141592 0 0" />
+
+    <xacro:if value="$(arg has_omnicam)">
+        <link name="omnicam">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh scale="${omnicam_scale} ${omnicam_scale} ${omnicam_scale}"
+                        filename="package://nifti_robot_description/meshes/omnicam.dae"/>
+                </geometry>
+            </visual>
+            <xacro:if value="${$(arg simplified_collision)==0}">
+                <collision>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <mesh scale="${omnicam_scale} ${omnicam_scale} ${omnicam_scale}"
+                            filename="package://nifti_robot_description/meshes/omnicam.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${$(arg simplified_collision)==1}">
+                <collision>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <mesh scale="${omnicam_scale} ${omnicam_scale} ${omnicam_scale}"
+                            filename="package://nifti_robot_description/meshes/collide/omnicam.dae"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${$(arg simplified_collision)==2}">
+                <collision>
+                  <origin rpy="0 0 0" xyz="-0.003 -0.0015 0.003"/>
+                  <geometry>
+                      <cylinder length="0.137" radius="0.068" />
+                  </geometry>
+                </collision>
+            </xacro:if>
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="${omnicam_mass}"/>
+                <xacro:inertia_meshlab
+                    ixx="2.3726e-003" ixy="-3.0562e-006" ixz="-2.3418e-006"
+                    iyy="2.3716e-003" iyz="5.1202e-006"
+                    izz="1.6667e-003"
+                    scale="${omnicam_scale}" mass="${omnicam_mass}" />
+            </inertial>
+        </link>
+
+        <xacro:fixed_joint name="omnicam_j" parent="top_box" child="omnicam" xyz="0.0023 -0.0017 0.1292" rpy="0 0 -0.628318530" />
+    </xacro:if>
+
+</robot>

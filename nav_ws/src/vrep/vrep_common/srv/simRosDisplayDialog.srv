@@ -1,0 +1,13 @@
+#
+# simInt simDisplayDialog(const simChar* titleText,const simChar* mainText,simInt dialogType,const simChar* initialText,const simFloat* titleColors,const simFloat* dialogColors,simInt* uiHandle)
+#
+
+string titleText
+string mainText
+int32 dialogType
+string initialText
+float32[] titleColors
+float32[] dialogColors
+---
+int32 dialogHandle
+int32 uiHandle

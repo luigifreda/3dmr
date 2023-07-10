@@ -1,0 +1,20 @@
+<package>
+  <name>odom2tf</name>
+  <version>1.0.0</version>
+  <description>odom2tf</description>
+
+  <maintainer email="yuki.kitsukawa@tier4.jp">Yuki KITSUKAWA</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>tf</build_depend>
+
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>tf</run_depend>
+
+</package>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <arg name="robot_name" default="ugv2" />
+    <arg name="simulator" default="" />
+    
+    <arg name="cloud_in" default="$(arg simulator)/$(arg robot_name)/local_map"/>       
+    <arg name="laser_frame_name" default="/$(arg robot_name)/ouster_laser"/>  
+
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+    
+    <!-- normals computation -->    
+    <include file="$(find path_planner)/launch/sim_compute_normals_ugv1.launch" >
+        <arg name="simulator" value="$(arg simulator)" />
+        <arg name="robot_name" value="$(arg robot_name)" />
+        <arg name="cloud_in" value="$(arg cloud_in)" />                
+        <arg name="laser_frame_name" value="$(arg laser_frame_name)"/> 
+        <arg name="respawn_value" value="$(arg respawn_value)" />           
+    </include>
+
+</launch>

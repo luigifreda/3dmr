@@ -1,0 +1,10 @@
+<!--library path="lib/librviz_plugin_tutorials"-->
+<library path="lib/libpath_planner_rviz_wp_plugin_SIM2">
+  <class name="path_planner_rviz_wp_plugin/WaypointsToolSimUgv2"
+         type="path_planner_rviz_wp_plugin::WaypointsToolSimUgv2"
+         base_class_type="rviz::Tool">
+    <description>
+      Tool for deploy/plant a set of 3D waypoints on the point cloud visualized inside rviz. SIM UGV 2
+    </description>
+  </class>
+</library>

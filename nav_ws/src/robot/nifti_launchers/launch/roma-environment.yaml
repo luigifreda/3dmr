@@ -1,0 +1,5 @@
+steering_efficiency: 0.5
+initial_lat: deg(51.486920758927404)
+initial_lon: deg(7.485857605934143)
+initial_altitude: 100.0
+initial_heading: deg(300.0)

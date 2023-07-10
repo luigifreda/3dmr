@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+
+<!--
+links:
+http://answers.ros.org/question/216582/how-to-use-tf_remap/
+http://ros-users.122217.n3.nabble.com/wiki-entry-for-tf-remap-td1840280.html
+http://answers.ros.org/question/11875/set-tf_remap-private-parameters-from-console/ 
+http://wiki.ros.org/geometry/CoordinateFrameConventions
+-->
+
+<launch>
+      
+    <node pkg="tf" type="tf_remap" name="tf_remapper" output="screen">
+        <!--rosparam param="mappings">
+          - {old: "odom",
+             new: "odom_new"}
+          - {old: "map",
+             new: "map_new"}
+        </rosparam-->
+        
+         <rosparam param="mappings">[{old: "odom", new: "odom_new"},{old: "map", new: "map_new"},{old: "world", new: "world_new"},{old: "turtle1", new: "turtle1/body"},{old: "turtle2", new: "turtle2/body"}]</rosparam>
+    </node>
+      
+    <!--node pkg="tf" type="view_frames" name="frames_viewer" output="screen" respawn="true"-->
+     <!--remap from="tf" to="tf_old"/--> <!-- this is not needed here since we want the new remapped tf -->
+    <!--/node-->
+    
+    <node pkg="rqt_tf_tree" type="rqt_tf_tree" name="tf_tree_viewer" output="screen" respawn="true">
+
+
+</launch>

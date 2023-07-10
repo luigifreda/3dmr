@@ -1,0 +1,57 @@
+<launch>
+	
+    <arg name="robot_name" default="ugv1" />
+	<arg name="simulator" default="/vrep" />
+
+    <arg name="control_rate"        default="10"/>
+    <arg name="transform_tolerance" default="0.1"/>
+
+    <arg name="factor_extending_plan_lookahead_dist_with_obs" default="1.5"/>
+    
+    <arg name="enable_track_cmds" default="true"/> <!-- enable just with TRADR robot -->
+    
+    <arg name="node_name" value="optim_local_planner_node_$(arg robot_name)"/>
+
+    <rosparam file="$(find teb_optim_local_planner)/config/local_planner_params_multi.yaml" command="load" ns="/$(arg node_name)"/>
+
+    <rosparam param="/$(arg node_name)/robot_base_frame" subst_value="True">$(arg robot_name)/base_link</rosparam>   
+
+  	<!--- Run optimization test node ns="/$(arg robot_name)" -->
+   	<node pkg="teb_optim_local_planner" type="teb_optim_local_planner_node" name="$(arg node_name)" output="screen">
+        <param name="robot_name" value="$(arg robot_name)"/>
+	    <param name="node_name" value="$(arg node_name)"/>
+
+        <param name="control_rate" value="$(arg control_rate)"/>
+	    <param name="transform_tolerance" value="$(arg transform_tolerance)"/>
+
+        <param name="factor_extending_plan_lookahead_dist_with_obs" value="$(arg factor_extending_plan_lookahead_dist_with_obs)"/>        
+
+        <param name="enable_track_cmds" value="$(arg enable_track_cmds)"/>
+
+        <param name="tracks_vel_cmd_topic" value="$(arg simulator)/$(arg robot_name)/tracks_vel_cmd"/>
+
+        <remap from="/robot_path" to="$(arg simulator)/$(arg robot_name)/robot_path"/>
+        <remap from="/robot_local_path" to="$(arg simulator)/$(arg robot_name)/robot_local_path"/>
+        <remap from="/robot_rotation" to="$(arg simulator)/$(arg robot_name)/robot_rotation"/>
+	 
+        <remap from="/planner/tasks/path" to="$(arg simulator)/$(arg robot_name)/planner/tasks/path"/>
+        <remap from="/planner/tasks/feedback" to="$(arg simulator)/$(arg robot_name)/planner/tasks/feedback"/>
+     
+        <remap from="/goal_abort_topic" to="$(arg simulator)/$(arg robot_name)/goal_abort_topic"/>
+        <remap from="/trajectory_control_abort_topic" to="$(arg simulator)/$(arg robot_name)/trajectory_control_abort_topic"/>
+     
+        <remap from="/traj_global_path" to="$(arg simulator)/$(arg robot_name)/traj_global_path"/>
+        <remap from="/traj_local_path" to="$(arg simulator)/$(arg robot_name)/traj_local_path"/>
+     
+        <remap from="/laser_proximity_topic" to="$(arg simulator)/$(arg robot_name)/laser_proximity_topic"/>
+        <remap from="/closest_obst_point"    to="$(arg simulator)/$(arg robot_name)/closest_obst_point"/>
+
+        <remap from="/cmd_vel"           to="$(arg simulator)/$(arg robot_name)/cmd_vel"/>    
+        <remap from="/cmd_wheels_topic"  to="$(arg simulator)/$(arg robot_name)/cmd_wheels_topic"/>    
+
+        <remap from="/obstacles"         to="$(arg simulator)/$(arg robot_name)/obstacles"/>                            
+
+	</node>
+
+</launch>
+

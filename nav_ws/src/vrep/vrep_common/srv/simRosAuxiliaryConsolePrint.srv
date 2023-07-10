@@ -1,0 +1,9 @@
+#
+# simInt simAuxiliaryConsolePrint(simInt consoleHandle,const simChar* text)
+#
+
+int32 consoleHandle
+string text
+---
+int32 result
+

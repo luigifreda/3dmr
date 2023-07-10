@@ -1,0 +1,8 @@
+#
+# simChar* simGetDialogInput(simInt genericDialogHandle)
+#
+
+int32 dialogHandle
+---
+int32 result
+string input

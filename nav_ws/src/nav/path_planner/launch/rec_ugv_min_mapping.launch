@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    <!--
+        copied from package -nifti_vision_data-
+        Records only the source data so that the rest can be recomputed offline.
+    -->
+    <node type="record" pkg="rosbag" name="rec_ugv_min" args="-o '$(find nifti_vision_data)/ugv' 
+        /brake /cmd_vel /currents /diagnostics /diagnostics_agg /diagnostics_toplevel_state
+        /enable /filtered_joint_states /fix /fix_extended
+        /flipper_cmd /flippers_cmd /flippers_state /icp_odom /imu/data /imu_odom /visual_odom 
+        /initialpose /joint_states /laser_center /local_joy/cmd_vel /local_joy/joy
+        /magnetic /mechanization_output_inso /mechanization_output_inso_aiddebug
+        /mux_cmd_vel/selected /nav/cmd_vel /nifti_robot_node/max_angular_speed /nifti_robot_node/max_linear_speed
+        /odom /pointcloud_control /poseupdate /posture /posture_cmd /private/nav/cmd_vel
+        /restart3d /robot_status /rosout /rosout_agg /scan /scanning_once /scanning_speed_cmd
+        /set_flippers_torque /steering_efficiency
+        /syscommand /teleop_joy/cmd_vel /teleop_ocu/cmd_vel /temperature
+        /tf /tf_static
+        /tracks_vel /tracks_vel_cmd /velocity"/>
+
+    <node pkg="nifti_vision_data" type="rec_params.sh" name="param_recorder" args="'$(find nifti_vision_data)/ugv'" />
+
+</launch>

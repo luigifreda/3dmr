@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<launch>
+  <arg name="robot_number" default="1"/>
+  <arg name="robot_name" default="ugv1"/>
+  <arg name="map" default="$(find patrolling3d_sim)/maps/vrep/vrep.graph" />
+  <arg name="interactive" default="false"/>
+  <arg name="simulator" default="/vrep" />
+  
+  <arg name="robot_frame" default="$(arg robot_name)/base_link"/>
+  <arg name="odom_frame_topic" default="$(arg simulator)/$(arg robot_name)/odom"/>
+
+  <node name="Conscientious_Reactive_$(arg robot_number)" pkg="patrolling3d_sim" type="Conscientious_Reactive" args="__name:=patrol_robot$(arg robot_number) $(arg map) $(arg robot_number) $(arg interactive)"  output="screen" launch-prefix="gdb -ex run --args">
+	
+        <param name="traj_act_client_name" value="trajectory_control_action_server_ugv$(arg robot_number)"/>
+    
+        <param name="check_interference_timeout" value="5" />
+        
+        <param name="last_other_robot_alive_timeout" value="2000" />
+        
+        <param name="robot_frame" value="$(arg robot_frame)"/>
+        <param name="odom_frame_topic" value="$(arg odom_frame_topic)"/>
+        
+        <param name="build_graph_event_topic" value="/build_graph_event" />
+
+        <param name="goal_topic" value="$(arg simulator)/$(arg robot_name)/goal_topic"/>
+        <param name="planning_goal_abort_topic" value="$(arg simulator)/$(arg robot_name)/goal_abort_topic"/>
+        <param name="nodes_topic" value="$(arg simulator)/$(arg robot_name)/patrolling_nodes_updated_markers"/>
+        <param name="path_plan_stat_topic" value= "$(arg simulator)/$(arg robot_name)/path_planning_status"/>
+        
+        
+  </node>
+
+</launch>

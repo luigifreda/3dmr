@@ -1,0 +1,16 @@
+Mesh Bounding Box Size 0.753991 1.094647 0.754010
+Mesh Bounding Box Diag 1.528164 
+Mesh Volume is 1.000038
+Mesh Surface is 7.199747
+Thin shell barycenter -0.000187 -0.259825 0.061342
+Center of Mass is 0.000005 -0.253840 0.055117
+Inertia Tensor is :
+| 0.132027 -0.000049 -0.000094 |
+| -0.000049 0.074729 0.000488 |
+| -0.000094 0.000488 0.132851 |
+Principal axes are :
+| 0.993688 0.000840 -0.112173 |
+| 0.000106 0.999964 0.008431 |
+| 0.112176 -0.008389 0.993653 |
+axis momenta are :
+| 0.132017 0.074725 0.132866 |

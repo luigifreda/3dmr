@@ -1,0 +1,8 @@
+#
+# simxChar* simxGetAndClearStringSignal(const simxChar* signalName,simxInt* stringLength)
+#
+
+string signalName
+---
+int32 result
+string signalValue

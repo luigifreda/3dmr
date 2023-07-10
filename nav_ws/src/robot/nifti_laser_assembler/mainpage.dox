@@ -1,0 +1,67 @@
+/**
+\mainpage
+\htmlinclude manifest.html
+
+There are two versions of the \b nifti_laser_assembler, the old one using directly the laser
+scan out of the driver and the updated one using coloured point clouds.
+
+Both versions republish laser data in four topics:
+- \c scan_relay (<a href="http://www.ros.org/doc/diamondback/api/sensor_msgs/html/msg/LaserScan.html">sensor_msgs::LaserScan</a>): scans filtered,
+- \c static_point_cloud (<a
+  href="http://www.ros.org/doc/diamondback/api/sensor_msgs/html/msg/PointCloud2.html">sensor_msgs::PointCloud2</a>):
+  assembled point clouds (static),
+- \c dynamic_point_cloud (<a
+  href="http://www.ros.org/doc/diamondback/api/sensor_msgs/html/msg/PointCloud2.html">sensor_msgs::PointCloud2</a>):
+  assembled point clouds (dynamic),
+- \c scan2d (<a
+  href="http://www.ros.org/doc/diamondback/api/sensor_msgs/html/msg/LaserScan.html">sensor_msgs::LaserScan</a>):
+  horizontal scans (not filtered).
+
+\b nifti_laser_assembler subscribes to \c scan_point_cloud as well as \c
+scan_filtered and \c tf. It is not doing any filtering (see \b
+nifti_laser_filtering package).
+\b nifti_laser_assembler_old subscribes directly to \c /scan and \c /tf and does
+the filtering internally. 
+
+\subsection parameters Parameters of the node
+
+The \c nifti_laser_assembler node can have the following parameters:
+- \a ~publish2d (\c true): publish the horizontal scans,
+- \a ~relay_scans (\c true): publish the individual scans,
+- \a ~laser_frame (\c laser): the \c /tf frame of the laser,
+- \a ~robot_frame (\c base_link): the \c /tf frame of the robot,
+- \a ~world_frame (\c odom): the \c /tf frame to check if the robot has moved,
+- \a ~max_size (\c 1000000): the number of points after which publishing the point cloud even if the scanner didn't finish it's rotation,
+- \a ~using_gmapping (\c false): invert the order of the beams for the
+  horizontal scan.
+
+The \c nifti_laser_assembler_old node supports additionallty the following
+parameters:
+- \a ~channels (<a href="http://www.ros.org/doc/diamondback/api/laser_geometry/html/namespacelaser__geometry_1_1channel__option.html">laser_geometry::channel_option::None</a>): the channels to include in the assembled point cloud,
+- \a ~laser_angle_offset (\c 0.0 rad): offset angle of the laser at center position with respect to horizontal,
+- \a ~time_offset (\c 0.0 s): time offset to correct the time stamps of the scans,
+- \a ~min_distance (\c 0.0 m): minimum distance to cut the laser values,
+- \a ~shadow_filter_min_angle (\c 0.1 rad): minimum incidence angle to keep
+points,
+- \a ~mapping_control_topic (\c /mapping_control): topic to ask to publish or not the \c /scan2d and \c /scan_relay topics.
+
+<!-- 
+Provide an overview of your package.
+-->
+
+<!--
+\section codeapi Code API
+-->
+<!--
+Provide links to specific auto-generated API documentation within your
+package that is of particular interest to a reader. Doxygen will
+document pretty much every part of your code, so do your best here to
+point the reader to the actual API.
+
+If your codebase is fairly large or has different sets of APIs, you
+should use the doxygen 'group' tag to keep these APIs together. For
+example, the roscpp documentation has 'libros' group.
+-->
+
+
+*/

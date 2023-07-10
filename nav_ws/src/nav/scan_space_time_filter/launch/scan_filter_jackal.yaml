@@ -1,0 +1,12 @@
+
+
+scan_filter/tf_frame: "map"
+scan_filter/tf_cache_length: 50 
+
+scan_filter/pcl_throttle: 1
+scan_filter/dist_pose_thres: 0.20
+scan_filter/rot_pose_thres: 30 # set in angles
+
+scan_filter/downsample_leaf_size: 0.075
+scan_filter/use_downsampling: true 
+

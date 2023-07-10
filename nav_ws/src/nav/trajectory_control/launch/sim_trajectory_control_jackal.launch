@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+    <arg name="robot_name" default="ugv1" />
+    <arg name="simulator" value="" />
+    
+    <!-- jackal:  https://clearpathrobotics.com/jackal-small-unmanned-ground-vehicle/ -->
+    <arg name="robot_width" default = "0.40"/>    <!-- [m] --> <!-- 40 cm instead of 43, removing some wheel width-->
+    <arg name="wheel_radius" default = "0.10"/>   <!-- [m] -->
+    <arg name="enable_flippers" default = "false"/>
+
+    <arg name="use_mapper" default="false" /> <!-- boolean: true, false -->
+    <arg name="odom_frame_id" default="/map" unless="$(arg use_mapper)"/>
+    <arg name="odom_frame_id" default="/odom_$(arg robot_name)" if="$(arg use_mapper)"/>
+
+    <arg name="use_at" default="false" /> <!-- boolean: true, false     use adaptive traversability -->
+    
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+    
+    
+    <node name="trajectory_control_action_server_$(arg robot_name)" pkg="trajectory_control" type="trajectory_control" respawn="$(arg respawn_value)" output="screen">
+	  
+        <param name = "robot_name" value="$(arg robot_name)" /> 
+        <param name = "simulator" value="" /> <!-- used to disable teleop mux! -->
+
+        <param name = "robot_width" value="$(arg robot_width)" /> 
+        <param name = "wheel_radius" value="$(arg wheel_radius)" /> 
+        <param name = "enable_flippers" value="$(arg enable_flippers)" /> 
+
+        <param name = "cruise_vel" value = "0.5" />
+        <param name = "rise_time" value = "2.0" /> <!-- in seconds -->
+        
+        <param name = "displacement" value = "0.05"/>
+        <param name = "vel_max_tracks" value = "1"/>
+        
+        <param name = "path_smoother_type" value = "1"/>    <!-- kNoSmoother = 0, kSmoother3 = 1, kSmoother5 = 2 --> 
+        
+        <param name = "use_at" value = "$(arg use_at)"/>   <!-- use adaptive traversability --> 
+                
+        <param name = "odom_frame_id" value = "$(arg odom_frame_id)"/>
+        <param name = "global_frame_id" value = "map"/>
+        <param name = "robot_frame_id" value = "$(arg robot_name)/base_link"/>
+	
+        <param name = "control_frequency" value = "30" />
+
+        <param name = "control_law_type" value = "0"/>   <!-- 0: input output feedback linearization; 1: non-linear control -->                 
+        <param name = "gain_k1_IOL" value = "0.9"/> <!-- was 1.0 -->
+        <param name = "gain_k2_IOL" value = "0.9"/> <!-- was 1.0 -->
+        
+        <param name = "gain_k1_NL" value = "1.0"/> <!-- was 1.5 -->
+        <param name = "gain_k2_NL" value = "1.0"/> <!-- was 1.5 -->
+
+        <param name = "gain_kv_CR" value = "0.6"/> 
+        <param name = "gain_kw_CR" value = "0.3"/> 
+
+        <param name = "gain_kw" value = "0.9"/> <!-- was 1 -->
+
+        <param name = "imu_odom_topic" value = "odom"/>
+        <param name = "tracks_vel_cmd_topic" value = "$(arg simulator)/$(arg robot_name)tracks_vel_cmd"/>
+	 
+        <!--param name="robot_path_topic" value="$(arg simulator)/$(arg robot_name)/robot_path" /-->
+
+        <remap from = "/robot_pp_path" to = "$(arg simulator)/$(arg robot_name)/robot_pp_path"/>
+
+        <remap from = "/robot_path" to = "$(arg simulator)/$(arg robot_name)/robot_path"/>
+        <remap from = "/robot_local_path" to = "$(arg simulator)/$(arg robot_name)/robot_local_path"/>
+        <remap from = "/robot_rotation" to = "$(arg simulator)/$(arg robot_name)/robot_rotation"/>
+	 
+        <remap from = "/planner/tasks/path" to = "$(arg simulator)/$(arg robot_name)/planner/tasks/path"/>
+        <remap from = "/planner/tasks/feedback" to = "$(arg simulator)/$(arg robot_name)/planner/tasks/feedback"/>
+     
+        <remap from = "/goal_abort_topic" to = "$(arg simulator)/$(arg robot_name)/goal_abort_topic"/>
+        <remap from = "/trajectory_control_abort_topic" to = "$(arg simulator)/$(arg robot_name)/trajectory_control_abort_topic"/>
+     
+        <remap from = "/traj_global_path" to = "$(arg simulator)/$(arg robot_name)/traj_global_path"/>
+        <remap from = "/traj_local_path" to = "$(arg simulator)/$(arg robot_name)/traj_local_path"/>
+     
+        <remap from = "/laser_proximity_topic" to = "$(arg simulator)/$(arg robot_name)/laser_proximity_topic"/>
+        <remap from = "/closest_obst_point"    to = "$(arg simulator)/$(arg robot_name)/closest_obst_point"/>
+
+        <remap from = "/cmd_vel"        to = "$(arg simulator)/$(arg robot_name)/cmd_vel"/>              
+        <remap from = "/nav/cmd_vel"    to = "$(arg simulator)/$(arg robot_name)/cmd_vel"/>        
+
+        <!--<remap from = "/mux_cmd_vel/acquire" to = "$(arg simulator)/$(arg robot_name)//mux_cmd_vel/acquire" />-->
+        <!--<remap from = "/mux_cmd_vel/release" to = "$(arg simulator)/$(arg robot_name)//mux_cmd_vel/release" />-->
+	 
+    </node> 
+
+
+</launch>
+

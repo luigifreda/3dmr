@@ -1,0 +1,10 @@
+#
+# simInt simReadProximitySensor(simInt sensorHandle,simFloat* detectedPoint,simInt* detectedObjectHandle,simFloat* detectedSurfaceNormalVector)
+#
+
+int32 handle
+---
+int32 result
+float32[] detectedPoint
+int32 detectedObject
+float32[] normalVector

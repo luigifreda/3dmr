@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <arg name="robot_name" default="ugv2" />
+    <arg name="simulator" default="/vrep" />
+    
+    <arg name="min_proximity_distance"  default="1.0"/>
+
+    <arg name="world_frame" default="odom_$(arg robot_name)"/>
+    <arg name="laser_frame" default="$(arg robot_name)/laser"/>
+
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+    <include file="$(find laser_proximity_checker)/launch/sim_laser_proximity_checker_ugv1.launch" >
+          <arg name="robot_name" value="$(arg robot_name)" />
+          <arg name="simulator" value="$(arg simulator)" />    
+          <arg name="min_proximity_distance"  value="$(arg min_proximity_distance)"/>                
+          <arg name="world_frame" value="$(arg world_frame)" />
+          <arg name="laser_frame" value="$(arg laser_frame)" />          
+          <arg name="respawn_value" value="$(arg respawn_value)" />
+    </include>
+    
+</launch>
+
+
+
+
+

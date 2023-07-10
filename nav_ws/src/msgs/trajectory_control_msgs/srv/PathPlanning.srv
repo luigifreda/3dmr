@@ -1,0 +1,7 @@
+geometry_msgs/PoseStamped start
+geometry_msgs/PoseStamped goal
+---
+bool success
+nav_msgs/Path path               # the computed path which joins the waypoints 
+float64 path_cost 
+

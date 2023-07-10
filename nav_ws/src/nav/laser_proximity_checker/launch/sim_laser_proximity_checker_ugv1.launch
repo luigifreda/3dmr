@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <arg name="robot_name" default="ugv1" />
+    <arg name="simulator" default="/vrep" />
+    
+    <arg name="min_proximity_distance"  default="1.0"/>
+
+    <arg name="world_frame" default="odom_$(arg robot_name)"/>
+    <arg name="laser_frame" default="$(arg robot_name)/laser"/>    
+    
+    <arg name="cloud_in" default="$(arg simulator)/$(arg robot_name)/scan_point_cloud_color" />  <!-- from scan space-time filter -->
+    <arg name="cloud_out" default="$(arg simulator)/$(arg robot_name)/obst_point_cloud" />
+
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+	<node type="laser_proximity_checker" pkg="laser_proximity_checker" name="laser_proximity_checker_$(arg robot_name)" output="screen"  respawn="$(arg respawn_value)">
+        <param name="laser_frame" value="$(arg laser_frame)"/>
+        <param name="robot_frame" value="$(arg robot_name)/base_link"/>
+        <param name="world_frame" value="$(arg world_frame)"/>
+
+        <param name="min_proximity_distance"  value="$(arg min_proximity_distance)"/>
+
+        <param name="max_size"       value="1000000"/>
+
+        <!-- Deprecated functionality from NIFTi. -->
+        <param name="publish2d"      value="false"/>
+        <param name="relay_scans"    value="false"/>
+
+        <!-- Subscribed -->
+        <remap from="scan"                to="$(arg simulator)/$(arg robot_name)/scan_filtered"/>  <!-- DEPRECATED, not used. -->
+        <remap from="pointcloud_control"  to="$(arg simulator)/$(arg robot_name)/pointcloud_control"/>
+        <!--remap from="scan_point_cloud" to="$(arg simulator)/$(arg robot_name)/scan_point_cloud_color"/-->        
+        <remap from="scan_point_cloud"    to="$(arg cloud_in)"/>
+
+        <!-- Advertised -->
+        <remap from="scan2d"                to="$(arg simulator)/$(arg robot_name)/scan2d"/>
+        <remap from="scan_relay"            to="$(arg simulator)/$(arg robot_name)/scan_relay"/>
+        <remap from="static_point_cloud"    to="$(arg simulator)/$(arg robot_name)/static_point_cloud"/>
+        <remap from="dynamic_point_cloud"   to="$(arg simulator)/$(arg robot_name)/dynamic_point_cloud"/>
+        <remap from="laser_proximity_topic" to="$(arg simulator)/$(arg robot_name)/laser_proximity_topic"/>
+        <remap from="closest_obst_point"    to="$(arg simulator)/$(arg robot_name)/closest_obst_point"/>
+        <!--remap from="obst_point_cloud"   to="$(arg simulator)/$(arg robot_name)/obst_point_cloud"/-->
+        <remap from="obst_point_cloud"      to="$(arg cloud_out)"/>     
+        <remap from="obstacles"             to="$(arg simulator)/$(arg robot_name)/obstacles"/>               
+
+	</node>
+</launch>
+
+
+
+
+

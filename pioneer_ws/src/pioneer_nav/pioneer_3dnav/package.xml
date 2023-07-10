@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>pioneer_3dnav</name>
+  <version>1.0.0</version>
+  <description>The pioneer_3dnav package</description>
+
+  <maintainer email="freda@diag.uniroma1.it">Luigi Freda</maintainer>
+  <author email="freda@diag.uniroma1.it">Luigi Freda</author>
+  
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package> 

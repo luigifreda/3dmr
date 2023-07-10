@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+
+    <arg name="robot_name" default="ugv1" />
+    <arg name="simulator" default="/vrep" />
+    
+    <arg name="world_frame" default="/odom_$(arg robot_name)"/>
+    
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+      
+    <!-- This launch file needs robot.yaml to be loaded by nifti_robot_description/load_robot_model.launch. This is done e.g. from robot_node.launch or play_ugv_min.launch. -->
+
+	<node type="nifti_laser_assembler" pkg="nifti_laser_assembler" name="nifti_laser_assembler_$(arg robot_name)" output="screen"  respawn="$(arg respawn_value)">
+        <param name="laser_frame" value="$(arg robot_name)/laser"/>
+        <param name="robot_frame" value="$(arg robot_name)/base_link"/>
+        <param name="world_frame" value="$(arg world_frame)"/>
+
+        <param name="max_size"       value="1000000"/>
+
+        <!-- Deprecated functionality from NIFTi. -->
+        <param name="using_gmapping" value="false"/>
+        <param name="publish2d"      value="false"/>
+        <param name="relay_scans"    value="false"/>
+
+        <!-- Subscribed -->
+        <remap from="scan"               to="$(arg simulator)/$(arg robot_name)/scan_filtered"/>  <!-- DEPRECATED, not used. -->
+        <remap from="scan_point_cloud"   to="$(arg simulator)/$(arg robot_name)/scan_point_cloud_color"/>
+        <remap from="pointcloud_control" to="$(arg simulator)/$(arg robot_name)/pointcloud_control"/>
+        
+        <!-- Advertised -->
+        <remap from="scan2d"              to="$(arg simulator)/$(arg robot_name)/scan2d"/>
+        <remap from="scan_relay"          to="$(arg simulator)/$(arg robot_name)/scan_relay"/>
+        <remap from="static_point_cloud"  to="$(arg simulator)/$(arg robot_name)/static_point_cloud"/>
+        <remap from="dynamic_point_cloud" to="$(arg simulator)/$(arg robot_name)/dynamic_point_cloud"/>
+	</node>
+</launch>

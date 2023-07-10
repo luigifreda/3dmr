@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# N.B.: 
+# 1) this script is designed just for testing the single-robot exploration 
+# 2) you can kill all the spawned terminals together by right clicking on the X icon on the left bar and selecting "Quit"
+
+## VOLUMETRIC EXPLORATION 
+xterm -e "echo flat exploration; roslaunch interface_nbvp_rotors multiagent_flat_exploration.launch; bash" &
+sleep 5
+
+xterm -e "echo rviz; roslaunch interface_nbvp_rotors rviz_flat_exploration.launch; bash" &

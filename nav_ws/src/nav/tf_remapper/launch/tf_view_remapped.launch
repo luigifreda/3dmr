@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>	
+
+<launch>
+      
+    <arg name="tf_input" default="tf"/>  
+      
+    <node pkg="tf" type="view_frames" name="frames_viewer" output="screen" respawn="true">
+        <remap from="tf" to="$(arg tf_input)"/> <!-- this is not needed here since we want the new remapped tf -->
+    </node>
+
+</launch>

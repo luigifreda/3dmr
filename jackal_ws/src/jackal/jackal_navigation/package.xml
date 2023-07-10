@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <name>jackal_navigation</name>
+  <version>0.7.6</version>
+  <description>Launch files and code for autonomous navigation of the Jackal</description>
+  <author email="spourmehr@clearpathrobotics.com">Shokoofeh Pourmehr</author>
+  <maintainer email="mpurvis@clearpathrobotics.com">Mike Purvis</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roslaunch</build_depend>
+  <run_depend>amcl</run_depend>
+  <run_depend>gmapping</run_depend>
+  <run_depend>map_server</run_depend>
+  <run_depend>move_base</run_depend>
+  <run_depend>urdf</run_depend>
+  <run_depend>xacro</run_depend>
+
+
+  <export>
+
+  </export>
+</package>

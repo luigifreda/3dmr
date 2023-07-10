@@ -1,0 +1,4 @@
+nbvp/tree/expl_step: 1
+sensor_max_range: 1
+nbvp/tree/extension_range: 0.20
+nbvp/gain/unmapped: 4

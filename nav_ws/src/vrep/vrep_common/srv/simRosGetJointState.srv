@@ -1,0 +1,8 @@
+#
+# simInt simGetJointPosition(simInt objectHandle,simFloat* position)
+# ...
+
+int32 handle
+---
+int32 result
+sensor_msgs/JointState state

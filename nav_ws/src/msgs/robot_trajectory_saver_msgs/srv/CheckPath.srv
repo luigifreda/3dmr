@@ -1,0 +1,6 @@
+nav_msgs/Path point_of_interest
+uint64 source_node_id
+uint64 destination_node_id
+---
+bool result
+uint64 path_cost
