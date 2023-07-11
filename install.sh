@@ -21,7 +21,7 @@ set -e
 # If you didn't use the `--recursive` option when cloning, then run:
 git submodule update --init --recursive 
 
-sudo apt get update 
+sudo apt-get update 
 
 version=$(lsb_release -a 2>&1)
 

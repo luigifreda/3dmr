@@ -24,7 +24,6 @@ alt="V-REP simulation 3d exploration" height="230" border="1"/>
 <img src="images/patrolling-two-floor-ring.gif"
 alt="V-REP simulation 3D exploration" height="230" border="1"/> 
 </p>
-
   
 ## Main features
 
@@ -54,7 +53,7 @@ alt="V-REP simulation 3D exploration" height="230" border="1"/>
 
 **Simulators**: [V-REP](http://www.coppeliarobotics.com/) and [gazebo](https://gazebosim.org/home).  
 
-**GUIs**: our [PyQt GUIs](#guis) offer a convenient entry point for quickly launching exploration, patrolling and navigation systems
+**GUIs**: our [PyQt GUIs](#guis) offer a convenient entry point for quickly launching exploration, patrolling and navigation systems.
 
 ----
 ## Prerequisites
