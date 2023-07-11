@@ -159,9 +159,9 @@ fi
 
 
 # --------------------------
-# Compile all
+# Build all
 # --------------------------
-./build_all.sh
+#./build_all.sh
 
 
 

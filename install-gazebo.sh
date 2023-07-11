@@ -42,8 +42,8 @@ cd gazebo_models
 
 if [ ! -d gazebo_models ]; then
     echo cloning gazebo models from git@github.com:osrf/gazebo_models.git and copying in ~/.gazebo/models/
-    #git clone https://github.com/osrf/gazebo_models 
-    git clone git@github.com:osrf/gazebo_models.git
+    git clone https://github.com/osrf/gazebo_models 
+    #git clone git@github.com:osrf/gazebo_models.git
     mv ./gazebo_models/ ~/.gazebo/models/
 fi    
 
@@ -54,8 +54,8 @@ fi
 # `export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:"<path-to-repo>/PX4-SITL_gazebo-classic/models"`
 if [ ! -d PX4-SITL_gazebo-classic ]; then 
     echo cloning gazebo models from git@github.com:PX4/PX4-SITL_gazebo-classic.git and exporting their path 
-    #git clone https://github.com/PX4/PX4-SITL_gazebo-classic 
-    git clone git@github.com:PX4/PX4-SITL_gazebo-classic.git
+    git clone https://github.com/PX4/PX4-SITL_gazebo-classic 
+    #git clone git@github.com:PX4/PX4-SITL_gazebo-classic.git
     MODELS_DIR=`pwd`
     echo exporting additional gazebo models folder: $GAZEBO_MODEL_PATH
     export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:"$MODELS_DIR/PX4-SITL_gazebo-classic/models"

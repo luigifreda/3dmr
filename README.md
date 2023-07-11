@@ -63,7 +63,7 @@ alt="V-REP simulation 3D exploration" height="230" border="1"/>
 ## Quick install and build
 
 Here, you can find a quick install procedure (tested under **Ubuntu 20.04**). Open a new terminal and get into the root folder of this repo. Run the following commands: 
-* automagically install V-REP, gazebo, ROS dependencies and everything else is required, and build the workspaces:   
+* automagically install V-REP, gazebo, ROS dependencies and everything else is required:   
 `$ ./install.sh`
 * build all the workspaces in this repo: 
 `$ ./build_all.sh`
