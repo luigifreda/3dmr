@@ -122,7 +122,7 @@ A similar procedure can be applied if you launched `main_pioneer.py`  or `main_j
 
 <center>
 <img src="images/3d_exploration3.png"
-alt="V-REP simulation 3D exploration" height="300" border="1" /> 
+alt="V-REP simulation 3D exploration" width="600" border="1" /> 
 </center>
 
 In the above figure, each robot expands a search tree to plan the next best view configuration (yellow disk). In fact, each robot moves toward a closer configuration (green disk) along the selected best branch, up to a pre-fixed maximum distance.  
