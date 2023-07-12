@@ -58,7 +58,7 @@ alt="V-REP simulation 3D exploration" height="230" border="1"/>
 ----
 ## Prerequisites
 
-3DMR requires **ROS noetic** under Ubuntu **20.04**. Python3 is required in order to start our **PyQt** GUIs. If you do not have this Ubuntu version, you can use the [rosdocker](https://github.com/luigifreda/rosdocker#3dmr) tool. 
+3DMR requires **ROS noetic** under Ubuntu **20.04**. Python3 is required in order to start our **PyQt** GUIs. If you do not have this Ubuntu version, you can use [rosdocker](https://github.com/luigifreda/rosdocker#3dmr). 
 
 ## Quick install and build
 
@@ -71,7 +71,7 @@ Here, you can find a quick install procedure (tested under **Ubuntu 20.04**). Op
 `$ source source_all.bash`
 Now, you're ready to test our *exploration*, *patrolling* and *navigation* systems. See the next sections for further details.  
 
-If you do not have Ubuntu 20.04, you can use the [rosdocker](https://github.com/luigifreda/rosdocker#3dmr) tool.
+If you do not have Ubuntu 20.04, you can use [rosdocker](https://github.com/luigifreda/rosdocker#3dmr).
 
 Refer to [INSTALL.md](./INSTALL.md) if you need a manual installation. 
 
