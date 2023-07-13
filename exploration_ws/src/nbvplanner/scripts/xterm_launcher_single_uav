@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # N.B.: 
 # 1) this script is designed just for testing the single-robot exploration 

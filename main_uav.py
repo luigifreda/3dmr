@@ -181,12 +181,10 @@ class MainWidget(QWidget):
     def slot_exploration(self):
         print('launch exploration')
         cmd_env = ''
-        if self.enable_multi_exploration:    
-            cmd = self.sourceCmd + cmd_env + \
-                'roslaunch interface_nbvp_rotors multiagent_flat_exploration.launch world_name:=' + self.exploration_WorldName            
-        else: 
-            cmd = self.sourceCmd + cmd_env + \
-                'roslaunch interface_nbvp_rotors flat_exploration.launch world_name:=' + self.exploration_WorldName                
+        if not self.enable_multi_exploration:    
+            cmd_envs += 'export ENABLE_MULTI_ENV=0; '   # must be integer             
+        cmd = self.sourceCmd + cmd_env + \
+            'rosrun interface_nbvp_rotors uav.sh ' + self.exploration_WorldName                            
         print(cmd)
         run_command(cmd)  
 

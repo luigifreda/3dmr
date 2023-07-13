@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Author: Luigi Freda 
 
 # N.B.: 
@@ -71,21 +71,22 @@ fi
 
 if [ $LAUNCH_GAZEBO -eq 1 ]; then
     echo "launching gazebo"
-    open_term GAZEBOMAIN "echo gazebo main; roslaunch --wait jackal_3dmain gazebo.launch world_name:=$WORLD_NAME gui:=$LAUNCH_GAZEBO_MODE; bash" &
-    sleep 13
+    open_term GAZEBOMAIN "echo gazebo main; roslaunch jackal_3dmain gazebo.launch world_name:=$WORLD_NAME gui:=$LAUNCH_GAZEBO_MODE; bash" &
+    rosrun jackal_3dmain wait_for_gazebo.sh
+    sleep 10    
     echo "spawning gazebo jackals"
-    open_term GAZEBOMODELS "echo jackal_ugvs; roslaunch jackal_3dmain jackal_ugvs.launch OS0:=true imuRate:=360 num_robots:=$NUM_ROBOTS use_rviz:=false; bash" &
+    open_term GAZEBOMODELS "echo jackal_ugvs; roslaunch --wait jackal_3dmain jackal_ugvs.launch OS0:=true imuRate:=360 num_robots:=$NUM_ROBOTS use_rviz:=false; bash" &
     sleep 5
 fi
 
 # Connect map to odom 
-open_term TF_STATICS "echo tf_statics; roslaunch jackal_3dnav tf_statics.launch; bash" & 
+open_term TF_STATICS "echo tf_statics; roslaunch --wait jackal_3dnav tf_statics.launch; bash" & 
     
 
 ########################################################################################################
 #- RVIZ
 
-open_term RVIZ "echo rviz; roslaunch jackal_3dnav rviz_sim_path_planning.launch; bash" &
+open_term RVIZ "echo rviz; roslaunch --wait jackal_3dnav rviz_sim_path_planning.launch; bash" &
 
 
 ########################################################################################################

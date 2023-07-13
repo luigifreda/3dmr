@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ -z "${MR3D_HOME}" ]]; then
     echo "ERROR: missing env var MR3D_HOME"

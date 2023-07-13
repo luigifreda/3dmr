@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # this is for launching a sequence of simulations  
 
 TIME=3610

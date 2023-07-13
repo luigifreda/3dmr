@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Author: Luigi Freda, Tiago Novo
 
 echo "usage: ./${0##*/} <world-name> <enable-battery> <enable-muti-robot-traversability> <max-sim-time>"

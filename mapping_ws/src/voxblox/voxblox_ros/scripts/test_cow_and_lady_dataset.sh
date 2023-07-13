@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # N.B.:
 # 1) you can kill all the spawned terminals together by right clicking on

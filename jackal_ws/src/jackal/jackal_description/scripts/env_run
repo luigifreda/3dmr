@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This simple wrapper allowing us to pass a set of
 # environment variables to be sourced prior to running
 # another command. Used in the launch file for setting

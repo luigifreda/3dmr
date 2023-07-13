@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # N.B.:
 # 1) this script is designed just for testing the expl planning nodes; no SLAM nodes are called; SLAM is assumed to be faked by a proper V-REP environment

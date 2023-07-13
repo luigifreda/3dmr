@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Copyright (C) 2008-2017 LAAS-CNRS, JRL AIST-CNRS.
 #
 # This program is free software: you can redistribute it and/or modify

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Author: Luigi Freda 
 
 export NUM_ROBOTS=1

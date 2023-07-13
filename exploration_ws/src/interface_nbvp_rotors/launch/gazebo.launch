@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+
+    <arg name="world_name" default="flat.world" /> <!-- a world in $(find interface_nbvp_rotors)/worlds/ -->
+    <arg name="gui" default="true"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find interface_nbvp_rotors)/worlds/$(arg world_name)" />
+    <arg name="paused" value="true"/>
+    <arg name="gui" value="$(arg gui)"/>
+    </include>
+  
+</launch>

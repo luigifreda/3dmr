@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # see this link for other options 
 # http://www.coppeliarobotics.com/helpFiles/en/commandLine.htm
 #

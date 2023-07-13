@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 kill -9 $(ps aux | grep gazebo_ugv_teleop_key | grep -v grep | awk '{print $2}')
 

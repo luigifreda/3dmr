@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Author: Luigi Freda 
 
 
@@ -135,10 +135,11 @@ if [ $LAUNCH_GAZEBO -eq 1 ]; then
     export ROBOT_INITIAL_POSITION_OPTIONS="x1:=2 y1:=-1 x2:=4 y2:=0"
 
     open_term GAZEBOMAIN "echo gazebo main; roslaunch jackal_3dmain gazebo.launch world_name:=$WORLD_NAME gui:=$LAUNCH_GAZEBO_MODE; bash" &
-    sleep 13
+    rosrun jackal_3dmain wait_for_gazebo.sh
+    sleep 10    
     
     echo "spawning gazebo jackals"
-    open_term GAZEBOMODELS "echo jackal_ugvs; roslaunch jackal_3dmain jackal_ugvs.launch $ROBOT_INITIAL_POSITION_OPTIONS OS0:=true imuRate:=360 organize_cloud:=$ENABLE_ORGANIZED_POINT_CLOUD num_robots:=$NUM_ROBOTS use_rviz:=false; bash" &
+    open_term GAZEBOMODELS "echo jackal_ugvs; roslaunch --wait jackal_3dmain jackal_ugvs.launch $ROBOT_INITIAL_POSITION_OPTIONS OS0:=true imuRate:=360 organize_cloud:=$ENABLE_ORGANIZED_POINT_CLOUD num_robots:=$NUM_ROBOTS use_rviz:=false; bash" &
     sleep 5
 fi
 
