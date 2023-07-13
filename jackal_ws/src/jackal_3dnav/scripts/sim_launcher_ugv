@@ -42,7 +42,10 @@ ENABLE_TRAJECTORY_CONTROL=1 # 1 enable trajectory control,
                      # 0 disable trajectory control 
 
 ENABLE_TEB_LOCAL_PLANNER=0 # 1 enable TEB local planner,
-                    # 0 disable TEB local path planner
+                           # 0 disable TEB local path planner
+
+ENABLE_ELEVATION_MAPPING=0 # 1 enable robot-centric elevation mapping,
+                           # 0 disable robot-centric elevation mapping
 
 #USE_MULITPLE_VOLUMETRIC_MAPPING=0 # 1 use an independent mapping node for each robot
 #                                  # 0 use a single shared mapping system with just one volumetric mapping node: light but can generate self-ghosts due to mutual robot-perceptions!
@@ -196,7 +199,7 @@ fi
 ########################################################################################################
 
 #- Elevation Mapping 
-if [ $ENABLE_ELEVATION_MAPPING_INPUT -eq 1 ]; then
+if [ $ENABLE_ELEVATION_MAPPING -eq 1 ]; then
     echo "$ROBOT_NAME elevation mapping"
     open_term "$ROBOT_NAME"elevation_mapping  "echo $ROBOT_NAME elevation mapping; roslaunch elevation_mapping_ugvs elevation_mapping_ugv.launch robot_name:=$ROBOT_NAME use_rviz:=false; bash" &
 fi 
@@ -206,8 +209,7 @@ fi
 
 #- Laser proximity checker
 
-if [ $ENABLE_LASER_PROXIMITY_CHECKER -eq 1 ]
-then
+if [ $ENABLE_LASER_PROXIMITY_CHECKER -eq 1 ]; then
     open_term "$ROBOT_NAME"laser_proximity_checker  "echo $ROBOT_NAME laser proximity checker; roslaunch laser_proximity_checker sim_laser_proximity_checker_jackal_ugv.launch robot_name:=$ROBOT_NAME; bash" &
 fi
 
