@@ -3,21 +3,21 @@
 * This file is a modified version of the corresponding file in patrolling_sim 
 * http://wiki.ros.org/patrolling_sim see license below.
 *
-* Copyright (C) 2016-present Luigi Freda <freda at diag dot uniroma1 dot it> and Alcor Lab (La Sapienza University)
-* For more information see <https://gitlab.com/luigifreda/3dpatrolling>
+* Copyright (C) 2016-present Luigi Freda <luigifreda at gmail dot com> and Alcor Lab (La Sapienza University)
+* For more information see <https://github.com/luigifreda/3dmr>
 *
-* 3DPATROLLING is free software: you can redistribute it and/or modify
+* 3DMR is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
-* 3DPATROLLING is distributed in the hope that it will be useful,
+* 3DMR is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with 3DPATROLLING. If not, see <http://www.gnu.org/licenses/>.
+* along with 3DMR. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**

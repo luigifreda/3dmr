@@ -1,13 +1,13 @@
 /**
-* This file is part of the ROS package expl_pointcloud_filter which belongs to the framework 3DPATROLLING. 
+* This file is part of the ROS package expl_pointcloud_filter which belongs to the framework 3DMR. 
 *
-* Copyright (C) 2016-present Luigi Freda <freda at diag dot uniroma1 dot it> and Alcor Lab (La Sapienza University)
-* For more information see <https://gitlab.com/luigifreda/3dpatrolling>
+* Copyright (C) 2016-present Luigi Freda <luigifreda at gmail dot com>  
+* For more information see <https://github.com/luigifreda/3dmr>
 *
-* 3DPATROLLING is free software: you can redistribute it and/or modify
+* 3DMR is free software: you can redistribute it and/or modify
 * it under the terms of the MIT License.
 *
-* 3DPATROLLING is distributed in the hope that it will be useful,
+* 3DMR is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. *
 */

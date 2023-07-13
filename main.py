@@ -3,8 +3,8 @@
 #
 # This file is part of the framework 3dpatrolling.
 #
-# Copyright (C) 2016-present Luigi Freda <freda at diag dot uniroma1 dot it>
-# For more information see <https://gitlab.com/luigifreda/3dpatrolling>
+# Copyright (C) 2016-present Luigi Freda <luigifreda at gmail dot com>
+# For more information see <https://github.com/luigifreda/3dmr>
 #
 # 3dpatrolling is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with 3DPATROLLING. If not, see <http://www.gnu.org/licenses/>.
+# along with 3DMR. If not, see <http://www.gnu.org/licenses/>.
 
 """
 Qt GUI for launching the patrolling system or the path planning system.

@@ -20,7 +20,6 @@ do
         if [ -d ".catkin_tools" ]; then 
             rm -Rf .catkin_tools
         fi 
-        #rm -Rf build 
         cd ..
     fi
 done

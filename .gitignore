@@ -23,7 +23,7 @@ patrolling_ws/src/CMakeLists.txt
 mapping_ws/src/CMakeLists.txt
 exploration_ws/src/CMakeLists.txt
 pioneer_ws/src/CMakeLists.txt
-patrolling_ws/src/msgs/brics_actuator
+#patrolling_ws/src/msgs/brics_actuator
 jackal_ws/src/CMakeLists.txt
 teb_ws/src/CMakeLists.txt
 

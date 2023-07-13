@@ -1,0 +1,21 @@
+<package>
+  <name>brics_actuator</name>
+  <description>Message defined in the BRICS project</description>
+  <author>Alexander Bubeck</author>
+  <maintainer email="nowak@locomotec.com">Walter Nowak</maintainer>
+  <license>BSD</license>
+  <version>0.7.0</version>
+  <url type="website">http://ros.org/wiki/brics_actuator</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>std_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+
+  <run_depend>std_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>message_runtime</run_depend>
+
+</package>
+

@@ -66,7 +66,18 @@ cd -
 print_blue 'ROS dependencies'
 
 rosdep update
-rosdep install --from-paths mapping_ws/src nav_ws/src patrolling_ws/src exploration_ws/src pioneer_ws/src jackal_ws/src teb_ws/src --ignore-src -y
+
+#rosdep install --from-paths mapping_ws/src nav_ws/src patrolling_ws/src exploration_ws/src pioneer_ws/src jackal_ws/src teb_ws/src --ignore-src -y
+# find all workspace src folders (by using suffix "_ws") 
+readarray -d '' WORKSPACES < <(find . -maxdepth 1 -type d -name "*_ws" -print0)
+WORKSPACES_SRC=""
+for ws in "${WORKSPACES[@]}"; do
+    if [ -d $ws ]; then
+        WORKSPACES_SRC+="$ws/src "
+    fi
+done
+echo WORKSPACES_SRC: $WORKSPACES_SRC
+rosdep install --from-paths $WORKSPACES_SRC --ignore-src -y
 
 sudo apt-get install -y cmake-extras     # https://bugs.launchpad.net/ubuntu/+source/googletest/+bug/1644062
 
