@@ -182,7 +182,7 @@ class MainWidget(QWidget):
         print('launch exploration')
         cmd_env = ''
         if not self.enable_multi_exploration:    
-            cmd_envs += 'export ENABLE_MULTI_ENV=0; '   # must be integer             
+            cmd_env += 'export ENABLE_MULTI_ENV=0; '   # must be integer             
         cmd = self.sourceCmd + cmd_env + \
             'rosrun interface_nbvp_rotors uav.sh ' + self.exploration_WorldName                            
         print(cmd)
