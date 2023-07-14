@@ -124,11 +124,9 @@ namespace teb_local_planner
 
 /**
   * @class TebOptimLocalPlannerServer
-  * @brief Implements teb_local_planner interface for 3D navigation stack
+  * @brief Implements teb_local_planner interface for 3D navigation stack. It was derived from TebLocalPlannerROS included in the repo https://github.com/rst-tu-dortmund/teb_local_planner .
   * @todo Escape behavior, more efficient obstacle handling
-  */
-
-//NOTE: the following class was derived from TebLocalPlannerROS included in the repo https://github.com/rst-tu-dortmund/teb_local_planner
+  */ 
 class TebOptimLocalPlannerServer 
 {
 
@@ -448,11 +446,6 @@ protected:
   
   void goalAbortCallback(const std_msgs::Bool& msg); 
   
-  // void laserProximityCallback(const std_msgs::Bool& msg); 
-  // void closestObstaclePointCallback(const std_msgs::Float32MultiArray& msg); 
-  // void closestObstacleVelReductionEnableCallback(const std_msgs::Bool& msg);
-  // void checkLaserProximityAndUpdateVelocity();
-
   void sendVelCmd(const geometry_msgs::Twist& cmd_twist);
   void getTracksVelCmd(const geometry_msgs::Twist& cmd_twist, nifti_robot_driver_msgs::Tracks& tracks_cmd);
 
