@@ -6,7 +6,7 @@ In order to simulate 3D navigation with pioneer you can launch
 ```
 $ rosrun vrep_pioneer_simulation sim_launcher_navigation
 ```
-Take a look into the script [sim_launcher_navigation](./pioneer_nav/vrep_pioneer_simulation/scripts/sim_launcher_navigation): if you want to launch a simulation with two pioneers you can by setting 
+Take a look into the script [sim_launcher_navigation](pioneer_nav/pioneer_3dnav/scripts/sim_launcher_navigation): if you want to launch a simulation with two pioneers you can by setting 
 ```
 WORLD_NAME=pioneer2 
 ```
