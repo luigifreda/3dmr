@@ -4,7 +4,7 @@
 
 In order to simulate 3D navigation with pioneer you can launch 
 ```
-$ rosrun vrep_pioneer_simulation sim_launcher_navigation
+$ rosrun pioneer_3dnav sim_launcher_navigation
 ```
 Take a look into the script [sim_launcher_navigation](pioneer_nav/pioneer_3dnav/scripts/sim_launcher_navigation): if you want to launch a simulation with two pioneers you can by setting 
 ```
@@ -16,7 +16,7 @@ RVIZ is already set in order to host the interface to manage two pioneers as two
 
 To run the simulation:
 ```
-$ rosrun expl_planner sim_launcher_exploration
+$ rosrun pioneer_3dexplorer sim_launcher_exploration
 ```
 
 ## Volumetric mapping 
