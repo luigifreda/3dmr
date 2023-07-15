@@ -39,6 +39,17 @@ public:
 
 	SphericalTransform(){}
 
+	void Init(const size_t subdivisionsPhiIn, const size_t subdivisionsThetaIn, const double minThetaIn=0.0, const double maxThetaIn=M_PI, const double maxReadingIn=1000.0)
+	{
+		subdivisionsPhi = subdivisionsPhiIn;
+		subdivisionsTheta = subdivisionsThetaIn;		
+		maxReading = maxReadingIn;
+		setMinMaxThetas(minThetaIn, maxThetaIn);
+
+		resPhi = rangePhi/static_cast<double>(subdivisionsPhi);
+		resTheta = rangeTheta/static_cast<double>(subdivisionsTheta);
+	}
+
 	void setMinMaxThetas(const double minThetaIn, const double maxThetaIn)
 	{
 		minTheta = minThetaIn; 
@@ -47,25 +58,25 @@ public:
 		ROS_ASSERT_MSG(rangeTheta>0.,"Range of theta must be positive!");
 	}
 
-	inline size_t flatBucket(const size_t bucket1, const size_t bucket2) const 
+	inline size_t flatBucket(const size_t bucketPhi, const size_t bucketTheta) const 
 	{
-		return bucket1 * subdivisions2 + bucket2;
+		return bucketPhi * subdivisionsTheta + bucketTheta;
 	}
 
-	inline void angleToBucket(double phi, double theta, size_t& bucket1, size_t& bucket2) const
+	inline void angleToBucket(double phi, double theta, size_t& bucketPhi, size_t& bucketTheta) const
 	{
 		// normalize angles between 0,2PI
 		while(phi < 0) phi += 2 * M_PI;
 		while(theta < 0) theta += 2 * M_PI;
 
-		bucket1 = static_cast<size_t> (phi * (subdivisions1) / rangePhi);   // azimuth 
-		bucket2 = static_cast<size_t> ((theta-minTheta) * (subdivisions2) / rangeTheta);  // inclination
+		bucketPhi = static_cast<size_t> (phi / resPhi);   // azimuth 
+		bucketTheta = static_cast<size_t> ((theta-minTheta) / resTheta);  // inclination
 	}
 
-	inline void bucketToAngle(const size_t bucket1, const size_t bucket2, double& phi, double& theta) const
+	inline void bucketToAngle(const size_t bucketPhi, const size_t bucketTheta, double& phi, double& theta) const
 	{
-		phi = bucket1 * rangePhi / static_cast<double> (subdivisions1);
-		theta = minTheta + bucket2 * rangeTheta / static_cast<double> (subdivisions2);
+		phi = bucketPhi * resPhi + 0.5*resPhi;
+		theta = minTheta + bucketTheta * resTheta + 0.5*resTheta;
 	}
 
 	template<typename T>
@@ -90,16 +101,16 @@ public:
 	void initCloud(PointCloud& pcl_out)
 	{
 		// init the output pointcloud with max readings 
-		pcl_out.resize(subdivisions1*subdivisions2);
-		for(size_t bucket1 = 0; bucket1 < subdivisions1; bucket1++)
+		pcl_out.resize(subdivisionsPhi*subdivisionsTheta);
+		for(size_t bucketPhi = 0; bucketPhi < subdivisionsPhi; bucketPhi++)
 		{
-			for(size_t bucket2 = 0; bucket2 < subdivisions2; bucket2++)
+			for(size_t bucketTheta = 0; bucketTheta < subdivisionsTheta; bucketTheta++)
 			{
-				size_t bucket = flatBucket(bucket1, bucket2);
+				size_t bucket = flatBucket(bucketPhi, bucketTheta);
 
 				double phi, theta, x,y,z;
-				bucketToAngle(bucket1, bucket2, phi, theta);
-				coordsSphericalToEuclidean(max_reading, phi, theta, x, y, z);
+				bucketToAngle(bucketPhi, bucketTheta, phi, theta);
+				coordsSphericalToEuclidean(maxReading, phi, theta, x, y, z);
 				pcl_out[bucket].x = x;
 				pcl_out[bucket].y = y;
 				pcl_out[bucket].z = z;			
@@ -110,7 +121,7 @@ public:
 	template<typename PointT>
 	void sphericalCloud(const pcl::PCLPointCloud2& input, pcl::PointCloud<PointT>& output) const 
 	{
-		ROS_ASSERT_MSG(output.size()==subdivisions1*subdivisions2, "Output cloud has not been initialized!"); 
+		ROS_ASSERT_MSG(output.size()==subdivisionsPhi*subdivisionsTheta, "Output cloud has not been initialized!"); 
 
 		//ROS_INFO_STREAM("input cloud: " << input.height << "x " << input.width);
 
@@ -166,10 +177,10 @@ public:
 				double r, theta, phi;
 				coordsEuclideanToSpherical(x, y, z, r, phi, theta);
 			
-				size_t bucket1 = 0, bucket2 = 0;
-				angleToBucket(phi, theta, bucket1, bucket2);
-				if(bucket1>=subdivisions1 || bucket2>=subdivisions2) continue; 
-				const size_t bucket = flatBucket(bucket1, bucket2);
+				size_t bucketPhi = 0, bucketTheta = 0;
+				angleToBucket(phi, theta, bucketPhi, bucketTheta);
+				if(bucketPhi>=subdivisionsPhi || bucketTheta>=subdivisionsTheta) continue; 
+				const size_t bucket = flatBucket(bucketPhi, bucketTheta);
 
 				PointT p; 
 				p.x = x; 
@@ -183,19 +194,23 @@ public:
 		}
 	} 
 
-	size_t subdivisions1=180;
-	size_t subdivisions2=90;
+	size_t subdivisionsPhi = 180;
+	size_t subdivisionsTheta = 90;
+
+	double resPhi = 0.;
+	double resTheta = 0.;
+
  	double offsetX = 0.;
 	double offsetY = 0.;
 	double offsetZ = 0.;	
 
-	double minPhi=0.0;
-	double maxPhi=2.0*M_PI;
-	double rangePhi=2.0*M_PI; 
+	double minPhi = 0.0;
+	double maxPhi = 2.0*M_PI;
+	double rangePhi = 2.0*M_PI; 
 
-	double minTheta=0.0;
-	double maxTheta=M_PI;
-	double rangeTheta=M_PI; 
+	double minTheta = 0.0;
+	double maxTheta = M_PI;
+	double rangeTheta = M_PI; 
 
-	float max_reading = 1000.0;
+	double maxReading = 1000.0;
 };

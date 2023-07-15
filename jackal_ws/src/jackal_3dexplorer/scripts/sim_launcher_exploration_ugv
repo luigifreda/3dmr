@@ -4,7 +4,7 @@
 # 1) this script is designed just for testing the expl planning nodes; no SLAM nodes are called; SLAM is assumed to be faked by a proper V-REP environment
 # 2) you can kill all the spawned terminals together by right clicking on the X icon on the left bar and selecting "Quit"
 
-echo "usage: ./${0##*/} <robot-id> <enable-multi-robot-traversability> <enable-exploration-agent>  <battery-of-tests>"
+echo "usage: ./${0##*/} <robot-id> <enable-multi-robot-traversability> <enable-exploration-agent>  <enable-exploration-pcl-filter>"
 
 
 ROBOT_ID=$1
@@ -33,6 +33,8 @@ ENABLE_EXPL_AGENT=1 # 1/0 enable/disable exploration agent
 ENABLE_LOGGING_EXPL_AGENT=0  # 1/0 enable/disable logging of exploration agent into files 
 
 ENABLE_MULTI_ROBOT_COORDINATION="true" # true or false
+
+ENABLE_EXPL_POINTCLOUD_FILTER=1  # see the discussion in https://github.com/luigifreda/3dmr/blob/main/README.exploration.md#information-gain-configuration-and-issues
 
 ENABLE_BATTERY=$4
 if [ -z $ENABLE_BATTERY ] || [ $ENABLE_BATTERY = false ]; then
@@ -69,6 +71,13 @@ if [[ -n "$ENABLE_EXPL_AGENT_INPUT" ]]; then
 fi
 echo "ENABLE_EXPL_AGENT: $ENABLE_EXPL_AGENT"
 
+export ENABLE_EXPL_POINTCLOUD_FILTER_INPUT=$4
+if [[ -n "$ENABLE_EXPL_POINTCLOUD_FILTER_INPUT" ]]; then
+    echo "setting ENABLE_EXPL_POINTCLOUD_FILTER_INPUT: $ENABLE_EXPL_POINTCLOUD_FILTER_INPUT"
+    ENABLE_EXPL_POINTCLOUD_FILTER=$ENABLE_EXPL_POINTCLOUD_FILTER_INPUT   
+fi
+echo "ENABLE_EXPL_POINTCLOUD_FILTER: $ENABLE_EXPL_POINTCLOUD_FILTER"
+
 
 ########################################################################################################
 
@@ -83,8 +92,10 @@ sleep 8
 
 if [ $ENABLE_EXPL_AGENT -eq 1 ]; then
 
-    #open_term "ugv$ROBOT_ID"expl_pointcloud_filter "echo expl_pointcloud_filter ugv$ROBOT_ID;  roslaunch expl_pointcloud_filter sim_expl_pointcloud_filter_jackal_ugv.launch robot_name:=$ROBOT_NAME; bash" &
-    #export EXPL_CLOUD_OPTION="exploration_pointcloud:=$ROBOT_NAME/expl_point_cloud"    
+    if [ $ENABLE_EXPL_POINTCLOUD_FILTER -eq 1 ]; then
+        open_term "ugv$ROBOT_ID"expl_pointcloud_filter "echo expl_pointcloud_filter ugv$ROBOT_ID;  roslaunch expl_pointcloud_filter sim_expl_pointcloud_filter_jackal_ugv.launch robot_name:=$ROBOT_NAME; bash" &
+        export EXPL_CLOUD_OPTION="robot_point_cloud_base_topic:=expl_point_cloud verticalFov:=180.0 sensor_max_range:=3.0 expl_step:=3.0"    
+    fi
 
     if [ $ENABLE_LOGGING_EXPL_AGENT -eq 1 ]; then
             echo "jackal_expl ugv$ROBOT_ID"

@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "expl_pointcloud_filter");
 
-    ExplPclFilter<pcl::PointXYZ> expl_pointcloud_filter(PreFilterType::kDeterministicFilter);
+    ExplPclFilter<pcl::PointXYZ> expl_pointcloud_filter(PreFilterType::kNone);
 
     ros::spin();
 

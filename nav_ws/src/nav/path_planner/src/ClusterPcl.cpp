@@ -36,6 +36,9 @@ template<typename PointT>
 const int ClusterPcl<PointT>::kFilterWallRadiusMinNumNeighbors = 10; // 18
 
 template<typename PointT>
+const float ClusterPcl<PointT>::kVoxelGridFilterLeafSize = 0.07f;
+
+template<typename PointT>
 const float ClusterPcl<PointT>::kAngleGroundMax     = 15*DEG_2_RAD;
 template<typename PointT>
 const float ClusterPcl<PointT>::kAngleRampStairsMin = 15*DEG_2_RAD;
@@ -133,15 +136,13 @@ void ClusterPcl<PointT>::clusterPcl()
 template<typename PointT>
 void ClusterPcl<PointT>::filterWall()
 {
-    constexpr float leafSizeFilter = 0.07f;
-
     point_idx_filter_out_.clear();
     
     /// < downsample the wall cloud 
     pcl::VoxelGrid<PointOut> sor;
     cout << "pcl_Wall size before downsampling: " << pcl_wall_.size() << endl;
     sor.setInputCloud(pcl_wall_.makeShared()); // necessary deep copy 
-    sor.setLeafSize(leafSizeFilter, leafSizeFilter, leafSizeFilter);
+    sor.setLeafSize(kVoxelGridFilterLeafSize, kVoxelGridFilterLeafSize, kVoxelGridFilterLeafSize);
     sor.filter(pcl_wall_);
     cout << "pcl_Wall size after downsampling: " << pcl_wall_.size() << endl;
 

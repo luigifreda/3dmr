@@ -9,16 +9,23 @@
     <arg name="number_of_robots" default="2" /> <!-- multi -->
     <arg name="param_file" default="$(find jackal_3dexplorer)/launch/exploration.yaml" />
 
+    <!-- exploration params: these override the ones in  param_file-->
+    <arg name="verticalFov" default="65.0"/>   <!-- override the vertical FOV set in the param_file and used to compute the information gain -->
+    <arg name="sensor_max_range" default="5.0"/>   <!-- override the sensor_max_rangeset in the param_file -->
+    <arg name="expl_step" default="3.0"/>   <!-- override the expl_step set in the param_file -->
+
     <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
     <arg name="use_marker_controller" default="true" /> <!-- boolean: true, false -->
-    <arg name="battery" default="false" />
   
-    <arg name="use_router" default="true" /> <!-- select if you want to use the router -->
+    <arg name="use_router" default="true" /> <!-- select if you want to use the scan router -->
 
     <node name="expl_planner_$(arg robot_name)" pkg="expl_planner" type="expl_planner_node" respawn="$(arg respawn_value)" output="screen"> 
 
         <rosparam command="load" file="$(arg param_file)" />
-        
+        <rosparam param="system/camera/verticalFov" subst_value="True">$(arg verticalFov)</rosparam>   
+        <rosparam param="sensor_max_range" subst_value="True">$(arg sensor_max_range)</rosparam> 
+        <rosparam param="expl_step" subst_value="True">$(arg expl_step)</rosparam>                    
+
         <param name="simulator" value="$(arg simulator)" />   
                 
         <param name="robot_name" value="$(arg robot_name)" /> 

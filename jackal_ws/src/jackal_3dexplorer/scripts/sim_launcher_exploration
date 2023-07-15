@@ -34,6 +34,8 @@ export ENABLE_MULTI_ROBOT_COORDINATION="true" # true or false  enable/disable mu
 
 export ENABLE_EXPLORATION=1  # enable/disable exploration agent 
 
+export ENABLE_EXPL_POINTCLOUD_FILTER=1 # enable/disable the exploration pointcloud filter, see the discussion in https://github.com/luigifreda/3dmr/blob/main/README.exploration.md#information-gain-configuration-and-issues
+
 export XTERM_OPTIONS="-hold -iconic" # the "iconic" option allows to automatically minimize all the launched xterms
 
 ########################################################################################################
@@ -74,9 +76,18 @@ else
   echo "set from env var - LAUNCH_GAZEBO_MODE: $LAUNCH_GAZEBO_MODE"  
 fi
 
+if [[ -z "${ENABLE_EXPL_POINTCLOUD_FILTER_ENV}" ]]; then
+  #using default value
+  true
+else
+  ENABLE_EXPL_POINTCLOUD_FILTER="${ENABLE_EXPL_POINTCLOUD_FILTER_ENV}"
+  echo "set from env var - ENABLE_EXPL_POINTCLOUD_FILTER: $ENABLE_EXPL_POINTCLOUD_FILTER"  
+fi
+
 if [[ -z "${ENABLE_ORGANIZED_POINT_CLOUD}" ]]; then
     ENABLE_ORGANIZED_POINT_CLOUD=0
 fi
+
 
 # check if we want to set the world from input and override
 export WORLD_NAME_FROM_INPUT=$1
@@ -94,12 +105,6 @@ if [[ -n "$NUM_ROBOTS_INPUT" ]]; then
     NUM_ROBOTS=$NUM_ROBOTS_INPUT
 fi
 echo "NUM_ROBOTS: $NUM_ROBOTS"
-
-#check if we want to launch a batery of tests
-export ENABLE_BATTERY=$2
-if [ -z $ENABLE_BATTERY ] || [ $ENABLE_BATTERY = false ]; then
-    ENABLE_BATTERY="false"
-fi
 
 
 # check if we want to enable/disable multi-robot from input 
@@ -157,7 +162,7 @@ sleep 1
 #- EXPLORATION PLANNERS
 
 for i in `seq 1 $NUM_ROBOTS`; do
-	rosrun jackal_3dexplorer sim_launcher_exploration_ugv $i $ENABLE_MULTI_ROBOT_COORDINATION $ENABLE_EXPLORATION $ENABLE_BATTERY
+	rosrun jackal_3dexplorer sim_launcher_exploration_ugv $i $ENABLE_MULTI_ROBOT_COORDINATION $ENABLE_EXPLORATION $ENABLE_EXPL_POINTCLOUD_FILTER
 done  
 
 ######################################################################################################## 

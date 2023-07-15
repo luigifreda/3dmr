@@ -9,7 +9,7 @@
   <arg name="robot_frame" default="$(arg robot_name)/base_link"/>
   <arg name="odom_frame_topic" default="$(arg simulator)/$(arg robot_name)/odom"/>
 
-  <node name="Conscientious_Reactive_$(arg robot_number)" pkg="patrolling3d_sim" type="Conscientious_Reactive" args="__name:=patrol_robot$(arg robot_number) $(arg map) $(arg robot_number) $(arg interactive)"  output="screen" launch-prefix="gdb -ex run --args">
+  <node name="Conscientious_Reactive_$(arg robot_number)" pkg="patrolling3d_sim" type="Conscientious_Reactive" args="__name:=patrol_robot$(arg robot_number) $(arg map) $(arg robot_number) $(arg interactive)"  output="screen" launch-prefix="">
 	
         <param name="traj_act_client_name" value="trajectory_control_action_server_ugv$(arg robot_number)"/>
     

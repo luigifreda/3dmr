@@ -59,7 +59,8 @@ class ClusterPcl
 {
     static const float kFilterWallRadiusMin; 
     static const int kFilterWallRadiusMinNumNeighbors;
-    
+    static const float kVoxelGridFilterLeafSize;
+
     static const float kAngleGroundMax;
     static const float kAngleWallMin;
     static const float kAngleWallMax;

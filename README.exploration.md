@@ -2,24 +2,24 @@
 
 <!-- TOC -->
 
-- [3D Multi-Robot Exploration](#3d-multi-robot-exploration)
-  - [Overview](#overview)
-  - [Main Scripts](#main-scripts)
-  - [How to run an exploration](#how-to-run-an-exploration)
-    - [PyQt GUIs](#pyqt-guis)
-    - [What is going to happen?](#what-is-going-to-happen)
-  - [How to prioritize the exploration](#how-to-prioritize-the-exploration)
-  - [How to build, save and load a volumetric map](#how-to-build-save-and-load-a-volumetric-map)
-  - [Information gain configuration and issues](#information-gain-configuration-and-issues)
-    - [V-REP sensor model](#v-rep-sensor-model)
-    - [Experimental package `expl_pointcloud_filter`](#experimental-package-expl_pointcloud_filter)
-  - [Robotic simulator modes](#robotic-simulator-modes)
-    - [Gazebo modes](#gazebo-modes)
-    - [V-REP modes](#v-rep-modes)
-- [3D Exploration with drones](#3d-exploration-with-drones)
-  - [Volumetric Exploration](#volumetric-exploration)
-  - [Surface Exploration](#surface-exploration)
-    - [Notes](#notes)
+- [D Multi-Robot Exploration](#d-multi-robot-exploration)
+    - [1. Overview](#1-overview)
+    - [2. Main Scripts](#2-main-scripts)
+    - [3. How to run an exploration](#3-how-to-run-an-exploration)
+        - [3.1. PyQt GUIs](#31-pyqt-guis)
+        - [3.2. What is going to happen?](#32-what-is-going-to-happen)
+    - [4. How to prioritize the exploration](#4-how-to-prioritize-the-exploration)
+    - [5. How to build, save and load a volumetric map](#5-how-to-build-save-and-load-a-volumetric-map)
+    - [6. Information gain configuration and issues](#6-information-gain-configuration-and-issues)
+        - [6.1. V-REP sensor model](#61-v-rep-sensor-model)
+        - [6.2. Experimental package expl_pointcloud_filter](#62-experimental-package-expl_pointcloud_filter)
+    - [7. Robotic simulator modes](#7-robotic-simulator-modes)
+        - [7.1. Gazebo modes](#71-gazebo-modes)
+        - [7.2. V-REP modes](#72-v-rep-modes)
+- [D Exploration with drones](#d-exploration-with-drones)
+    - [1. Volumetric Exploration](#1-volumetric-exploration)
+    - [2. Surface Exploration](#2-surface-exploration)
+    - [3. References](#3-references)
 
 <!-- /TOC -->
 
@@ -146,13 +146,13 @@ This is explained [here](./README.navigation.md#how-to-build-save-and-load-a-vol
 
 In order to compute the information gains of the next candidate viewpoints in a meaningful way, we need to carefully consider how the *exploration octomap* $H$ is built (see the [paper](https://arxiv.org/pdf/2307.02417.pdf)). Note that $H$ is distinct from the *navigation octomap* $M$ that is used by the path planner for traversability analysis. 
 
-Typically, a 3D rangefinder scan only includes sensor readings corresponding to rays that hit obstacles within the sensor perception range. These "obstacle" sensor rays are then integrated into the octomap through raycasting. Hence, maximum range readings are commonly discarded. 
+Typically, a 3D rangefinder scan only includes sensor readings corresponding to rays that hit obstacles within the sensor perception range. These "obstacle" sensor rays are then integrated into the octomap through raycasting. On the other hand, maximum range readings are commonly discarded. 
 
 Assume the robot moves in an outdoor scenario that consists of a flat ground terrain only populated by shallow obstacles up to a max certain height $h$: in such case, all surrounding voxels immediately above a height $h$ will perpetually remain in an *unknown* state (since never hit by any reported obstacle sensor ray). This entails that we'll always find informative candidate viewpoints around the robot, since the information gain of a candidate viewpoint $q$ typically "measures" how many *unknown* voxels fall within the sensor FOV at $q$ (see the [paper](https://arxiv.org/pdf/2307.02417.pdf)).
 
-Therefore, without appropriately updating *all* the *free* voxels which fall within the sensor perception FOV, the robot may find itself surrounded by candidate viewpoints that are perpetually informative. In such a case, an exploration process that is driven by information gain maximization will drive the robot through a meaningless never-ending random walk.  
+Therefore, without appropriately updating *all* the *free* voxels which fall within the sensor perception FOV, the robot may find itself surrounded by candidate viewpoints that are perpetually informative. In such a case, an exploration process that is driven by information gain maximization will drive the robot through a meaningless never-ending random walk. Note that such a problem does not typically occur with robot equipped with dense RGBD scans and moving in indoor environments. 
 
-A solution to such a problem is to process the robot rangefinder perception (within the sensor driver or downstream) to include and appropriately represent the maximum range readings too: see the following two subsections: *[V-REP sensor model](#v-rep-sensor-model)* and [Experimental package `expl_pointcloud_filter`](#experimental-package-expl_pointcloud_filter).  
+A solution to such a problem is to process the robot rangefinder perception (within the sensor driver or downstream) to include and appropriately integrate the information coming with the maximum range readings: see the following two subsections: *[V-REP sensor model](#v-rep-sensor-model)* and [Experimental package `expl_pointcloud_filter`](#experimental-package-expl_pointcloud_filter).  
 
 A more practical approach, which is a viable approximation in the case we know the maximum height $h$ of the obstacles (and the obstacles are not too far apart from each other), is to reduce the vertical sensor FOV is used to compute the information gain. This vertical sensor FOV `system/camera/verticalFov` can be set in the yaml configuration file of the 3 exploration packages mentioned [above](#main-scripts): for instance, see the jackal configuration file [exploration.yaml](jackal_ws/src/jackal_3dexplorer/launch/exploration.yaml).
 
@@ -164,11 +164,22 @@ In some of the V-REP exploration worlds (namely, in the folder *ugv_3dexplorer/m
   1) modifying the V-REP laser sensor model: check this [file](./exploration_ws/src/ugv_3dexplorer/maps/laserd_sensor_model.md).
   2) increasing the maximum scan range to *30 m* in the laser parameter box. 
 
-Note that the *30 m* range is bigger than the maximum sensor range which is currently used by the navigation octomap, i.e. *15 m*. This avoids confusing the maximum range readings as obstacle readings.
+Note that the *30 m* max scan range is bigger than the maximum sensor range (`sensor_max_range`) that is currently used by the navigation octomap, i.e. *15 m*. This avoids confusing the maximum range readings as obstacle readings.
 
 ### Experimental package `expl_pointcloud_filter`
 
-The experimental package `expl_pointcloud_filter` allows processing an input 3D scan, downsampling it and generating a lower-resolution output 3D scan that includes information about maximum range readings. The output scan should be carefully managed to avoid any confusion of the maximum readings as "obstacle" readings.  Please refer to its [README.md](exploration_ws/src/expl_pointcloud_filter/README.md) for more information.
+<p align="center">
+<img src="./images/expl_pointcloud_filter.png" alt="expl_pointcloud_filter" height="250" border="1" />
+</p>
+
+
+The experimental package `expl_pointcloud_filter` allows processing an input 3D scan, downsampling it and generating a lower-resolution output 3D scan that includes information about maximum range readings. 
+
+The output scans of an `expl_pointcloud_filter` node should be carefully managed to avoid confusing the maximum readings as "obstacle" readings. Our `volumetric_mapping` and `volumetric_mapping_expl` nodes already take care of that if the values of their parameter `sensor_max_range` is kept smaller than than the max sensor reading value used by the `expl_pointcloud_filter` node (by default 1000m). 
+
+ You can test the `expl_pointcloud_filter` with jackal by setting `ENABLE_EXPL_POINTCLOUD_FILTER=1` in the script `jackal_ws/src/jackal_3dexplorer/scripts/sim_launcher_exploration`.
+
+Please refer to this [README.md](exploration_ws/src/expl_pointcloud_filter/README.md) for more information.
 
 ---
 ## Robotic simulator modes
@@ -226,7 +237,7 @@ Run
 or 
 `$ roslaunch interface_nbvp_rotors multiagent_flat_exploration.launch `
 
-### Notes
+## References
 
 * original nbvplanner repository: https://github.com/ethz-asl/nbvplanner
 * wiki: https://github.com/ethz-asl/nbvplanner/wiki

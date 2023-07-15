@@ -396,7 +396,7 @@ bool ExplorationPlanner::setParams()
         params_.camVertical_.clear();
         params_.camVertical_ = {60.0}; 
     }
-    params_.cameraVerticalFov_ = 45.0;
+    params_.cameraVerticalFov_ = 180.0;
     if (!ros::param::get(ns + "/system/camera/verticalFov", params_.cameraVerticalFov_))
     {
         ROS_WARN_STREAM(

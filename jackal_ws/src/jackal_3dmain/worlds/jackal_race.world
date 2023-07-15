@@ -1,6 +1,16 @@
 <?xml version="1.0" ?>
 <sdf version='1.4'>
   <world name='default'>
+    <scene>
+      <sky>
+        <clouds>
+          <speed>8</speed>
+        </clouds>
+      </sky>
+      <ambient>0.95 0.95 0.95 1</ambient>
+      <background>0.3 0.3 0.3 1</background>
+      <shadows>true</shadows>
+    </scene>  
     <light name='sun' type='directional'>
       <cast_shadows>1</cast_shadows>
       <pose>0 0 10 0 -0 0</pose>

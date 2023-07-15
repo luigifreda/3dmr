@@ -2,30 +2,36 @@
 
 <launch>
 
-  <arg name="robot_name" default="ugv2" />
-  <arg name="simulator" default="" />
-  
-  <arg name="number_of_robots" default="2" /> <!-- multi -->    
-  <arg name="robot_point_cloud_base_topic" default="filtered_pointcloud" />   
-  <arg name="param_file" default="$(find jackal_3dexplorer)/launch/exploration.yaml" />
+    <arg name="robot_name" default="ugv2" />
+    <arg name="simulator" default="" />
 
-  <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
-  <arg name="use_marker_controller" default="true" /> <!-- boolean: true, false -->
-  <arg name="battery" default="false"/>  
+    <arg name="number_of_robots" default="2" /> <!-- multi -->    
+    <arg name="robot_point_cloud_base_topic" default="filtered_pointcloud" />   
+    <arg name="param_file" default="$(find jackal_3dexplorer)/launch/exploration.yaml" />
 
-  <include file="$(find jackal_3dexplorer)/launch/sim_expl_planner_ugv1.launch" >
-      
-     <arg name="respawn_value" value="$(arg respawn_value)" />
-     <arg name="robot_name" value="$(arg robot_name)" />
-     <arg name="simulator" value="$(arg simulator)" />
+    <!-- exploration params: these override the ones in  param_file-->
+    <arg name="verticalFov" default="65.0"/>   <!-- override the vertical FOV set in the param_file and used to compute the information gain -->
+    <arg name="sensor_max_range" default="5.0"/>   <!-- override the sensor_max_rangeset in the param_file -->
+    <arg name="expl_step" default="3.0"/>   <!-- override the expl_step set in the param_file -->
 
-     <arg name="number_of_robots" value="$(arg number_of_robots)" />
-     <arg name="robot_point_cloud_base_topic" value="$(arg robot_point_cloud_base_topic)" />
+    <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
+    <arg name="use_marker_controller" default="true" /> <!-- boolean: true, false -->
 
-     <arg name="use_marker_controller" value="$(arg use_marker_controller)" />
-     <arg name="battery" value="$(arg battery)"/>     
-     
-     <arg name="param_file" value="$(arg param_file)"/>
-  </include>
+    <include file="$(find jackal_3dexplorer)/launch/sim_expl_planner_ugv1.launch" >
+        
+        <arg name="respawn_value" value="$(arg respawn_value)" />
+        <arg name="robot_name" value="$(arg robot_name)" />
+        <arg name="simulator" value="$(arg simulator)" />
+
+        <arg name="number_of_robots" value="$(arg number_of_robots)" />
+        <arg name="robot_point_cloud_base_topic" value="$(arg robot_point_cloud_base_topic)" />
+
+        <arg name="use_marker_controller" value="$(arg use_marker_controller)" />  
+        
+        <arg name="param_file" value="$(arg param_file)"/>
+        <arg name="verticalFov" value="$(arg verticalFov)"/>     
+        <arg name="sensor_max_range" value="$(arg sensor_max_range)"/>     
+        <arg name="expl_step" value="$(arg expl_step)"/>                     
+    </include>
   
 </launch>

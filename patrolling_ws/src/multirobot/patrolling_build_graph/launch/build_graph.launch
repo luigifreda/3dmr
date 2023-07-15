@@ -6,7 +6,7 @@
     <arg name="map" default="/vrep"/>
     <arg name="user_build_graph" default="true"/>
     
-    <node name="patrolling_build_graph" pkg="patrolling_build_graph" type="patrolling_build_graph" output="screen" launch-prefix="gdb -ex run --args"> 
+    <node name="patrolling_build_graph" pkg="patrolling_build_graph" type="patrolling_build_graph" output="screen" launch-prefix=""> 
         
         <param name="filename" value="$(find patrolling3d_sim)/maps/$(arg map)/$(arg map).graph" />
                 

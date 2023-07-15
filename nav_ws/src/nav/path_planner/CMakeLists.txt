@@ -10,8 +10,7 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     if(PREPARE_RELASE )
         message(STATUS "${PROJECT_NAME} build type: Release *********************************")
         set(CMAKE_BUILD_TYPE Release)
-        #set(CUSTOM_C_FLAGS "-O3 -pthread -DNDEBUG -march=native -mmmx -msse -msse2 -msse3")#-Wall 
-        set(CUSTOM_C_FLAGS "-O3 -pthread -DNDEBUG -march=native")#-Wall 
+        set(CUSTOM_C_FLAGS "-O3 -pthread -DNDEBUG -march=native")
     else()
         message(STATUS "${PROJECT_NAME} build type: Debug *********************************")
         set(CMAKE_BUILD_TYPE Debug)
@@ -25,18 +24,6 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
 #endif(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif()
 
-# Add C++11 (this is required for using KdTreeFLANN.h)  <<--- CANNOT BE USED WITH PCL !! 
-# we get a runtime error: we cannot mix libraries compiled with different versions of C++ standard -> see https://github.com/felixendres/rgbdslam_v2/issues/8
-#include(CheckCXXCompilerFlag)
-#CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-#CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-#if(COMPILER_SUPPORTS_CXX11)
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-#elseif(COMPILER_SUPPORTS_CXX0X)
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-#else()
-#    message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
-#endif()
 set(CMAKE_CXX_STANDARD 14) # required by new PCL
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 

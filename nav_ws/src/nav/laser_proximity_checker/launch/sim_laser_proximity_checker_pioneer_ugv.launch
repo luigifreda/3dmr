@@ -17,7 +17,7 @@
     <arg name="respawn_value" default="false" /> <!-- boolean: true, false -->
       
 	<node type="laser_proximity_checker2" pkg="laser_proximity_checker" name="laser_proximity_checker_$(arg robot_name)" 
-        output="screen"  respawn="$(arg respawn_value)" launch-prefix="gdb -ex=run --args">
+        output="screen"  respawn="$(arg respawn_value)" launch-prefix="">
         <param name="laser_frame" value="$(arg laser_frame)"/>
         <param name="robot_frame" value="$(arg robot_name)/base_link"/>
         <param name="world_frame" value="$(arg world_frame)"/>

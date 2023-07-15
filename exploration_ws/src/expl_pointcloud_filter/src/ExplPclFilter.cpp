@@ -57,13 +57,10 @@ ExplPclFilter<PointOut>::ExplPclFilter(const PreFilterType& type):n_("~"), prefi
     // point cloud publisher
     expl_point_cloud_pub = n.advertise<sensor_msgs::PointCloud2>("expl_point_cloud", 1);
 
-
-	spherical_transform.subdivisions1 = num_subdivisions_phi;
-	spherical_transform.subdivisions2 = num_subdivisions_theta;	
-	spherical_transform.max_reading = max_reading;	
 	const double minTheta = 0.5*M_PI - max_angle_v*M_PI/180.0; // min inclination 
 	const double maxTheta = 0.5*M_PI - min_angle_v*M_PI/180.0; // max inclination 
-	spherical_transform.setMinMaxThetas(minTheta,maxTheta);
+	spherical_transform.Init(num_subdivisions_phi, num_subdivisions_theta, minTheta, maxTheta, max_reading);
+
 
     if (!tf_listener.waitForTransform(laser_frame, world_frame, ros::Time(0), ros::Duration(30.)))
     {

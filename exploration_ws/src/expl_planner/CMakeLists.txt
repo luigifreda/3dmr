@@ -11,7 +11,8 @@ project(expl_planner)
 set(CMAKE_CXX_STANDARD 14) # required by new PCL
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#force debug 
+
+# force debug 
 # set(CMAKE_BUILD_TYPE Debug)
 # set(CUSTOM_C_FLAGS "-g3 -ggdb -Wall")
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CUSTOM_C_FLAGS}")

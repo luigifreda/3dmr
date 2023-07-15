@@ -97,7 +97,7 @@ Open a new terminal and from the root folder of this repo you can:
 - build all the workspaces    
 `$ ./build_all.sh `
 - source the workspaces by using the command   
-`$ source source_all.bash`
+`$ source source_all.bash`     
 Once you have sourced the workspaces, you're ready to test the *patrolling* and *exploration* systems, or the *path planner* (see the next sections).
 - if needed, clean the workspaces by running   
 `$ ./clean_all.sh `

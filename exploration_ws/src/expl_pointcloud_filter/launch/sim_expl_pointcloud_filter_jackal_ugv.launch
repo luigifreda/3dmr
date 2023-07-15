@@ -5,10 +5,11 @@
     <arg name="robot_name" default="ugv1" />
     <arg name="simulator" default="" />
     
-    <arg name="num_subdivisions_phi"  default="500"/>    
-    <arg name="num_subdivisions_theta"  default="25"/>        
+    <!-- jackal OS0 lidar: hsamples="1024" vsamples="64" min_angle_v="-45.0" max_angle_v="45.0"  min_range="0.1" filter_radius="0.4" -->
+    <arg name="num_subdivisions_phi"  default="512"/>    
+    <arg name="num_subdivisions_theta"  default="32"/>        
     <arg name="max_reading"  default="50.0"/>
-    <arg name="min_angle_v"  default="-10.0"/>    
+    <arg name="min_angle_v"  default="-20.0"/>    
     <arg name="max_angle_v"  default="45.0"/>       
 
     <arg name="world_frame" default="odom"/>

@@ -184,8 +184,8 @@ class MainWidget(QWidget):
 
         # set layouts
 
-        self.create_nav_layout()
         self.create_exploration_layout()
+        self.create_nav_layout()
         self.mainLayout.addWidget(self.btn_save_map)
         self.mainLayout.addWidget(self.btn_load_map)
         self.mainLayout.addWidget(self.btn_kill)

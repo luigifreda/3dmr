@@ -2,28 +2,22 @@ cmake_minimum_required(VERSION 2.8.3)
 project(scan_space_time_filter)
 
 
-# ### setup git submodules in this workspace 
-#set(MY_COMMAND sh)
-#set(MY_ARG ${CMAKE_CURRENT_SOURCE_DIR}/../setup_git_submodules.sh "${CMAKE_CURRENT_SOURCE_DIR}/..")
-#execute_process(COMMAND ${MY_COMMAND} ${MY_ARG} WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} RESULT_VARIABLE RES)
-
-
 ## Compile as C++14, supported in ROS noetic and newer
 set(CMAKE_CXX_STANDARD 14) # required by new PCL
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#force debug 
+
+# force debug 
 #set(CMAKE_BUILD_TYPE Debug)
 #set(CUSTOM_C_FLAGS "-g3 -ggdb -Wall")
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CUSTOM_C_FLAGS}")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CUSTOM_C_FLAGS}")
 
-# this does not work - there is still some problem with Eigen and optimizations (indeed, some of the packages did not properly use Eigen with aligned allocators!)
-#if (CMAKE_BUILD_TYPE STREQUAL "Release")
-#    set(CUSTOM_C_FLAGS  "-O3 -DNDEBUG -march=native") 
-#    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${CUSTOM_C_FLAGS}")
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CUSTOM_C_FLAGS}")
-#endif()
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+   set(CUSTOM_C_FLAGS  "-O3 -DNDEBUG -march=native") 
+   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${CUSTOM_C_FLAGS}")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CUSTOM_C_FLAGS}")
+endif()
 
 
 set(PKG_DEPS

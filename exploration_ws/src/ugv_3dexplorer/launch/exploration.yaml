@@ -1,7 +1,7 @@
 # System 
 system/v_max: 0.2
 system/dyaw_max: 0.75
-system/camera/verticalFov: 90
+system/camera/verticalFov: 180
 
 system/robot/robotSensorHeight: 0.07    # height of the sensor (along ROS z) w.r.t. robot body (do not put it to zero otherwise with a rough octomap resolution there will be troubles)
 
