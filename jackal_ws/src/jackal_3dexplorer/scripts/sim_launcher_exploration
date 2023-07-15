@@ -34,7 +34,7 @@ export ENABLE_MULTI_ROBOT_COORDINATION="true" # true or false  enable/disable mu
 
 export ENABLE_EXPLORATION=1  # enable/disable exploration agent 
 
-export ENABLE_EXPL_POINTCLOUD_FILTER=1 # enable/disable the exploration pointcloud filter, see the discussion in https://github.com/luigifreda/3dmr/blob/main/README.exploration.md#information-gain-configuration-and-issues
+export ENABLE_EXPL_POINTCLOUD_FILTER=0 # enable/disable the exploration pointcloud filter, see the discussion in https://github.com/luigifreda/3dmr/blob/main/README.exploration.md#information-gain-configuration-and-issues
 
 export XTERM_OPTIONS="-hold -iconic" # the "iconic" option allows to automatically minimize all the launched xterms
 
