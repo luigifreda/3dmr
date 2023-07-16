@@ -221,11 +221,11 @@ Packages used for UAVs simulation:
 
 Open a new terminal, and enter in the root folder of our repo `3DMR`:    
 * source the 3DMR workspace     
-`$ source source_all.bash` 
+`$ source source_all.bash`   
 * single-robot exploration      
-`$ roslaunch interface_nbvp_rotors flat_exploration.launch `
+`$ roslaunch interface_nbvp_rotors flat_exploration.launch `   
 * multi-robot exploration    
-`roslaunch interface_nbvp_rotors multiagent_flat_exploration.launch`
+`roslaunch interface_nbvp_rotors multiagent_flat_exploration.launch`     
 
 Rviz (take a look here https://github.com/ethz-asl/nbvplanner/wiki/Visualization) is automatically launched. Alternatively, run:    
 `$ roslaunch interface_nbvp_rotors rviz_flat_exploration.launch `
@@ -233,9 +233,9 @@ Rviz (take a look here https://github.com/ethz-asl/nbvplanner/wiki/Visualization
 ## Surface Exploration  
 
 Run     
-`$ roslaunch interface_nbvp_rotors area_exploration.launch `
+`$ roslaunch interface_nbvp_rotors area_exploration.launch `      
 or    
-`$ roslaunch interface_nbvp_rotors multiagent_flat_exploration.launch `
+`$ roslaunch interface_nbvp_rotors multiagent_flat_exploration.launch `    
 
 ## References
 
