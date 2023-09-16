@@ -87,8 +87,8 @@ installation folder VREP_ROOT_DIR (NOTE: this lib enables V-REP to get and parse
 
 ## Test V-REP installation 
 
-You can test if V-REP is correctly installated by running the following commands: 
-`$ cd $VREP_ROOT_DIR`   
+You can test if V-REP is correctly installated by running the following commands:     
+`$ cd $VREP_ROOT_DIR`     
 `$ sh vrep.sh`   
 
 **Note**: the environment variable should have been set for you by the install script `install.sh` inside  `~/.bashrc`. 
