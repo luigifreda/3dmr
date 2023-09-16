@@ -93,9 +93,9 @@ You can test if V-REP is correctly installated by running the following commands
 
 **Note**: the environment variable should have been set for you by the install script `install.sh` inside  `~/.bashrc`. 
 
-In order to check if the TRADR UGV model is correctly managed, run from the root folder of the 3dpatrolling repo: 
-`$ source source_all.bash`   
-`$ roslaunch vrep_ugv_simulation vrep_ugv_simulation.launch`    
+In order to check if the TRADR UGV model is correctly managed, run from the root folder of the 3dpatrolling repo:     
+`$ source source_all.bash`      
+`$ roslaunch vrep_ugv_simulation vrep_ugv_simulation.launch`       
 Once the V-REP main window shows up, press the play button.  
 You can then shut down all the nodes by running     
 `$ rosrun path_planner kill_vrep_sim`
