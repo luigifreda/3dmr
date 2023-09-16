@@ -68,7 +68,7 @@ Below you can find some required installation steps. Please, consider that these
 1. Download version <strike>3.2.2</strike> (tested) from here    
 <strike>http://coppeliarobotics.com/files/V-REP_PRO_EDU_V3_2_2_64_Linux.tar.gz</strike>    
 <strike>http://coppeliarobotics.com/files/V-REP_PRO_EDU_V3_3_2_64_Linux.tar.gz</strike>    
-<strike>http://coppeliarobotics.com/files/V-REP_PRO_EDU_V3_5_0_Linux.tar.gz<strike>
+<strike>http://coppeliarobotics.com/files/V-REP_PRO_EDU_V3_5_0_Linux.tar.gz</strike>
 The script `install-vrep.sh` automatically downloads and installs V-REP V3.5.0. I shared a copy of that V-REP version on Google Drive. See that [script](https://github.com/luigifreda/3dmr/blob/main/install-vrep.sh) for further details.  
 
 3. You don't need to compile anything. Just extract the files in your V-REP installation folder and you are ready to execute the main launcher (vrep.sh) from there.
