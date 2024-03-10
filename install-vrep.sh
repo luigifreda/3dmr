@@ -13,9 +13,10 @@ function print_blue(){
 }
 
 function gdrive_download () {
-  CONFIRM=$(wget --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate "https://docs.google.com/uc?export=download&id=$1" -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
-  wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$CONFIRM&id=$1" -O $2
-  rm -rf /tmp/cookies.txt
+  #CONFIRM=$(wget --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate "https://docs.google.com/uc?export=download&id=$1" -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
+  #wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$CONFIRM&id=$1" -O $2
+  #rm -rf /tmp/cookies.txt
+  gdown https://drive.google.com/uc?id=$1
 }
 
 #sudo_replace_or_add_string_in_file <search_string> <replace_string> <filename>
@@ -39,6 +40,8 @@ print_blue '================================================'
 set -e
 set -x 
 
+pip install gdown
+export PATH=$HOME/.local/bin:$PATH
 
 #FILE=V-REP_PRO_EDU_V3_2_2_64_Linux  # not available any more on coppelia website 
 #FILE=V-REP_PRO_EDU_V3_3_2_64_Linux # not available any more on coppelia website 
@@ -72,7 +75,7 @@ fi
 
 # download the file 
 if [ ! -f $FILE".tar.gz" ]; then
-	if [ $DOWNLOAD_FROM_COPPELIA -eq 1]; then 
+	if [ $DOWNLOAD_FROM_COPPELIA -eq 1 ]; then 
 		echo 'downloading from Coppelia'
 		wget $URL_COPPELIA 
 	else
