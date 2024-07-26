@@ -84,7 +84,7 @@ Refer to [INSTALL.md](./INSTALL.md) if you need a manual installation.
 * `mapping_ws` collects volumetric mapping tools integrated in our system (octomap, [voxblox](https://github.com/ethz-asl/voxblox), robot-centric [elavation mapping](https://github.com/ANYbotics/elevation_mapping)).
 * `nav_ws` collects the packages that allow path planning, trajectory control, navigation, and V-REP simulation with the tracked robots.
 * `patrolling_ws` collects our main patrolling packages imported from [3dpatrolling](https://github.com/luigifreda/3dpatrolling).   
-* `exploration_ws` collects packages used for multi-robot exploration and a port of the [nbvplanner](https://github.com/ethz-asl/nbvplanner) packages (exploration for drones) to ROS noetic.  
+* `exploration_ws` collects packages used for multi-robot exploration and a porting of the [nbvplanner](https://github.com/ethz-asl/nbvplanner) packages (exploration for drones) to ROS noetic.  
 * `jackal_ws` collects gazebo packages and launch files for multi-robot navigation and exploration with a team of jackal robots equipped with LIDAR. 
 * `pioneer_ws` collects packages used for multi-robot navigation and exploration with a team of pioneer robots equipped with RGBD cameras. 
 * `teb_ws` collects the [TEB](https://github.com/rst-tu-dortmund/teb_local_planner) tools that we integrated into our system. 
@@ -210,7 +210,7 @@ You can contribute to the code base by using pull requests, reporting bugs, leav
 ----
 ## Credits 
 
-* Some of the packages in the folders `nav_ws/src/robot` and `nav_ws/src/msgs`have been developed by the [TRADR team](https://www.luigifreda.com/wp-content/uploads/2018/04/IMG-20180321-WA0009-1024x768.jpg). Thanks to all the guys that shared with us cold tents, hot coffee and wonderful life moments during TRADR demos, integrations, exercises and reviews!
+* Some of the packages in the folders `nav_ws/src/robot` and `nav_ws/src/msgs`have been developed by the [TRADR team](https://www.luigifreda.com/wp-content/uploads/2018/04/IMG-20180321-WA0009-1024x768.jpg). Thanks to all the guys who shared with us cold tents, hot coffee and wonderful life moments during TRADR demos, integrations, exercises and reviews!
 
 * We implemented our patrolling agent in the ROS package `patrolling3d_sim`. We used the package [patrolling_sim](http://wiki.ros.org/patrolling_sim) as a starting point (further details in our [3D patrolling paper](http://www.luigifreda.com/pubs/Freda%20-%203D%20Multi-Robot%20Patrolling%20with%20a%20Two-Level%20Coordination%20Strategy%20-%20AURO%202018%20-%20pub.pdf)). We would like to thank the Authors for their great work. 
 
