@@ -23,7 +23,9 @@
 #include <mavros_msgs/mavlink_convert.h>
 
 #ifndef MAVLINK_H
+  #include <stdint.h>
   typedef mavlink::mavlink_message_t mavlink_message_t;
+  typedef mavlink::mavlink_status_t mavlink_status_t;
   #include <mavlink/v2.0/common/mavlink.h>
 #endif 
 
