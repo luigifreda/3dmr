@@ -9,6 +9,12 @@ function print_blue(){
 	printf "\033[0m"
 }
 
+function print_green(){
+	printf "\033[32;1m"
+	printf "$@ \n"
+	printf "\033[0m"
+}
+
 # ====================================================
 
 print_blue '================================================'
@@ -30,11 +36,34 @@ version=$(lsb_release -a 2>&1)
 # --------------------------
 # from https://catkin-tools.readthedocs.io/en/latest/installing.html
 
-print_blue 'Installing catkin tools'
+# print_blue 'Installing catkin tools'
 
-# first you must have the ROS repositories which contain the .deb for catkin_tools:
-sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list'
-wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+# # first you must have the ROS repositories which contain the .deb for catkin_tools:
+# sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list'
+# wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+
+
+# --- ROS apt repo: canonical keyring + normalized signed-by (idempotent) ---
+sudo apt-get install -y curl gnupg lsb-release
+sudo mkdir -p /usr/share/keyrings
+curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
+  | sudo gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+# Normalize any older entries to the canonical keyring path
+for f in /etc/apt/sources.list /etc/apt/sources.list.d/*.list; do
+  [ -f "$f" ] && sudo sed -i \
+    's#/etc/apt/keyrings/ros-archive-keyring.gpg#/usr/share/keyrings/ros-archive-keyring.gpg#g' "$f"
+done
+
+UBUNTU_CODENAME="$(lsb_release -sc)"
+ROS_LIST="/etc/apt/sources.list.d/ros-latest.list"
+ROS_LINE="deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros/ubuntu ${UBUNTU_CODENAME} main"
+
+# Only write the line if it's not already present
+if ! grep -qsF "$ROS_LINE" "$ROS_LIST" 2>/dev/null; then
+  echo "$ROS_LINE" | sudo tee "$ROS_LIST" >/dev/null
+fi
+
 
 # once you have added that repository, run these commands to install catkin_tools:
 sudo apt-get update
@@ -65,7 +94,9 @@ cd -
 
 print_blue 'ROS dependencies'
 
-rosdep update
+sudo apt-get install -y python3-rosdep
+sudo rosdep init || true
+rosdep update --include-eol-distros || rosdep update
 
 #rosdep install --from-paths mapping_ws/src nav_ws/src patrolling_ws/src exploration_ws/src pioneer_ws/src jackal_ws/src teb_ws/src --ignore-src -y
 # find all workspace src folders (by using suffix "_ws") 
@@ -76,7 +107,7 @@ for ws in "${WORKSPACES[@]}"; do
         WORKSPACES_SRC+="$ws/src "
     fi
 done
-echo WORKSPACES_SRC: $WORKSPACES_SRC
+print_blue "WORKSPACES_SRC: $WORKSPACES_SRC"
 rosdep install --from-paths $WORKSPACES_SRC --ignore-src -y
 
 sudo apt-get install -y cmake-extras     # https://bugs.launchpad.net/ubuntu/+source/googletest/+bug/1644062
@@ -175,7 +206,8 @@ fi
 #./build_all.sh
 
 
-
+# --------------------------
+print_green "install.sh -> done"
 
 
 

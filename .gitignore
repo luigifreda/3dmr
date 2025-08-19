@@ -29,6 +29,8 @@ teb_ws/src/CMakeLists.txt
 
 models.gazebosim.org
 
+gazebo_models/
+
 laser_slam_ws
 
 screenlog.0

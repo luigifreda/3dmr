@@ -142,7 +142,7 @@ class MainWidget(QWidget):
 
         # set layouts
 
-        self.createExplorationPioneerLayout()
+        self.create_exploration_layout()
         self.mainLayout.addWidget(self.btn_kill)
 
         # connections
@@ -154,7 +154,7 @@ class MainWidget(QWidget):
         # show the widget
         self.show()
 
-    def createExplorationPioneerLayout(self):
+    def create_exploration_layout(self):
         self.horizontalGroupBox_expl = QGroupBox(
             "Exploration - UAV")
         self.gridLayout_expl = QGridLayout()

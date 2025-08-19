@@ -64,11 +64,11 @@ alt="V-REP simulation 3D exploration" height="230" border="1"/>
 
 Here, you can find a quick install procedure (tested under **Ubuntu 20.04**). Open a new terminal and get into the root folder of this repo. Run the following commands: 
 * automagically install V-REP, gazebo, ROS dependencies and everything else is required:     
-`$ ./install.sh`    
+`./install.sh`    
 * build all the workspaces in this repo:     
-`$ ./build_all.sh`    
+`./build_all.sh`    
 * source all the 3DMR workspaces:        
-`$ source source_all.bash`    
+`source source_all.bash`    
 Now, you're ready to test our *exploration*, *patrolling* and *navigation* systems. See the next sections for further details.  
 
 If you do not have Ubuntu 20.04, you can use [rosdocker](https://github.com/luigifreda/rosdocker#3dmr).
@@ -95,12 +95,12 @@ In each workspace, you can use the script`compile_with_catkin_build.sh` to separ
 
 Open a new terminal and from the root folder of this repo you can:
 - build all the workspaces    
-`$ ./build_all.sh `
+`./build_all.sh `
 - source the workspaces by using the command   
-`$ source source_all.bash`     
+`source source_all.bash`     
 Once you have sourced the workspaces, you're ready to test the *patrolling* and *exploration* systems, or the *path planner* (see the next sections).
 - if needed, clean the workspaces by running   
-`$ ./clean_all.sh `
+`./clean_all.sh `
 
 See the *[GUIs](#guis)* section below on how to use our `main_*.py` **GUI scripts**. 
 
