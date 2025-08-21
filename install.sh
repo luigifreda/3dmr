@@ -31,9 +31,20 @@ sudo apt-get update
 
 version=$(lsb_release -a 2>&1)
 
-# --------------------------
-# install catkin tools 
-# --------------------------
+# -----------------------------
+# Install and generate locales
+# -----------------------------
+sudo apt-get update
+sudo apt-get install -y locales
+sudo sed -i 's/^# *\(en_US\.UTF-8\)/\1/' /etc/locale.gen
+sudo locale-gen
+
+# Make en_US.UTF-8 the default for your shell and services
+#sudo update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+# -----------------------------
+# Install catkin tools 
+# -----------------------------
 # from https://catkin-tools.readthedocs.io/en/latest/installing.html
 
 # print_blue 'Installing catkin tools'
@@ -74,9 +85,9 @@ else
 fi
 
 
-# --------------------------
-# solve problems with ROS melodic  
-# --------------------------
+# -----------------------------
+# Solve problems with ROS melodic  
+# -----------------------------
 
 if [ ! -d  patrolling_ws/src/msgs ]; then
 	mkdir -p patrolling_ws/src/msgs
@@ -89,7 +100,7 @@ fi
 cd - 
 
 # --------------------------
-# install necessary workspace dependencies 
+# Install necessary workspace dependencies 
 # --------------------------
 
 print_blue 'ROS dependencies'
@@ -138,6 +149,8 @@ sudo apt install -y ros-$ROS_DISTRO-geodesy
 sudo apt install -y ros-$ROS_DISTRO-nmea-*
 sudo apt install -y ros-$ROS_DISTRO-pcl-ros
 sudo apt install -y ros-$ROS_DISTRO-lms1xx ros-$ROS_DISTRO-pointgrey-camera-description ros-$ROS_DISTRO-twist-mux ros-$ROS_DISTRO-interactive-marker-twist-server
+
+sudo apt-get install -y ros-$ROS_DISTRO-image-transport-plugins ros-$ROS_DISTRO-compressed-image-transport
 
 if [[ $version == *"18.04"* ]] ; then
 	sudo apt-get install -y libqt4-dev 
@@ -189,20 +202,20 @@ if [ ! -f /.dockerenv ]; then # if we are outside a docker container
 	fi 
 fi 
 
-# --------------------------
-# install V-REP
-# --------------------------
+# -----------------------------
+# Install V-REP
+# -----------------------------
 ./install-vrep.sh
 
-# --------------------------
-# install Gazebo 
-# --------------------------
+# -----------------------------
+# Install Gazebo 
+# -----------------------------
 ./install-gazebo.sh
 
 
-# --------------------------
-# Build all
-# --------------------------
+# -----------------------------
+# Build all workspaces
+# -----------------------------
 #./build_all.sh
 
 

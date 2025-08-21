@@ -103,8 +103,19 @@ if [ ! -d $DEST_DIR/$FILE ]; then
 	sudo_replace_or_add_string_in_file "highResDisplay = -1" "highResDisplay = 1" "/usr/local/$FILE/system/usrset.txt"
 fi
 
-# set VREP_ROOT_DIR env var in ~/.bashrc
-echo "export VREP_ROOT_DIR=/usr/local/$FILE" >> ~/.bashrc
+# Check if VREP_ROOT_DIR is already set in ~/.bashrc and update/add accordingly
+if grep -q "export VREP_ROOT_DIR=" ~/.bashrc; then
+    # Update existing VREP_ROOT_DIR line (handles both direct export and conditional export)
+    sed -i "s|export VREP_ROOT_DIR=.*|export VREP_ROOT_DIR=/usr/local/$FILE|" ~/.bashrc
+    echo "Updated VREP_ROOT_DIR in ~/.bashrc"
+else
+    # Add new VREP_ROOT_DIR line with conditional check
+    echo "" >> ~/.bashrc  # Add blank line for separation
+    echo "if [ -d /usr/local/$FILE ]; then" >> ~/.bashrc
+    echo "    export VREP_ROOT_DIR=/usr/local/$FILE" >> ~/.bashrc
+    echo "fi" >> ~/.bashrc
+    echo "Added VREP_ROOT_DIR conditional block to ~/.bashrc"
+fi
 
 
 cd $STARTING_DIR

@@ -330,8 +330,8 @@ class NiftiTeleopJoy(object):
 
 	## Handle priority based on the joystick input.
 	def mux_jcb(self, joy):
-                # this is needed for proper function even when the node runs in a namespace
-                topic = self.cmd_vel_topic if self.cmd_vel_topic[0] == '/' else '/' + self.cmd_vel_topic
+		# this is needed for proper function even when the node runs in a namespace
+		topic = self.cmd_vel_topic if self.cmd_vel_topic[0] == '/' else '/' + self.cmd_vel_topic
 
 		if joy.pressed_any(self.deadman_buttons):
 			self.priority_acquire(topic)
@@ -416,7 +416,7 @@ class NiftiTeleopJoy(object):
 							flipperMotion.object_id = ID_FLIPPER_REAR_RIGHT
 							flipperMotion.angle = self.fs.rearRight + joy.axes[self.flipper_axis]*self.flipper_increment
 							self.flipper_pub.publish(flipperMotion)
-				except (TypeError, AttributeError), e:
+				except (TypeError, AttributeError) as e:
 					rospy.logwarn('Flipper command ignored since no FlippersState message received.')
 
 
@@ -652,7 +652,7 @@ class HistoryJoystick(Joy):
 		try:
 			return self.is_down_any(button_ids) and\
 					not self.was_down_any(button_ids)
-		except (AttributeError, TypeError), e:
+		except (AttributeError, TypeError)as e:
 			# not enough joystick messages yet?
 			return False
 
@@ -670,7 +670,7 @@ class HistoryJoystick(Joy):
 				res = res or (not self.buttons[button_id] and\
 					self.old_buttons[button_id])
 			return res
-		except (AttributeError, TypeError), e:
+		except (AttributeError, TypeError)as e:
 			# not enough joystick messages yet?
 			return False
 
@@ -680,7 +680,7 @@ class HistoryJoystick(Joy):
 		try:
 			return not self.is_down_any(button_ids) and\
 					self.was_down_any(button_ids)
-		except (AttributeError, TypeError), e:
+		except (AttributeError, TypeError)as e:
 			# not enough joystick messages yet?
 			return False
 
@@ -698,7 +698,7 @@ class HistoryJoystick(Joy):
 				res = res or (self.buttons[button_id] !=\
 					self.old_buttons[button_id])
 			return res
-		except (TypeError, AttributeError), e:
+		except (TypeError, AttributeError)as e:
 			# not enough joystick messages yet?
 			return False
 
@@ -708,7 +708,7 @@ class HistoryJoystick(Joy):
 		try:
 			return self.axes[axis_id] != \
 					self.old_axes[axis_id]
-		except (TypeError, AttributeError), e:
+		except (TypeError, AttributeError)as e:
 			# no joystick messages yet?
 			return False
 
@@ -720,7 +720,7 @@ class HistoryJoystick(Joy):
 		try:
 			return self.axes[axis_id] and \
 					not self.old_axes[axis_id]
-		except (TypeError, AttributeError), e:
+		except (TypeError, AttributeError)as e:
 			# no joystick messages yet?
 			return False
 
@@ -732,7 +732,7 @@ class HistoryJoystick(Joy):
 		try:
 			return not self.axes[axis_id] and \
 					self.old_axes[axis_id]
-		except (TypeError, AttributeError), e:
+		except (TypeError, AttributeError)as e:
 			# no joystick messages yet?
 			return False
 	################################################################################

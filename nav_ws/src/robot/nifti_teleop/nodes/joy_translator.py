@@ -127,9 +127,9 @@ class JoyTranslator(object):  # TODO fallback relay mode
                 rospy.loginfo("Initializing section %s" % section)
                 exec(self.config['init'][section], self.translation_vars)
 
-	self.deadzone = 0.05
-	if "deadzone" in config.keys():
-		self.deadzone = float(config["deadzone"])
+        self.deadzone = 0.05
+        if "deadzone" in config.keys():
+            self.deadzone = float(config["deadzone"])
 
 
     def translate(self, joy):
@@ -167,14 +167,14 @@ class JoyTranslator(object):  # TODO fallback relay mode
                 for item in self.config[section].keys():
                     try:
                         getattr(result, section)[item] = eval(self.config[section][item], self.translation_vars)
-                    except Exception, e:
-                        print "Evaluation of expression '%s' failed with exception:" % self.config[section][item]
+                    except Exception as e:
+                        print("Evaluation of expression '%s' failed with exception:" % self.config[section][item])
                         traceback.print_exc()
 
-	# we implement our own deadzone config to be able to change it on the fly
-	for i in range(len(result.axes)):
-		if -self.deadzone < result.axes[i] < self.deadzone:
-			result.axes[i] = 0.0
+        # we implement our own deadzone config to be able to change it on the fly
+        for i in range(len(result.axes)):
+            if -self.deadzone < result.axes[i] < self.deadzone:
+                result.axes[i] = 0.0
 
         return result
 

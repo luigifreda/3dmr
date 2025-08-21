@@ -85,7 +85,7 @@ class HistoryJoystick(Joy):
 		try:
 			return self.buttons[button_id] and\
 					not self.old_buttons[button_id]
-		except (AttributeError, TypeError), e:
+		except (AttributeError, TypeError)as e:
 			# not enough joystick messages yet?
 			return False
 
@@ -95,7 +95,7 @@ class HistoryJoystick(Joy):
 		try:
 			return not self.buttons[button_id] and\
 					self.old_buttons[button_id]
-		except (AttributeError, TypeError), e:
+		except (AttributeError, TypeError)as e:
 			# not enough joystick messages yet?
 			return False
 
@@ -105,7 +105,7 @@ class HistoryJoystick(Joy):
 		try:
 			return self.buttons[button_id] != \
 					self.old_buttons[button_id]
-		except (TypeError, AttributeError), e:
+		except (TypeError, AttributeError)as e:
 			# not enough joystick messages yet?
 			return False
 
@@ -115,7 +115,7 @@ class HistoryJoystick(Joy):
 		try:
 			return self.axes[axis_id] != \
 					self.old_axes[axis_id]
-		except (TypeError, AttributeError), e:
+		except (TypeError, AttributeError)as e:
 			# no joystick messages yet?
 			return False
 
@@ -127,7 +127,7 @@ class HistoryJoystick(Joy):
 		try:
 			return self.axes[axis_id] and \
 					not self.old_axes[axis_id]
-		except (TypeError, AttributeError), e:
+		except (TypeError, AttributeError)as e:
 			# no joystick messages yet?
 			return False
 
@@ -139,7 +139,7 @@ class HistoryJoystick(Joy):
 		try:
 			return not self.axes[axis_id] and \
 					self.old_axes[axis_id]
-		except (TypeError, AttributeError), e:
+		except (TypeError, AttributeError)as e:
 			# no joystick messages yet?
 			return False
 	################################################################################

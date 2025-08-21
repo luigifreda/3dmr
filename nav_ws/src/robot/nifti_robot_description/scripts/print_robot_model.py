@@ -48,7 +48,7 @@ if __name__ == '__main__':
     ros_params = None
     try:
         ros_params = rospy.get_param_names()
-    except socket.error, e:
+    except socket.error as e:
         # parameter server (roscore) not running, so read the config from robot.yaml
         pass
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
         # read the config from robot.yaml
         try:
             nifti_launchers_path = rospkg.RosPack().get_path('nifti_launchers')
-        except rospkg.ResourceNotFound, e:
+        except rospkg.ResourceNotFound as e:
             sys.stderr.write("Rospack is not working. Have you sourced the ROS environment in this shell? Error: %s\n"
                              % str(e))
             sys.exit(2)
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                 sys.stderr.write("File nifti_launchers/launch/default-robot.yaml is empty.\n")
                 sys.exit(4)
             parts_config = robot_yaml_values['parts_config']
-        except IOError, e:
+        except IOError as e:
             sys.stderr.write("Could not find nifti_launchers/launch/default-robot.yaml. Error: %s\n" % str(e))
             sys.exit(3)
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
             sys.stderr.write("Robot parts config taken from %s with the following values: %r\n" % (
                 robot_yaml_file, parts_config))
 
-        except IOError, e:
+        except IOError as e:
             sys.stderr.write("Could not find %s. Have you created the file?\nError: %s\n" % (robot_yaml_file,  str(e)))
             sys.exit(3)
 
@@ -134,12 +134,12 @@ if __name__ == '__main__':
                                      mappings=dict([(key, str(val)) for (key, val) in parts_config.iteritems()]),
                                      in_order=True, xacro_ns=False
                                      )
-            print doc.toprettyxml()
-        except Exception, e:
+            print(doc.toprettyxml())
+        except Exception as e:
             sys.stderr.write("Error converting XACRO to URDF: %s, %r\n" % (str(e), e))
             sys.exit(4)
 
-    except rospkg.ResourceNotFound, e:
+    except rospkg.ResourceNotFound as e:
         sys.stderr.write("Rospack is not working. Have you sourced the ROS environment in this shell? Error: %s\n"
                          % str(e))
         sys.exit(1)

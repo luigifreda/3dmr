@@ -70,7 +70,7 @@ class DynamicRobotModelServer(object):
 
             self._last_config = config
 
-        except Exception, e:
+        except Exception as e:
             rospy.logerr('XACRO to URDF conversion did not succeed: %s, %r' % (str(e), e))
             config = self._last_config
 

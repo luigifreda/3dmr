@@ -46,8 +46,9 @@ class NiftiMuxCtrl(object):
 		rospy.Subscriber('mux_cmd_vel/selected', String, self.selected_cb)
 
 		# last messages
-		topics = priority.keys()
-		topics.remove('__none')
+		topics = list(priority.keys())
+		if '__none' in topics:
+			topics.remove('__none')
 		self.last_msg = dict(zip(topics, [rostime.Time(0)]*len(topics)))
 		for topic in topics:
 			rospy.Subscriber(topic, Twist, self.cmd_vel_cb_factory(topic))
@@ -119,7 +120,7 @@ class NiftiMuxCtrl(object):
 		while not rospy.is_shutdown():
 			try:
 				r.sleep()
-			except rospy.exceptions.ROSTimeMovedBackwardsException, e:
+			except rospy.exceptions.ROSTimeMovedBackwardsException as e:
 				self.lock.acquire()
 				rospy.logdebug(str(e))
 				self.stack = ['__none']

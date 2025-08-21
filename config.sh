@@ -33,6 +33,18 @@ mkdir -p -- "$LOG_FOLDER"
 
 ########################################################################################################
 
+# set the locale
+export LC_ALL=en_US.UTF-8
+export LC_NUMERIC=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    export XDG_RUNTIME_DIR=/tmp/runtime-$USER
+    mkdir -p "$XDG_RUNTIME_DIR" && chmod 700 "$XDG_RUNTIME_DIR"
+fi
+
+########################################################################################################
+
 function open_screen(){
 session_name=$1
 command_string=${@:2}

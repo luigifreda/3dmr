@@ -50,7 +50,7 @@ class BaseWithTime(object):
             index = next(idx for idx, val in enumerate(self.time) if val > time)
         except StopIteration:
             index = len(self.time)
-        except Exception, e:
+        except Exception as e:
             raise e
         return index
 
