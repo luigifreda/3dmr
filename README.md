@@ -1,5 +1,8 @@
-# 3DMR 
+<p align="center">
+<img src="images/3dmr-logo.png" alt="3DMR" height="200" border="0" /> 
+</p>
 
+# 3DMR 
 
 **3D Multi-Robot** Exploration, Patrolling and Navigation.
 
@@ -20,9 +23,9 @@ This repository allows testing our proposed multi-robot strategies within [V-REP
 
 <p align="center">
 <img src="images/3D-exploration-ugvs2.gif"
-alt="V-REP simulation 3d exploration" height="230" border="1"/> 
+alt="V-REP simulation 3d exploration" height="230" border="0"/> 
 <img src="images/patrolling-two-floor-ring.gif"
-alt="V-REP simulation 3D exploration" height="230" border="1"/> 
+alt="V-REP simulation 3D exploration" height="230" border="0"/> 
 </p>
   
 ## Main features
@@ -30,25 +33,25 @@ alt="V-REP simulation 3D exploration" height="230" border="1"/>
 **Tasks**: 3D exploration, 3D patrolling, and  3D navigation. 
 
 <p align="center">
-<img src="images/teaser-repo.png" alt="3DMR system" width="500" border="1" /> 
+<img src="images/teaser-repo.png" alt="3DMR system" width="500" border="0" /> 
 </p>
 
 
 **Robots**: tracked UGV, jackal UGV, pioneer 3-DX, and AscTec Firefly.
 
 <p align="center">
-<img src="images/nifti.png" alt="TRADR system" height="180" border="1" /> 
-<img src="images/pioneer_team.png" alt="TRADR system" height="180" border="1" />
+<img src="images/nifti.png" alt="TRADR system" height="180" border="0" /> 
+<img src="images/pioneer_team.png" alt="TRADR system" height="180" border="0" />
 </p>
 
 <p align="center">
-<img src="images/jackal-ugvs.png" alt="TRADR system" height="180" border="1" />
-<img src="images/pioneers-rviz-vrep.png" alt="TRADR system" height="180" border="1" />
+<img src="images/jackal-ugvs.png" alt="TRADR system" height="180" border="0" />
+<img src="images/pioneers-rviz-vrep.png" alt="TRADR system" height="180" border="0" />
 </p>
 
 <p align="center">
-<img src="images/tracked-ugvs.png" alt="TRADR system" height="180" border="1" />
-<img src="images/exploring-uavs.png" alt="TRADR system" height="180" border="1" />
+<img src="images/tracked-ugvs.png" alt="TRADR system" height="180" border="0" />
+<img src="images/exploring-uavs.png" alt="TRADR system" height="180" border="0" />
 </p>
 
 **Simulators**: [V-REP](http://www.coppeliarobotics.com/) and [gazebo](https://gazebosim.org/home).  
@@ -111,9 +114,9 @@ Refer to this [README.exploration.md](./README.exploration.md) for testing the e
 
 <p align="center">
 <img src="images/3d_exploration_ring.png"
-alt="V-REP simulation 3d exploration" height="250" border="1" />
+alt="V-REP simulation 3d exploration" height="250" border="0" />
 <img src="images/exploration-3robots.png"
-alt="V-REP simulation 3D exploration" height="250" border="1" /> 
+alt="V-REP simulation 3D exploration" height="250" border="0" /> 
 </p>
 
 ----
@@ -123,9 +126,9 @@ Refer to this [README.patrolling.md](./README.patrolling.md) for testing the pat
 
 <p align="center">
 <img src="images/patrolling-elike-animated.gif"
-alt="V-REP simulation 3dpatrolling" height="250" border="1" /> <img src="images/patrolling-crossroad.gif"
-alt="V-REP simulation 3dpatrolling" height="250" border="1" />
-<img src="images/3d_patrolling_corridor.png" alt="TRADR system" height="250" border="1" /> 
+alt="V-REP simulation 3dpatrolling" height="250" border="0" /> <img src="images/patrolling-crossroad.gif"
+alt="V-REP simulation 3dpatrolling" height="250" border="0" />
+<img src="images/3d_patrolling_corridor.png" alt="TRADR system" height="250" border="0" /> 
 </p>
 
 ----
@@ -135,7 +138,7 @@ alt="V-REP simulation 3dpatrolling" height="250" border="1" />
 
 <center>
 <img src="images/navigation.png"
-alt="RVIZ and V-REP" width="900" border="1" />
+alt="RVIZ and V-REP" width="900" border="0" />
 </center>
 
 ----
@@ -152,13 +155,13 @@ We have different **PyQt GUIs** for launching exploration, patrolling and path p
 
 <p align="center">
 <img src="images/gui-tradr.png"
-alt="RVIZ and V-REP" width="200" border="1" />
+alt="RVIZ and V-REP" width="200" border="0" />
 <img src="images/gui-jackal.png"
-alt="RVIZ and V-REP" width="200" border="1" />
+alt="RVIZ and V-REP" width="200" border="0" />
 <img src="images/gui-pioneer.png"
-alt="RVIZ and V-REP" width="200" border="1" />
+alt="RVIZ and V-REP" width="200" border="0" />
 <img src="images/gui-uav.png"
-alt="RVIZ and V-REP" width="200" border="1" />
+alt="RVIZ and V-REP" width="200" border="0" />
 <p align="center">
 
 The buttons and tooltips should be self-explanatory. Start playing with them and refer to the following README files for further details:
@@ -188,9 +191,9 @@ Videos and further information about our previous [3dpatrolling](https://github.
 
 <p align="center">
 <img src="images/patrolling-rv-yr4.png"
-alt="TRADR system" height="150" border="1" />
+alt="TRADR system" height="150" border="0" />
 <img src="images/monte-libretti-robots.jpg"
-alt="TRADR system" height="150" border="1" /> <img src="images/montelibretti-patrolling.png" alt="TRADR system" height="150" border="1" />
+alt="TRADR system" height="150" border="0" /> <img src="images/montelibretti-patrolling.png" alt="TRADR system" height="150" border="0" />
 </p>
 
 
