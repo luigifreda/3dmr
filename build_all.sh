@@ -5,11 +5,12 @@ echo STARTING_DIR: $STARTING_DIR
 
 set -e 
 
-source ~/.bashrc 
-echo "VREP_ROOT_DIR: $VREP_ROOT_DIR"
+source ~/.bashrc
 
 source source_all.bash 
 cd $MR3D_HOME
+
+echo "VREP_ROOT_DIR: $VREP_ROOT_DIR"
 
 for ws in "${LIST_OF_WSS[@]}"   # in config.sh 
 do

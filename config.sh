@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+CONFIG_DIR_=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd ) # get script dir
+CONFIG_DIR_=$(readlink -f $CONFIG_DIR_)  # this reads the actual path if a symbolic directory is used
+
+
 # here you can load some common env variables 
 
 MR3D_USE_SCREEN=1  # 1 use screen for running ros commands in the scripts; 0 use xterm 
@@ -30,6 +34,12 @@ SOURCE_FILE=$MR3D_HOME/source_all.bash
 # check if log folder is created 
 LOG_FOLDER=$HOME/.ros/3dmr/logs
 mkdir -p -- "$LOG_FOLDER"
+
+########################################################################################################
+
+if [ -d /usr/local/V-REP_PRO_EDU_V3_5_0_Linux ]; then
+    export VREP_ROOT_DIR=/usr/local/V-REP_PRO_EDU_V3_5_0_Linux
+fi
 
 ########################################################################################################
 

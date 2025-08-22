@@ -182,5 +182,9 @@ fi
 
 ######################################################################################################## 
 
+echo ""
+echo "WARNING: At the first launch, gazebo may take a while to warm up... be patient"
+echo ""
+
 echo DONE 
 

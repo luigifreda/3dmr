@@ -100,6 +100,10 @@ done
 
 ########################################################################################################
 
+echo ""
+echo "WARNING: At the first launch, gazebo may take a while to warm up... be patient"
+echo ""
+
 echo DONE 
 
 # NOTE: you can use the following command to get the xterm window live if the app terminates or crashes

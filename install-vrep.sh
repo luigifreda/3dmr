@@ -2,6 +2,10 @@
 
 # you can use this script to install V-REP 
 
+SCRIPT_DIR_=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd ) # get script dir
+SCRIPT_DIR_=$(readlink -f $SCRIPT_DIR_)  # this reads the actual path if a symbolic directory is used
+
+
 # ====================================================
 
 set -x
@@ -45,7 +49,7 @@ export PATH=$HOME/.local/bin:$PATH
 
 #FILE=V-REP_PRO_EDU_V3_2_2_64_Linux  # not available any more on coppelia website 
 #FILE=V-REP_PRO_EDU_V3_3_2_64_Linux # not available any more on coppelia website 
-FILE=V-REP_PRO_EDU_V3_5_0_Linux
+FILE="V-REP_PRO_EDU_V3_5_0_Linux"
 
 URL_COPPELIA=http://coppeliarobotics.com/files/$FILE".tar.gz"
 URL_MY_DRIVE_ID="1WIQuVPRsyhX851OL8e21hZMTrqCbX8KN"
@@ -117,6 +121,8 @@ else
     echo "Added VREP_ROOT_DIR conditional block to ~/.bashrc"
 fi
 
+# Export VREP_ROOT_DIR variable in config.sh 
+sudo_replace_or_add_string_in_file "export VREP_ROOT_DIR=\/usr\/local\/V-REP_PRO_EDU_V3_5_0_Linux" "export VREP_ROOT_DIR=\/usr\/local\/$FILE" "$SCRIPT_DIR_/config.sh"
 
 cd $STARTING_DIR
 
