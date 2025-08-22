@@ -22,13 +22,13 @@ Please read the main **[README.md](./README.md)** file and install the required 
 
 <p align="center">
 <img src="images/patrolling-two-floor-ring.gif"
-alt="V-REP simulation 3dpatrolling" height="300" border="1" /> 
+alt="V-REP simulation 3dpatrolling" height="300" border="0" /> 
 </p>
 
 <p align="center">
 <img src="images/patrolling-elike-animated.gif"
-alt="V-REP simulation 3dpatrolling" width="300" border="1" /> <img src="images/patrolling-crossroad.gif"
-alt="V-REP simulation 3dpatrolling" width="300" border="1" />
+alt="V-REP simulation 3dpatrolling" width="300" border="0" /> <img src="images/patrolling-crossroad.gif"
+alt="V-REP simulation 3dpatrolling" width="300" border="0" />
 </p>
 
 ## Overview
@@ -133,22 +133,22 @@ In the script `patrolling3d_sim/scripts/sim_launcher_patrolling` you can select 
 
 <p align="center">
 <img src="images/envs/3D_ramp.png"
-alt="V-REP simulation 3dpatrolling" height="150" border="1" />
+alt="V-REP simulation 3dpatrolling" height="150" border="0" />
 <img src="images/envs/3D_ring.png"
-alt="V-REP simulation 3dpatrolling" height="150" border="1" />  
+alt="V-REP simulation 3dpatrolling" height="150" border="0" />  
 </p>
 
 <p align="center">
 <img src="images/envs/crossroad3.png"
-alt="V-REP simulation 3dpatrolling" height="150" border="1" /> <img src="images/envs/three-ways.png"
-alt="V-REP simulation 3dpatrolling" height="150" border="1" />
+alt="V-REP simulation 3dpatrolling" height="150" border="0" /> <img src="images/envs/three-ways.png"
+alt="V-REP simulation 3dpatrolling" height="150" border="0" />
 </p>
 
 <p align="center">
 <img src="images/envs/crossroad4.png"
-alt="V-REP simulation 3dpatrolling" height="150" border="1" /> <img src="images/envs/fork4.png"
-alt="V-REP simulation 3dpatrolling" height="150" border="1" /> <img src="images/envs/ring_tails.png"
-alt="V-REP simulation 3dpatrolling" height="150" border="1" />
+alt="V-REP simulation 3dpatrolling" height="150" border="0" /> <img src="images/envs/fork4.png"
+alt="V-REP simulation 3dpatrolling" height="150" border="0" /> <img src="images/envs/ring_tails.png"
+alt="V-REP simulation 3dpatrolling" height="150" border="0" />
 </p>
 
 ----
@@ -206,7 +206,7 @@ Take a look at the following [video](https://youtu.be/59UC6Ohq37E):
 <center>
 <a href="https://youtu.be/59UC6Ohq37E" target="_blank" align="middle">
 <img src="images/3d-patrolling-graph-interactive.gif"
-alt="3dpatrolling - RVIZ and V-REP" border="1" /></a>
+alt="3dpatrolling - RVIZ and V-REP" border="0" /></a>
 </center>
 
 

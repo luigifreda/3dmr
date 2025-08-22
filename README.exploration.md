@@ -27,11 +27,11 @@ Please read the main **[README.md](./README.md)** file and install the required 
 
 <p align="center">
 <img src="images/3D-exploration-ugvs2.gif"
-alt="V-REP simulation 3d exploration" height="250" border="1"/> 
+alt="V-REP simulation 3d exploration" height="250" border="0"/> 
 <img src="images/3d_exploration2.png"
-alt="V-REP simulation 3d exploration" height="250" border="1" /> 
+alt="V-REP simulation 3d exploration" height="250" border="0" /> 
 <img src="images/3d_exploration_ring.png"
-alt="V-REP simulation 3d exploration" height="250" border="1" />
+alt="V-REP simulation 3d exploration" height="250" border="0" />
 </p>
 
 ## Overview
@@ -122,7 +122,7 @@ A similar procedure can be applied if you launched `main_pioneer.py`  or `main_j
 
 <center>
 <img src="images/3d_exploration3.png"
-alt="V-REP simulation 3D exploration" width="600" border="1" /> 
+alt="V-REP simulation 3D exploration" width="600" border="0" /> 
 </center>
 
 In the above figure, each robot expands a search tree to plan the next best view configuration (yellow disk). In fact, each robot moves toward a closer configuration (green disk) along the selected best branch, up to a pre-fixed maximum distance.  
@@ -169,7 +169,7 @@ Note that the *30 m* max scan range is bigger than the maximum sensor range (`se
 ### Experimental package `expl_pointcloud_filter`
 
 <p align="center">
-<img src="./images/expl_pointcloud_filter.png" alt="expl_pointcloud_filter" height="250" border="1" />
+<img src="./images/expl_pointcloud_filter.png" alt="expl_pointcloud_filter" height="250" border="0" />
 </p>
 
 

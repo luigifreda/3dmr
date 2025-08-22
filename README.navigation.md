@@ -22,7 +22,7 @@ Please read the main **[README.md](./README.md)** file and install the required 
 
 <center>
 <img src="images/navigation.png"
-alt="RVIZ and V-REP" width="800" border="1" />
+alt="RVIZ and V-REP" width="800" border="0" />
 </center>
 
 
@@ -54,7 +54,7 @@ Each script launches ROS nodes within [screen](http://aperiodic.net/screen/quick
 <center>
 <a href="https://youtu.be/qfytKc2FRs0" target="_blank" align="middle">
 <img src="images/navigation.gif"
-alt="3DMR - RVIZ and V-REP" border="1" /></a>
+alt="3DMR - RVIZ and V-REP" border="0" /></a>
 </center>
 
 ---
@@ -127,7 +127,7 @@ Take a look at the following [video](https://youtu.be/qfytKc2FRs0):
 <center>
 <a href="https://youtu.be/qfytKc2FRs0" target="_blank" align="middle">
 <img src="images/waypoints.png"
-alt="3DMR - RVIZ and V-REP" width="800" border="1" /></a>
+alt="3DMR - RVIZ and V-REP" width="800" border="0" /></a>
 </center>
 
 --- 
